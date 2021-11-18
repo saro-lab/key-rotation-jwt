@@ -5,6 +5,7 @@ import me.saro.jwt.core.JwtKey
 import me.saro.jwt.core.JwtObject
 import me.saro.jwt.exception.JwtException
 import java.util.*
+import java.util.function.Function
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -19,9 +20,9 @@ abstract class JwtHs: JwtAlgorithm{
 
     abstract fun getMac(): Mac
 
-    override fun signature(key: JwtKey, body: String): String {
+    override fun signature(body: String, jwtKey: JwtKey): String {
         val mac = getMac()
-            .apply { init((key as JwtHsKey).key) }
+            .apply { init((jwtKey as JwtHsKey).key) }
         return EN_BASE64_URL_WOP.encodeToString(mac.doFinal(body.toByteArray()))
     }
 
@@ -43,22 +44,24 @@ abstract class JwtHs: JwtAlgorithm{
     override fun randomJwtKey(): JwtKey =
         getJwtKey(32, 64)
 
-    override fun verify(key: JwtKey, jwt: String, jwtObject: JwtObject): JwtObject {
+    override fun toJwtObjectWithVerify(jwt: String, searchJwtKey: Function<Any?, JwtKey>): JwtObject {
+        val jwtObject = JwtObject.parse(jwt)
+        val jwtKey = searchJwtKey.apply(jwtObject.kid())
+        if (jwtObject.header("alg") != algorithm()) {
+            throw JwtException("algorithm does not matched jwt : $jwt")
+        }
         val firstPoint = jwt.indexOf('.')
         val lastPoint = jwt.lastIndexOf('.')
         if (firstPoint < lastPoint && firstPoint != -1) {
-            if (signature(key, jwt.substring(0, lastPoint)) == jwt.substring(lastPoint + 1)) {
-                if (jwtObject.header("alg") != algorithm()) {
-                    throw JwtException("algorithm does not matched jwt : $jwt")
-                }
+            if (signature(jwt.substring(0, lastPoint), jwtKey) == jwt.substring(lastPoint + 1)) {
                 return jwtObject
             }
         }
         throw JwtException("invalid jwt : $jwt")
     }
 
-    override fun parseJwtKey(text: String): JwtKey {
-        val point = text.indexOf(':')
-        return JwtHsKey(SecretKeySpec((text.substring(point + 1)).toByteArray(Charsets.UTF_8), text.substring(0, point)))
+    override fun parseJwtKey(keyData: String): JwtKey {
+        val point = keyData.indexOf(':')
+        return JwtHsKey(SecretKeySpec((keyData.substring(point + 1)).toByteArray(Charsets.UTF_8), keyData.substring(0, point)))
     }
 }

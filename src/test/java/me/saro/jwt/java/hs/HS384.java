@@ -1,30 +1,28 @@
 package me.saro.jwt.java.hs;
 
-import me.saro.jwt.alg.es.JwtEs256;
-import me.saro.jwt.alg.hs.JwtHs256;
+import me.saro.jwt.alg.es.JwtEs384;
+import me.saro.jwt.alg.hs.JwtHs384;
 import me.saro.jwt.core.JwtKey;
 import me.saro.jwt.exception.JwtException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
-@DisplayName("[Java] HS256")
-public class HS256 {
+@DisplayName("[Java] HS384")
+public class HS384 {
 
     @Test
     @DisplayName("check jwt.io example")
     public void t1() {
-        var exJwtBody = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ";
-        var exJwtSign = "ypNASjsXTW6nmFdRxHAw-7s7tLMLj_jKknIXprDZkSs";
-        var secret = "your-secret-key";
+        var exJwtBody = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzM4NCJ9.eyJpYXQiOjE2MzcyNTk0NDEsImV4cCI6MTYzNzM0NTg0MX0";
+        var exJwtSign = "OgkRovv9QLVtPTwdZgkobRNK0cbqqVi_-XELviEAceYzSDYjcHpzC9YA5GOEyKtL";
+        var secret = "your-256-bit-secret";
 
-        var alg = new JwtHs256();
+        var alg = new JwtHs384();
         var key = alg.getJwtKey(secret);
 
         var newJwtSign = alg.signature(exJwtBody, key);
@@ -41,7 +39,7 @@ public class HS256 {
     @Test
     @DisplayName("normal")
     public void t2() {
-        var alg = new JwtHs256();
+        var alg = new JwtHs384();
         var key1 = alg.randomJwtKey();
         var key2 = alg.randomJwtKey();
         var key3 = alg.parseJwtKey(key1.stringify());
@@ -77,7 +75,7 @@ public class HS256 {
     @Test
     @DisplayName("key store")
     public void t3() {
-        var alg = new JwtHs256();
+        var alg = new JwtHs384();
 
         var keyStore = new ConcurrentHashMap<String, JwtKey>();
         var jwtList = new ArrayList<String>();
@@ -106,7 +104,7 @@ public class HS256 {
         }
 
         var wrongKeyStore = new ConcurrentHashMap<String, JwtKey>();
-        wrongKeyStore.put("1", new JwtEs256().randomJwtKey());
+        wrongKeyStore.put("1", new JwtEs384().randomJwtKey());
         for (var i = 0 ; i < jwtList.size() ; i++) {
             var jwtObject = alg.toJwtObjectWithVerifyOrNull(jwtList.get(i), kid -> wrongKeyStore.get(kid));
             Assertions.assertNull(jwtObject);
@@ -118,7 +116,7 @@ public class HS256 {
     @Test
     @DisplayName("expire")
     public void t4() {
-        var alg = new JwtHs256();
+        var alg = new JwtHs384();
 
         var key = alg.randomJwtKey();
         System.out.println(key);

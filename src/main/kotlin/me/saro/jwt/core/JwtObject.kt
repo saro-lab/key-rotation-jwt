@@ -3,7 +3,7 @@ package me.saro.jwt.core
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import me.saro.jwt.exception.JwtException
-import java.lang.StringBuilder
+import java.time.OffsetDateTime
 import java.util.*
 
 class JwtObject private constructor(
@@ -36,22 +36,23 @@ class JwtObject private constructor(
                 throw JwtException("alg is required : $jwt")
             }
 
-            norDate(jwt, header, "nbf")
-            norDate(jwt, header, "iat")
-            norDate(jwt, header, "exp")
+            norDate(jwt, claim, "nbf")
+            norDate(jwt, claim, "iat")
+            norDate(jwt, claim, "exp")
 
-            val exp = header["exp"]
+            val exp = claim["exp"]
             if (exp != null && (System.currentTimeMillis() / 1000L) > (exp as Long)) {
                 throw JwtException("expired jwt : $jwt")
             }
             return JwtObject(header, claim)
         }
 
-        private fun norDate(jwt: String, header: MutableMap<String, Any>, key: String) {
-            var date = header[key]
+        private fun norDate(jwt: String, claim: MutableMap<String, Any>, key: String) {
+            var date = claim[key]
             if (date != null) {
                 if (date is Int) {
-                    date = date.toLong() ; header["nbf"] = date
+                    date = date.toLong()
+                    claim[key] = date
                 }
                 if (date !is Long) {
                     throw JwtException("nbf format error : $jwt")
@@ -76,8 +77,8 @@ class JwtObject private constructor(
     }
     fun claim(key: String): Any? = claim[key]
 
-    fun kid() = header("kid")
-    fun kid(value: Any) = header("kid", value)
+    fun kid(): String? = header("kid") as String?
+    fun kid(value: String) = header("kid", value)
 
     fun issuer() = claim("iat")
     fun issuer(value: Any) = claim("iat", value)
@@ -92,17 +93,19 @@ class JwtObject private constructor(
     fun id(value: String) = claim("jti", value)
 
     fun notBefore() = claim("nbf")?.let { Date(1000L * it as Long) }
-    fun notBefore(value: Date) = claim("nbf", value.time / 1000L)
+    fun notBefore(date: Date) = claim("nbf", date.time / 1000L)
+    fun notBefore(date: OffsetDateTime) = claim("nbf", date.toEpochSecond())
 
     fun issuedAt() = claim("iat")?.let { Date(1000L * it as Long) }
-    fun issuedAt(value: Date) = claim("iat", value.time / 1000L)
+    fun issuedAt(date: Date) = claim("iat", date.time / 1000L)
+    fun issuedAt(date: OffsetDateTime) = claim("iat", date.toEpochSecond())
 
     fun expire() = claim("exp")?.let { Date(1000L * it as Long) }
-    fun expire(value: Date) = claim("exp", value.time / 1000L)
+    fun expire(date: Date) = claim("exp", date.time / 1000L)
+    fun expire(date: OffsetDateTime) = claim("exp", date.toEpochSecond())
 
-    override fun toString(): String {
-        return OBJECT_MAPPER.writeValueAsString(header) + " " + OBJECT_MAPPER.writeValueAsString(claim)
-    }
+    override fun toString(): String =
+        OBJECT_MAPPER.writeValueAsString(header) + " " + OBJECT_MAPPER.writeValueAsString(claim)
 
     fun toJwtBody(): String =
         StringBuilder(200)

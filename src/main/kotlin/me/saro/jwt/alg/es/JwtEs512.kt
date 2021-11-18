@@ -9,7 +9,7 @@ class JwtEs512: JwtEs() {
         private val signature = Signature.getInstance("SHA512withECDSAinP1363Format")
     }
 
-    override fun algorithm(): String = "ES384"
+    override fun algorithm(): String = "ES512"
     override fun getECGenParameterSpec(): ECGenParameterSpec = ecGenParameterSpec
     override fun getSignature(): Signature = signature
 }
