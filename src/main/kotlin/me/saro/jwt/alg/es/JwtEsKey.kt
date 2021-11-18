@@ -2,15 +2,11 @@ package me.saro.jwt.alg.es
 
 import me.saro.jwt.core.JwtKey
 import java.security.KeyPair
-import java.time.LocalDateTime
 import java.util.*
 
-
-class JwtKeyEs(
+data class JwtEsKey(
     val keyPair: KeyPair
 ): JwtKey {
-    private val createDateTime = LocalDateTime.now()
-
     companion object {
         private val EN_BASE64 = Base64.getEncoder()
     }
@@ -21,7 +17,4 @@ class JwtKeyEs(
             .append(' ')
             .append(EN_BASE64.encodeToString(keyPair.private.encoded))
             .toString()
-
-    override fun createDateTime(): LocalDateTime =
-        createDateTime
 }

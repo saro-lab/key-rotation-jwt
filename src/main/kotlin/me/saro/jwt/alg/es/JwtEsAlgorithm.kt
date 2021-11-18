@@ -2,7 +2,7 @@ package me.saro.jwt.alg.es
 
 import me.saro.jwt.core.JwtAlgorithm
 import me.saro.jwt.core.JwtKey
-import me.saro.jwt.core.JwtIo
+import me.saro.jwt.core.JwtObject
 import me.saro.jwt.exception.JwtException
 import java.security.KeyFactory
 import java.security.KeyPair
@@ -13,7 +13,7 @@ import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 import java.util.*
 
-abstract class JwtAlgorithmEs: JwtAlgorithm{
+abstract class JwtEsAlgorithm: JwtAlgorithm{
     companion object {
         private val EN_BASE64_URL_WOP = Base64.getUrlEncoder().withoutPadding()
         private val DE_BASE64_URL = Base64.getUrlDecoder()
@@ -26,30 +26,30 @@ abstract class JwtAlgorithmEs: JwtAlgorithm{
 
     override fun signature(key: JwtKey, body: String): String {
         val signature = getSignature()
-        signature.initSign((key as JwtKeyEs).keyPair.private)
+        signature.initSign((key as JwtEsKey).keyPair.private)
         signature.update(body.toByteArray())
         return EN_BASE64_URL_WOP.encodeToString(signature.sign())
     }
 
     override fun genJwtKey(): JwtKey =
-        JwtKeyEs(
+        JwtEsKey(
             KeyPairGenerator.getInstance(KEY_ALGORITHM)
                 .apply { initialize(getECGenParameterSpec()) }
                 .genKeyPair()
         )
 
-    override fun verify(key: JwtKey, jwt: String, jwtIo: JwtIo): JwtIo {
+    override fun verify(key: JwtKey, jwt: String, jwtObject: JwtObject): JwtObject {
         val signature = getSignature()
         val firstPoint = jwt.indexOf('.')
         val lastPoint = jwt.lastIndexOf('.')
         if (firstPoint < lastPoint && firstPoint != -1) {
-            signature.initVerify((key as JwtKeyEs).keyPair.public)
+            signature.initVerify((key as JwtEsKey).keyPair.public)
             signature.update(jwt.substring(0, lastPoint).toByteArray())
             if (signature.verify(DE_BASE64_URL.decode(jwt.substring(lastPoint + 1)))) {
-                if (jwtIo.header("alg") != algorithm()) {
+                if (jwtObject.header("alg") != algorithm()) {
                     throw JwtException("algorithm does not matched jwt : $jwt")
                 }
-                return jwtIo
+                return jwtObject
             }
         }
         throw JwtException("invalid jwt : $jwt")
@@ -60,6 +60,6 @@ abstract class JwtAlgorithmEs: JwtAlgorithm{
         val textKeyPair = text.split(' ')
         val publicKey = keyFactory.generatePublic(X509EncodedKeySpec(DE_BASE64.decode(textKeyPair[0])))
         val privateKey = keyFactory.generatePrivate(PKCS8EncodedKeySpec(DE_BASE64.decode(textKeyPair[1])))
-        return JwtKeyEs(KeyPair(publicKey, privateKey))
+        return JwtEsKey(KeyPair(publicKey, privateKey))
     }
 }

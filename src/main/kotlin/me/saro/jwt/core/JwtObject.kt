@@ -6,7 +6,7 @@ import me.saro.jwt.exception.JwtException
 import java.lang.StringBuilder
 import java.util.*
 
-class JwtIo private constructor(
+class JwtObject private constructor(
     private val header: MutableMap<String, Any>,
     private val claim: MutableMap<String, Any>
 ) {
@@ -17,14 +17,14 @@ class JwtIo private constructor(
         private val TYPE_MAP = object: TypeReference<MutableMap<String, Any>>() {}
 
         @JvmStatic
-        fun create(alg: String): JwtIo {
+        fun create(alg: String): JwtObject {
             val header = mutableMapOf<String, Any>("typ" to "JWT", "alg" to alg)
             val claim = mutableMapOf<String, Any>("iat" to System.currentTimeMillis() / 1000L)
-            return JwtIo(header, claim)
+            return JwtObject(header, claim)
         }
 
         @JvmStatic
-        fun parse(jwt: String): JwtIo {
+        fun parse(jwt: String): JwtObject {
             val jwtParts = jwt.split('.')
             val header = OBJECT_MAPPER.readValue(DE_BASE64_URL.decode(jwtParts[0]), TYPE_MAP)
             val claim = OBJECT_MAPPER.readValue(DE_BASE64_URL.decode(jwtParts[1]), TYPE_MAP)
@@ -44,7 +44,7 @@ class JwtIo private constructor(
             if (exp != null && (System.currentTimeMillis() / 1000L) > (exp as Long)) {
                 throw JwtException("expired jwt : $jwt")
             }
-            return JwtIo(header, claim)
+            return JwtObject(header, claim)
         }
 
         private fun norDate(jwt: String, header: MutableMap<String, Any>, key: String) {
@@ -60,7 +60,7 @@ class JwtIo private constructor(
         }
     }
 
-    fun header(key: String, value: Any): JwtIo {
+    fun header(key: String, value: Any): JwtObject {
         when (key) {
             "alg" -> throw JwtException("alg(algorithm) is readonly")
             "typ" -> throw JwtException("tpy(type) is readonly")
@@ -70,7 +70,7 @@ class JwtIo private constructor(
     }
     fun header(key: String): Any? = header[key]
 
-    fun claim(key: String, value: Any): JwtIo {
+    fun claim(key: String, value: Any): JwtObject {
         claim[key] = value
         return this
     }

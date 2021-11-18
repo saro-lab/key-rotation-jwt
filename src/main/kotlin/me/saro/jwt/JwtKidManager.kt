@@ -2,7 +2,7 @@ package me.saro.jwt
 
 import me.saro.jwt.core.JwtAlgorithm
 import me.saro.jwt.core.JwtKey
-import me.saro.jwt.core.JwtIo
+import me.saro.jwt.core.JwtObject
 import me.saro.jwt.exception.JwtException
 import java.util.concurrent.ConcurrentHashMap
 
@@ -35,26 +35,26 @@ class JwtKidManager<KID>(
     }
 
     fun createJwtIo() =
-        JwtIo.create(jwtAlgorithm.algorithm())
+        JwtObject.create(jwtAlgorithm.algorithm())
 
-    fun toJwt(jwtIo: JwtIo): String {
+    fun toJwt(jwtObject: JwtObject): String {
         val pair = newJwtIoKeyPicker(jwtKeyMap)
-        jwtIo.header("kid", pair.first as Any)
-        val body = jwtIo.toJwtBody()
+        jwtObject.header("kid", pair.first as Any)
+        val body = jwtObject.toJwtBody()
         return body + "." + jwtAlgorithm.signature(pair.second, body)
     }
 
 
-    fun toJwtIo(jwt: String): JwtIo {
-        val jwtIo = JwtIo.parse(jwt)
+    fun toJwtIo(jwt: String): JwtObject {
+        val jwtObject = JwtObject.parse(jwt)
 
-        val kid = jwtIo.kid()
+        val kid = jwtObject.kid()
             ?: throw JwtException("dose not exist kid field")
 
         @Suppress("UNCHECKED_CAST")
         val key = jwtKeyMap[kid as KID]
             ?: throw JwtException("not found key[kid=$kid]")
 
-        return jwtAlgorithm.verify(key, jwt, jwtIo)
+        return jwtAlgorithm.verify(key, jwt, jwtObject)
     }
 }

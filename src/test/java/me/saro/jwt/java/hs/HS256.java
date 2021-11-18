@@ -1,8 +1,8 @@
 package me.saro.jwt.java.hs;
 
-import me.saro.jwt.alg.es.JwtAlgorithmEs384;
-import me.saro.jwt.alg.es.JwtKeyEs;
-import me.saro.jwt.alg.hs.JwtAlgorithmHs256;
+import me.saro.jwt.alg.es.JwtEs384Algorithm;
+import me.saro.jwt.alg.es.JwtEsKey;
+import me.saro.jwt.alg.hs.JwtHs256Algorithm;
 import me.saro.jwt.exception.JwtException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -18,7 +18,7 @@ public class HS256 {
         var exJwtSign = "ypNASjsXTW6nmFdRxHAw-7s7tLMLj_jKknIXprDZkSs";
         var secret = "your-secret-key";
 
-        var es = new JwtAlgorithmHs256();
+        var es = new JwtHs256Algorithm();
         var key = es.getJwtKey(secret);
 
         var newJwtSign = es.signature(key, exJwtBody);
@@ -35,8 +35,8 @@ public class HS256 {
     @Test
     @DisplayName("normal")
     public void t2() {
-        var es = new JwtAlgorithmEs384();
-        var key = (JwtKeyEs)es.genJwtKey();
+        var es = new JwtEs384Algorithm();
+        var key = (JwtEsKey)es.genJwtKey();
 
         System.out.println(key.getKeyPair().getPublic().getAlgorithm());
         System.out.println(key.getKeyPair().getPrivate().getAlgorithm());

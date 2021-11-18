@@ -2,13 +2,13 @@ package me.saro.jwt.alg.hs
 
 import me.saro.jwt.core.JwtAlgorithm
 import me.saro.jwt.core.JwtKey
-import me.saro.jwt.core.JwtIo
+import me.saro.jwt.core.JwtObject
 import me.saro.jwt.exception.JwtException
 import java.util.*
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-abstract class JwtAlgorithmHs: JwtAlgorithm{
+abstract class JwtHsAlgorithm: JwtAlgorithm{
     companion object {
         private val MOLD = "1234567890!@#$%^&*()+=-_/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
         private val MOLD_LEN = MOLD.size
@@ -21,12 +21,12 @@ abstract class JwtAlgorithmHs: JwtAlgorithm{
 
     override fun signature(key: JwtKey, body: String): String {
         val mac = getMac()
-            .apply { init((key as JwtKeyHs).key) }
+            .apply { init((key as JwtHsKey).key) }
         return EN_BASE64_URL_WOP.encodeToString(mac.doFinal(body.toByteArray()))
     }
 
     fun getJwtKey(secret: String): JwtKey =
-        JwtKeyHs(SecretKeySpec(secret.toByteArray(), getKeyAlgorithm()))
+        JwtHsKey(SecretKeySpec(secret.toByteArray(), getKeyAlgorithm()))
 
     fun getJwtKey(minLength: Int, maxLength: Int): JwtKey {
         if (minLength > maxLength) {
@@ -43,15 +43,15 @@ abstract class JwtAlgorithmHs: JwtAlgorithm{
     override fun genJwtKey(): JwtKey =
         getJwtKey(32, 64)
 
-    override fun verify(key: JwtKey, jwt: String, jwtIo: JwtIo): JwtIo {
+    override fun verify(key: JwtKey, jwt: String, jwtObject: JwtObject): JwtObject {
         val firstPoint = jwt.indexOf('.')
         val lastPoint = jwt.lastIndexOf('.')
         if (firstPoint < lastPoint && firstPoint != -1) {
             if (signature(key, jwt.substring(0, lastPoint)) == jwt.substring(lastPoint + 1)) {
-                if (jwtIo.header("alg") != algorithm()) {
+                if (jwtObject.header("alg") != algorithm()) {
                     throw JwtException("algorithm does not matched jwt : $jwt")
                 }
-                return jwtIo
+                return jwtObject
             }
         }
         throw JwtException("invalid jwt : $jwt")
@@ -59,6 +59,6 @@ abstract class JwtAlgorithmHs: JwtAlgorithm{
 
     override fun toJwtKey(text: String): JwtKey {
         val point = text.indexOf(':')
-        return JwtKeyHs(SecretKeySpec((text.substring(point + 1)).toByteArray(Charsets.UTF_8), text.substring(0, point)))
+        return JwtHsKey(SecretKeySpec((text.substring(point + 1)).toByteArray(Charsets.UTF_8), text.substring(0, point)))
     }
 }
