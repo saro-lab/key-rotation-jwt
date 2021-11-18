@@ -47,5 +47,3 @@ compile 'me.saro:jwt:1.0.0'
 ## see
 - [가리사니 개발자공간](https://gs.saro.me)
 
-## include
-- [io.jsonwebtoken:jjwt](https://github.com/jwtk/jjwt)

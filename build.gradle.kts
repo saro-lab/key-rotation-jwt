@@ -19,6 +19,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  *    signing.password=<secret>
  *    signing.secretKeyRingFile=<path of secring.gpg>
  *
+ * + you can use "User Token" instead of id & password.
+ *     - https://oss.sonatype.org -> profile -> User Token
+ *
  * @See
  * https://github.com/saro-lab/jwt
  * https://docs.gradle.org/current/userguide/publishing_maven.html
@@ -81,10 +84,10 @@ publishing {
 
 			repositories {
 				maven {
-//					credentials {
-//						username = project.property("sonatype.username").toString()
-//						password = project.property("sonatype.password").toString()
-//					}
+					credentials {
+						username = project.property("sonatype.username").toString()
+						password = project.property("sonatype.password").toString()
+					}
 					val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
 					val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
 					url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
