@@ -4,12 +4,12 @@ import java.util.function.Function
 
 interface JwtAlgorithm {
 
-    fun toJwtObjectWithVerify(jwt: String, searchJwtKey: Function<Any?, JwtKey>): JwtObject
+    fun toJwtObjectWithVerify(jwt: String, searchJwtKey: Function<Any?, JwtKey?>): JwtObject
 
     fun toJwtObjectWithVerify(jwt: String, jwtKey: JwtKey): JwtObject =
         toJwtObjectWithVerify(jwt) { jwtKey }
 
-    fun toJwtObjectWithVerifyOrNull(jwt: String, searchJwtKey: Function<Any?, JwtKey>): JwtObject? =
+    fun toJwtObjectWithVerifyOrNull(jwt: String, searchJwtKey: Function<Any?, JwtKey?>): JwtObject? =
         try { toJwtObjectWithVerify(jwt, searchJwtKey) } catch (e: Exception) { null }
 
     fun toJwtObjectWithVerifyOrNull(jwt: String, jwtKey: JwtKey): JwtObject? =

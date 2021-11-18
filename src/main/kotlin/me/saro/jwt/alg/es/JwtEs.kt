@@ -39,9 +39,10 @@ abstract class JwtEs: JwtAlgorithm{
                 .genKeyPair()
         )
 
-    override fun toJwtObjectWithVerify(jwt: String, searchJwtKey: Function<Any?, JwtKey>): JwtObject {
+    override fun toJwtObjectWithVerify(jwt: String, searchJwtKey: Function<Any?, JwtKey?>): JwtObject {
         val jwtObject = JwtObject.parse(jwt)
         val jwtKey = searchJwtKey.apply(jwtObject.kid())
+            ?: throw JwtException("does not found kid : ${jwtObject.kid()}")
         if (jwtObject.header("alg") != algorithm()) {
             throw JwtException("algorithm does not matched jwt : $jwt")
         }
