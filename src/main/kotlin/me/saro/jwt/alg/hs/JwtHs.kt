@@ -8,7 +8,7 @@ import java.util.*
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-abstract class JwtHsAlgorithm: JwtAlgorithm{
+abstract class JwtHs: JwtAlgorithm{
     companion object {
         private val MOLD = "1234567890!@#$%^&*()+=-_/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
         private val MOLD_LEN = MOLD.size
@@ -40,7 +40,7 @@ abstract class JwtHsAlgorithm: JwtAlgorithm{
         return getJwtKey(chars.toString())
     }
 
-    override fun genJwtKey(): JwtKey =
+    override fun randomJwtKey(): JwtKey =
         getJwtKey(32, 64)
 
     override fun verify(key: JwtKey, jwt: String, jwtObject: JwtObject): JwtObject {
@@ -57,7 +57,7 @@ abstract class JwtHsAlgorithm: JwtAlgorithm{
         throw JwtException("invalid jwt : $jwt")
     }
 
-    override fun toJwtKey(text: String): JwtKey {
+    override fun parseJwtKey(text: String): JwtKey {
         val point = text.indexOf(':')
         return JwtHsKey(SecretKeySpec((text.substring(point + 1)).toByteArray(Charsets.UTF_8), text.substring(0, point)))
     }

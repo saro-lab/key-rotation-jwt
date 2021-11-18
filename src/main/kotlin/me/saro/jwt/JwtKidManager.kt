@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
 class JwtKidManager<KID>(
     private val jwtAlgorithm: JwtAlgorithm,
     private val jwtKeyMap: ConcurrentHashMap<KID, JwtKey>,
-    private val newJwtIoKeyPicker: (Map<KID, JwtKey>) -> Pair<KID, JwtKey>
+    private val newJwtObjectKeyPicker: (Map<KID, JwtKey>) -> Pair<KID, JwtKey>
 ) {
 
     fun addKey(kid: KID, jwtKey: JwtKey) {
@@ -34,18 +34,18 @@ class JwtKidManager<KID>(
         delKeyIf { id, _ -> !ids.contains(id) }
     }
 
-    fun createJwtIo() =
+    fun createJwtObject() =
         JwtObject.create(jwtAlgorithm.algorithm())
 
     fun toJwt(jwtObject: JwtObject): String {
-        val pair = newJwtIoKeyPicker(jwtKeyMap)
+        val pair = newJwtObjectKeyPicker(jwtKeyMap)
         jwtObject.header("kid", pair.first as Any)
         val body = jwtObject.toJwtBody()
         return body + "." + jwtAlgorithm.signature(pair.second, body)
     }
 
 
-    fun toJwtIo(jwt: String): JwtObject {
+    fun toJwtObject(jwt: String): JwtObject {
         val jwtObject = JwtObject.parse(jwt)
 
         val kid = jwtObject.kid()

@@ -13,7 +13,7 @@ import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 import java.util.*
 
-abstract class JwtEsAlgorithm: JwtAlgorithm{
+abstract class JwtEs: JwtAlgorithm{
     companion object {
         private val EN_BASE64_URL_WOP = Base64.getUrlEncoder().withoutPadding()
         private val DE_BASE64_URL = Base64.getUrlDecoder()
@@ -31,7 +31,7 @@ abstract class JwtEsAlgorithm: JwtAlgorithm{
         return EN_BASE64_URL_WOP.encodeToString(signature.sign())
     }
 
-    override fun genJwtKey(): JwtKey =
+    override fun randomJwtKey(): JwtKey =
         JwtEsKey(
             KeyPairGenerator.getInstance(KEY_ALGORITHM)
                 .apply { initialize(getECGenParameterSpec()) }
@@ -55,7 +55,7 @@ abstract class JwtEsAlgorithm: JwtAlgorithm{
         throw JwtException("invalid jwt : $jwt")
     }
 
-    override fun toJwtKey(text: String): JwtKey {
+    override fun parseJwtKey(text: String): JwtKey {
         val keyFactory = KeyFactory.getInstance(KEY_ALGORITHM)
         val textKeyPair = text.split(' ')
         val publicKey = keyFactory.generatePublic(X509EncodedKeySpec(DE_BASE64.decode(textKeyPair[0])))

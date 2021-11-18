@@ -3,13 +3,13 @@ package me.saro.jwt.alg.es
 import java.security.Signature
 import java.security.spec.ECGenParameterSpec
 
-class JwtEs384Algorithm: JwtEsAlgorithm() {
+class JwtEs256: JwtEs() {
     companion object {
-        private val ecGenParameterSpec = ECGenParameterSpec("secp384r1")
-        private val signature = Signature.getInstance("SHA384withECDSAinP1363Format")
+        private val ecGenParameterSpec = ECGenParameterSpec("secp256r1")
+        private val signature = Signature.getInstance("SHA256withECDSAinP1363Format")
     }
 
-    override fun algorithm(): String = "ES384"
+    override fun algorithm(): String = "ES256"
     override fun getECGenParameterSpec(): ECGenParameterSpec = ecGenParameterSpec
     override fun getSignature(): Signature = signature
 }
