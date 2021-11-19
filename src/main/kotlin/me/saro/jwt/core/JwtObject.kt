@@ -80,8 +80,8 @@ class JwtObject private constructor(
     fun kid(): String? = header("kid") as String?
     fun kid(value: String) = header("kid", value)
 
-    fun issuer() = claim("iat")
-    fun issuer(value: Any) = claim("iat", value)
+    fun issuer() = claim("iss")
+    fun issuer(value: Any) = claim("iss", value)
 
     fun subject() = claim("sub") as String?
     fun subject(value: String) = claim("sub", value)
