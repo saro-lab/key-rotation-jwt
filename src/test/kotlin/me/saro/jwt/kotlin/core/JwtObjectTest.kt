@@ -10,7 +10,6 @@ import me.saro.jwt.core.JwtAlgorithm
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import java.text.ParseException
 import java.text.SimpleDateFormat
 
 @DisplayName("[Kotlin] JwtObject")

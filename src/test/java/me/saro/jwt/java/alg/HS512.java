@@ -11,9 +11,9 @@ public class HS512 {
     @Test
     @DisplayName("check jwt.io example")
     public void t1() {
-        var exJwtBody = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2MzcyNTk0NDEsImV4cCI6MTYzNzM0NTg0MX0";
-        var exJwtSign = "EogNKHRE8l4xad3mI5fIhyl6RoiVHTmGfEgfHhXYDOnhpZPM1wNPUKNRCJ3Fr90v9OVltB10gwB0i_fmg2wU5g";
-        var secret = "your-256-bit-secret";
+        var exJwtBody = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0";
+        var exJwtSign = "VFb0qJ1LRg_4ujbZoRMXnVkUgiuKq5KxWqNdbKq_G9Vvz-S1zZa9LPxtHWKa64zDl2ofkT8F6jBt_K4riU-fPg";
+        var secret = "your-512-bit-secret";
 
         var alg = new JwtHs512();
         var key = alg.getJwtKey(secret);

@@ -23,6 +23,7 @@ public class ES384 {
                 "MIPAxMtZXkEWbDF0zo9f2n4+T1h/2sh/fviblc/VTyrv10GEtIi5qiOy85Pf1RRw" +
                 "8lE5IPUWpgu553SteKigiKLUPeNpbqmYZUkWGh3MLfVzLmx85ii2vMU="
         );
+
         var alg = new JwtEs384();
         var key = alg.parseJwtKey(publicKey + " " + privateKey);
 

@@ -1,16 +1,10 @@
 package me.saro.jwt.kotlin.alg
 
 import me.saro.jwt.alg.es.JwtEs256
-import me.saro.jwt.alg.hs.JwtHs256
-import me.saro.jwt.core.JwtKey
 import me.saro.jwt.core.JwtObject
-import me.saro.jwt.exception.JwtException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import java.time.OffsetDateTime
-import java.util.concurrent.ConcurrentHashMap
-import java.util.function.Function
 
 @DisplayName("[Kotlin] ES256")
 class ES256 {
@@ -30,18 +24,14 @@ class ES256 {
         )
 
         val alg = JwtEs256()
-
         val key = alg.parseJwtKey("$publicKey $privateKey")
+
         val newJwtSign = alg.signature(exJwtBody, key)
 
         println(Assertions.assertDoesNotThrow<JwtObject> { alg.toJwtObjectWithVerify("$exJwtBody.$exJwtSign", key) })
         println(Assertions.assertDoesNotThrow<JwtObject> { alg.toJwtObjectWithVerify("$exJwtBody.$newJwtSign", key) })
 
-        Assertions.assertThrows(Exception::class.java) {
-            alg.toJwtObjectWithVerify(exJwtBody + "." + exJwtSign + "1", key)
-        }
-        Assertions.assertThrows(Exception::class.java) {
-            alg.toJwtObjectWithVerify(exJwtBody + "." + newJwtSign + "1", key)
-        }
+        Assertions.assertThrows(Exception::class.java) { alg.toJwtObjectWithVerify(exJwtBody + "." + exJwtSign + "1", key) }
+        Assertions.assertThrows(Exception::class.java) { alg.toJwtObjectWithVerify(exJwtBody + "." + newJwtSign + "1", key) }
     }
 }

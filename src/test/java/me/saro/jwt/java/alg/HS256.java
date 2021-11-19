@@ -12,8 +12,8 @@ public class HS256 {
     @DisplayName("check jwt.io example")
     public void t1() {
         var exJwtBody = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ";
-        var exJwtSign = "ypNASjsXTW6nmFdRxHAw-7s7tLMLj_jKknIXprDZkSs";
-        var secret = "your-secret-key";
+        var exJwtSign = "SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+        var secret = "your-256-bit-secret";
 
         var alg = new JwtHs256();
         var key = alg.getJwtKey(secret);

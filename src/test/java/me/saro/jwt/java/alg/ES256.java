@@ -28,6 +28,7 @@ public class ES256 {
                 "OF/2NxApJCzGCEDdfSp6VQO30hyhRANCAAQRWz+jn65BtOMvdyHKcvjBeBSDZH2r" +
                 "1RTwjmYSi9R/zpBnuQ4EiMnCqfMPWiZqB4QdbAd0E7oH50VpuZ1P087G"
         );
+
         var alg = new JwtEs256();
         var key = alg.parseJwtKey(publicKey + " " + privateKey);
 

@@ -26,6 +26,7 @@ public class ES512 {
                 "jMiZNE25pT2yWP1NUndJxPcvVtfBW48kPOmvkY4WlqP5bAwCXwbsKrCgk6xbsp12" +
                 "ew=="
         );
+
         var alg = new JwtEs512();
         var key = alg.parseJwtKey(publicKey + " " + privateKey);
 
