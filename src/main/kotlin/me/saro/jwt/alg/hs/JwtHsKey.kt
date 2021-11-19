@@ -8,4 +8,7 @@ data class JwtHsKey(
 ): JwtKey {
     override fun stringify(): String =
         key.algorithm + ":" + String(key.encoded, Charsets.UTF_8)
+
+    override fun toString(): String =
+        "JwtHsKey(${stringify()})"
 }

@@ -17,4 +17,7 @@ data class JwtEsKey(
             .append(' ')
             .append(EN_BASE64.encodeToString(keyPair.private.encoded))
             .toString()
+
+    override fun toString(): String =
+        "JwtEsKey(${stringify()})"
 }
