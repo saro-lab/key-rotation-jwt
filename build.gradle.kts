@@ -60,10 +60,10 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
 	// jackson
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
 
 	// test
-	val junitVer = "5.8.1"
+	val junitVer = "5.8.2"
 	testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVer")
 	testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVer")
 }
