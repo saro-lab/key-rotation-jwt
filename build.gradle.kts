@@ -60,7 +60,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
 	// jackson
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.2")
 
 	// test
 	val junitVer = "5.8.2"
@@ -85,8 +85,12 @@ publishing {
 			repositories {
 				maven {
 					credentials {
-						username = project.property("sonatype.username").toString()
-						password = project.property("sonatype.password").toString()
+						try {
+							username = project.property("sonatype.username").toString()
+							password = project.property("sonatype.password").toString()
+						} catch (e: Exception) {
+							println("warn: " + e.message)
+						}
 					}
 					val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
 					val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
