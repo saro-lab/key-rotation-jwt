@@ -6,12 +6,12 @@
 
 ## gradle kts
 ```
-implementation('me.saro:jwt:1.0.1')
+implementation('me.saro:jwt:1.0.2')
 ```
 
 ## gradle
 ```
-compile 'me.saro:jwt:1.0.1'
+compile 'me.saro:jwt:1.0.2'
 ```
 
 ## maven
@@ -19,7 +19,7 @@ compile 'me.saro:jwt:1.0.1'
 <dependency>
   <groupId>me.saro</groupId>
   <artifactId>jwt</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 
