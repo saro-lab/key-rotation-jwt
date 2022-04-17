@@ -4,12 +4,7 @@ import java.security.Signature
 import java.security.spec.ECGenParameterSpec
 
 class JwtEs384: JwtEs() {
-    companion object {
-        private val ecGenParameterSpec = ECGenParameterSpec("secp384r1")
-        private val signature = Signature.getInstance("SHA384withECDSAinP1363Format")
-    }
-
     override fun algorithm(): String = "ES384"
-    override fun getECGenParameterSpec(): ECGenParameterSpec = ecGenParameterSpec
-    override fun getSignature(): Signature = signature
+    override fun getECGenParameterSpec(): ECGenParameterSpec = ECGenParameterSpec("secp384r1")
+    override fun getSignature(): Signature = Signature.getInstance("SHA384withECDSAinP1363Format")
 }
