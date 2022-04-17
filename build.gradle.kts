@@ -15,7 +15,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  *    - ex windows path) C:/Users/<USER_NAME>/.gradle/gradle.properties
  *    sonatype.username=<username>
  *    sonatype.password=<password>
- *    signing.keyId=<last 16 chars in key>
+ *    signing.keyId=<last 8/16 chars in key>
  *    signing.password=<secret>
  *    signing.secretKeyRingFile=<path of secring.gpg>
  *
@@ -26,6 +26,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  * https://github.com/saro-lab/jwt
  * https://docs.gradle.org/current/userguide/publishing_maven.html
  * https://docs.gradle.org/current/userguide/signing_plugin.html#signing_plugin
+ * windows -> pgp4win
+ * gpg --gen-key
+ * gpg --list-keys --keyid-format short
+ * gpg --export-secret-keys -o secring.gpg
  */
 
 plugins {
