@@ -6,6 +6,9 @@ import javax.crypto.spec.SecretKeySpec
 data class JwtHsKey(
     val key: SecretKeySpec
 ): JwtKey {
+    override fun algorithm(): String =
+        key.algorithm
+
     override fun stringify(): String =
         key.algorithm + ":" + String(key.encoded, Charsets.UTF_8)
 

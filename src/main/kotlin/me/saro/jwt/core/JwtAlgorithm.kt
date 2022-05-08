@@ -19,5 +19,7 @@ interface JwtAlgorithm {
     fun verify(jwt: String, key: JwtKey): Boolean
 
     fun newRandomJwtKey(): JwtKey
+
+    @Throws(JwtException::class)
     fun toJwtKey(key: String): JwtKey
 }

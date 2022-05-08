@@ -2,7 +2,7 @@ package me.saro.jwt.core
 
 import com.fasterxml.jackson.databind.ObjectMapper
 
-class JwtHeader private constructor(
+class JwtHeader(
     private val header: Map<String, Any>
 ) {
     companion object {
