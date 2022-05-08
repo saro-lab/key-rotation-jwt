@@ -8,11 +8,28 @@ import java.util.*
 class JwtClaims constructor(
     private val claims: MutableMap<String, Any>
 ) {
+    companion object {
+        @JvmStatic
+        fun create(): JwtClaims {
+            return JwtClaims(mutableMapOf())
+        }
+    }
+
     fun claim(key: String, value: Any): JwtClaims {
         claims[key] = value
         return this
     }
     fun claim(key: String): Any? = claims[key]
+    fun claimLong(key: String): Long? {
+        val v = claims[key]
+            ?: return null
+        return when (v) {
+            is Int -> v.toLong()
+            is Long -> v
+            is String -> v.toLong()
+            else -> v.toString().toLong()
+        }
+    }
 
     fun issuer() = claim("iss")
     fun issuer(value: Any) = claim("iss", value)
@@ -26,15 +43,15 @@ class JwtClaims constructor(
     fun id() = claim("jti") as String?
     fun id(value: String) = claim("jti", value)
 
-    fun notBefore() = claim("nbf")?.let { Date(1000L * it as Long) }
+    fun notBefore() = claimLong("nbf")?.let { Date(1000L * it) }
     fun notBefore(date: Date) = claim("nbf", date.time / 1000L)
     fun notBefore(date: OffsetDateTime) = claim("nbf", date.toEpochSecond())
 
-    fun issuedAt() = claim("iat")?.let { Date(1000L * it as Long) }
+    fun issuedAt() = claimLong("iat")?.let { Date(1000L * it) }
     fun issuedAt(date: Date) = claim("iat", date.time / 1000L)
     fun issuedAt(date: OffsetDateTime) = claim("iat", date.toEpochSecond())
 
-    fun expire() = claim("exp")?.let { Date(1000L * it as Long) }
+    fun expire(): Date? = claimLong("exp")?.let { Date(1000L * it) }
     fun expire(date: Date) = claim("exp", date.time / 1000L)
     fun expire(date: OffsetDateTime) = claim("exp", date.toEpochSecond())
 
