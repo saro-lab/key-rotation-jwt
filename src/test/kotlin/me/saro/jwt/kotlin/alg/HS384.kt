@@ -16,13 +16,13 @@ class HS384 {
 
         val jwt = "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.bQTnz6AuMJvmXXQsVPrxeQNvzDkimo7VNXxHeSBfClLufmCVZRUuyTwJF311JHuh"
         val secret = "your-384-bit-secret"
-        val key = alg.getJwtKey(secret)
+        val key = alg.toJwtKey(secret)
 
         println("example")
         Assertions.assertDoesNotThrow<JwtClaims> { alg.toJwtClaims(jwt, key) }
         println("example jwt toJwt - pass")
 
-        Assertions.assertThrows(JwtException::class.java) { alg.toJwtClaims(jwt, alg.getJwtKey("is not key")) }
+        Assertions.assertThrows(JwtException::class.java) { alg.toJwtClaims(jwt, alg.toJwtKey("is not key")) }
         println("example jwt error text - pass")
     }
 }

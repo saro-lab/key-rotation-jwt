@@ -8,22 +8,27 @@ import java.util.*
 
 class JwtUtils {
     companion object {
-        private val OBJECT_MAPPER = ObjectMapper()
-        private val DE_BASE64_URL = Base64.getUrlDecoder()
-        private val EN_BASE64_URL_WOP = Base64.getUrlEncoder().withoutPadding()
+        private val OBJECT_MAPPER: ObjectMapper = ObjectMapper()
+        private val DE_BASE64_URL: Base64.Decoder = Base64.getUrlDecoder()
         private val TYPE_MAP = object: TypeReference<MutableMap<String, Any>>() {}
+        private val DE_BASE64: Base64.Decoder = Base64.getDecoder()
+
+        private val EN_BASE64_URL_WOP: Base64.Encoder = Base64.getUrlEncoder().withoutPadding()
 
         fun toJsonString(obj: Any): String = OBJECT_MAPPER.writeValueAsString(obj)
+        
+        fun decodeBase64(src: String): ByteArray = DE_BASE64.decode(src)
 
-        fun encodeBase64UrlWop(obj: Any): String =
-            EN_BASE64_URL_WOP.encodeToString(OBJECT_MAPPER.writeValueAsBytes(obj))
+        fun decodeBase64Url(src: String): ByteArray = DE_BASE64_URL.decode(src)
+
+        fun encodeToBase64UrlWopString(src: ByteArray): String = EN_BASE64_URL_WOP.encodeToString(src)
 
         /** jwt data is header + payload */
         fun toJwtData(header: Map<String, Any>, claims: Map<String, Any>): String =
             StringBuilder(200)
-                .append(encodeBase64UrlWop(header))
+                .append(encodeToBase64UrlWopString(OBJECT_MAPPER.writeValueAsBytes(header)))
                 .append('.')
-                .append(encodeBase64UrlWop(claims))
+                .append(encodeToBase64UrlWopString(OBJECT_MAPPER.writeValueAsBytes(claims)))
                 .toString()
 
         @Throws(JwtException::class)

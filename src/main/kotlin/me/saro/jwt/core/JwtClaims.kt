@@ -1,5 +1,7 @@
 package me.saro.jwt.core
 
+import me.saro.jwt.exception.JwtException
+import me.saro.jwt.exception.JwtExceptionCode
 import java.time.OffsetDateTime
 import java.util.*
 
@@ -39,4 +41,11 @@ class JwtClaims constructor(
     override fun toString(): String = JwtUtils.toJsonString(claims)
 
     fun toMap(): Map<String, Any> = claims.toMutableMap()
+
+    @Throws(JwtException::class)
+    fun assertExpire() {
+        if (expire() != null && expire()!!.before(Date())) {
+            throw JwtException(JwtExceptionCode.DATE_EXPIRED)
+        }
+    }
 }

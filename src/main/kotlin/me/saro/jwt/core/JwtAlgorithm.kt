@@ -1,8 +1,6 @@
 package me.saro.jwt.core
 
 import me.saro.jwt.exception.JwtException
-import me.saro.jwt.exception.JwtExceptionCode
-import java.util.*
 
 interface JwtAlgorithm {
     fun algorithm(): String
@@ -46,28 +44,5 @@ interface JwtAlgorithm {
         try { toJwtClaims(jwt, key) } catch (e: Exception) { null }
 
     @Throws(JwtException::class)
-    fun toJwtClaims(jwt: String, key: JwtKey?): JwtClaims {
-        val header = toJwtHeader(jwt)
-        if (key == null) {
-            throw JwtException(JwtExceptionCode.JWT_KEY_IS_NULL)
-        }
-        if (header.algorithm != algorithm()) {
-            throw JwtException(JwtExceptionCode.NOT_EQUALS_HEADER_ALGORITHM)
-        }
-        val firstPoint = jwt.indexOf('.')
-        val lastPoint = jwt.lastIndexOf('.')
-        if (firstPoint < lastPoint && firstPoint != -1) {
-            if (signature(jwt.substring(0, lastPoint), key) == jwt.substring(lastPoint + 1)) {
-                val claims = JwtUtils.toJwtClaimsWithoutVerify(jwt)
-                if (claims.expire() != null && claims.expire()!!.before(Date())) {
-                    throw JwtException(JwtExceptionCode.DATE_EXPIRED)
-                }
-                return claims
-            } else {
-                throw JwtException(JwtExceptionCode.INVALID_SIGNATURE)
-            }
-        } else {
-            throw JwtException(JwtExceptionCode.PARSE_ERROR)
-        }
-    }
+    fun toJwtClaims(jwt: String, key: JwtKey?): JwtClaims
 }
