@@ -1,32 +1,23 @@
 package me.saro.jwt.core
 
-import java.util.function.Function
+import me.saro.jwt.exception.JwtException
 
 interface JwtAlgorithm {
-
-    fun toJwtObjectWithVerify(jwt: String, searchJwtKey: Function<Any?, JwtKey?>): JwtObject
-
-    fun toJwtObjectWithVerify(jwt: String, jwtKey: JwtKey): JwtObject =
-        toJwtObjectWithVerify(jwt) { jwtKey }
-
-    fun toJwtObjectWithVerifyOrNull(jwt: String, searchJwtKey: Function<Any?, JwtKey?>): JwtObject? =
-        try { toJwtObjectWithVerify(jwt, searchJwtKey) } catch (e: Exception) { null }
-
-    fun toJwtObjectWithVerifyOrNull(jwt: String, jwtKey: JwtKey): JwtObject? =
-        try { toJwtObjectWithVerify(jwt) { jwtKey } } catch (e: Exception) { null }
-
-    fun verify(jwt: String, jwtKey: JwtKey): Boolean =
-        toJwtObjectWithVerifyOrNull(jwt, jwtKey) != null
-
     fun algorithm(): String
-    fun signature(body: String, jwtKey: JwtKey): String
 
-    fun randomJwtKey(): JwtKey
-    fun parseJwtKey(keyData: String): JwtKey
+    @Throws(JwtException::class)
+    fun toJwtHeader(jwt: String?): JwtHeader
 
-    fun createJwtObject(): JwtObject =
-        JwtObject.create(algorithm())
+    @Throws(JwtException::class)
+    fun toJwtClaims(jwt: String?): JwtClaims
 
-    fun toJwt(jwtObject: JwtObject, jwtKey: JwtKey): String =
-        jwtObject.toJwtBody().run { this + '.' + signature(this, jwtKey) }
+    fun toJwt(jwtClaims: JwtClaims, header: Map<String, Any>): String
+
+    fun toJwt(jwtClaims: JwtClaims): String
+        = toJwt(jwtClaims, mapOf())
+
+    fun verify(jwt: String, key: JwtKey): Boolean
+
+    fun newRandomJwtKey(): JwtKey
+    fun toJwtKey(key: String): JwtKey
 }

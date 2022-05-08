@@ -1,7 +1,6 @@
 package me.saro.jwt.kotlin.alg
 
 import me.saro.jwt.alg.hs.JwtHs256
-import me.saro.jwt.core.JwtObject
 import me.saro.jwt.exception.JwtException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
