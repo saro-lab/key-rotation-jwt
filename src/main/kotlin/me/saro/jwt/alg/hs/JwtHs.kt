@@ -1,17 +1,14 @@
 package me.saro.jwt.alg.hs
 
-import me.saro.jwt.core.AbstractJwtAlgorithm
 import me.saro.jwt.core.JwtAlgorithm
-import me.saro.jwt.core.JwtClaims
 import me.saro.jwt.core.JwtKey
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
 import java.util.*
-import java.util.function.Function
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-abstract class JwtHs: AbstractJwtAlgorithm() {
+abstract class JwtHs: JwtAlgorithm {
     companion object {
         private val MOLD = "1234567890!@#$%^&*()+=-_/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
         private val MOLD_LEN = MOLD.size
@@ -19,14 +16,7 @@ abstract class JwtHs: AbstractJwtAlgorithm() {
     }
 
     abstract fun getKeyAlgorithm(): String
-
-    override fun toJwt(jwtClaims: JwtClaims, header: Map<String, Any>): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun verify(jwt: String, key: JwtKey): Boolean {
-        TODO("Not yet implemented")
-    }
+    abstract fun getMac(): Mac
 
     @Throws(JwtException::class)
     override fun toJwtKey(key: String): JwtKey = try {
@@ -54,44 +44,11 @@ abstract class JwtHs: AbstractJwtAlgorithm() {
         return getJwtKey(chars.toString())
     }
 
-//    fun signature(body: String, jwtKey: JwtKey): String {
-//        val mac = getMac()
-//            .apply { init((jwtKey as JwtHsKey).key) }
-//        return EN_BASE64_URL_WOP.encodeToString(mac.doFinal(body.toByteArray()))
-//    }
-
-
-
-//    abstract fun getKeyAlgorithm(): String
-//
-//    abstract fun getMac(): Mac
-//
-
-//
-
-//
-
-//
-
-//
-//    override fun toJwtObjectWithVerify(jwt: String, searchJwtKey: Function<Any?, JwtKey?>): JwtObject {
-//        val jwtObject = JwtObject.parse(jwt)
-//        val jwtKey = searchJwtKey.apply(jwtObject.kid())
-//            ?: throw JwtException("does not found kid : ${jwtObject.kid()}")
-//        if (jwtObject.header("alg") != algorithm()) {
-//            throw JwtException("algorithm does not matched jwt : $jwt")
-//        }
-//        val firstPoint = jwt.indexOf('.')
-//        val lastPoint = jwt.lastIndexOf('.')
-//        if (firstPoint < lastPoint && firstPoint != -1) {
-//            if (signature(jwt.substring(0, lastPoint), jwtKey) == jwt.substring(lastPoint + 1)) {
-//                return jwtObject
-//            }
-//        }
-//        throw JwtException("invalid jwt : $jwt")
-//    }
-//
-//    override fun parseJwtKey(keyData: String): JwtKey {
-
-//    }
+    @Throws(JwtException::class)
+    override fun signature(body: String, jwtKey: JwtKey): String = try {
+        val mac = getMac().apply { init((jwtKey as JwtHsKey).key) }
+        EN_BASE64_URL_WOP.encodeToString(mac.doFinal(body.toByteArray()))
+    } catch (e: Exception) {
+        throw JwtException(JwtExceptionCode.PARSE_ERROR)
+    }
 }

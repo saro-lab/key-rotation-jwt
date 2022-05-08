@@ -5,9 +5,12 @@ enum class JwtExceptionCode {
     PARSE_ERROR,
 
     // HEADER
-    NOT_DEFINED_HEADER_ALGORITHM,
     NOT_EQUALS_HEADER_ALGORITHM,
 
+    // KEY
+    JWT_KEY_IS_NULL,
+    INVALID_SIGNATURE,
+
     // CLAIMS
-    EXPIRED_DATE
+    DATE_EXPIRED
 }

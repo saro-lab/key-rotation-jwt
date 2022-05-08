@@ -11,21 +11,17 @@ public class HS256 {
     @Test
     @DisplayName("check jwt.io example")
     public void t1() {
-        var exJwtBody = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ";
-        var exJwtSign = "SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-        var secret = "your-256-bit-secret";
-
         var alg = new JwtHs256();
+
+        var jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+        var secret = "your-256-bit-secret";
         var key = alg.getJwtKey(secret);
 
-        var newJwtSign = alg.signature(exJwtBody, key);
+        System.out.println("example");
+        Assertions.assertDoesNotThrow(() -> alg.toJwtClaims(jwt, key));
+        System.out.println("example jwt toJwt - pass");
 
-        Assertions.assertEquals(exJwtSign, newJwtSign);
-
-        System.out.println(Assertions.assertDoesNotThrow(() -> alg.toJwtObjectWithVerify(exJwtBody + "." + exJwtSign, key)));
-        System.out.println(Assertions.assertDoesNotThrow(() -> alg.toJwtObjectWithVerify(exJwtBody + "." + newJwtSign, key)));
-
-        Assertions.assertThrows(JwtException.class, () -> alg.toJwtObjectWithVerify(exJwtBody + "." + exJwtSign+"1", key));
-        Assertions.assertThrows(JwtException.class, () -> alg.toJwtObjectWithVerify(exJwtBody + "." + newJwtSign+"1", key));
+        Assertions.assertThrows(JwtException.class, () -> alg.toJwtClaims(jwt, alg.getJwtKey("is not key")));
+        System.out.println("example jwt error text - pass");
     }
 }

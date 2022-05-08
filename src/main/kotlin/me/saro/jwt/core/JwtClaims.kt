@@ -37,4 +37,6 @@ class JwtClaims constructor(
     fun expire(date: OffsetDateTime) = claim("exp", date.toEpochSecond())
 
     override fun toString(): String = JwtUtils.toJsonString(claims)
+
+    fun toMap(): Map<String, Any> = claims.toMutableMap()
 }
