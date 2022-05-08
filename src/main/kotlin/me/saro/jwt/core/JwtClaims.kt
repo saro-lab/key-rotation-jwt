@@ -36,6 +36,5 @@ class JwtClaims constructor(
     fun expire(date: Date) = claim("exp", date.time / 1000L)
     fun expire(date: OffsetDateTime) = claim("exp", date.toEpochSecond())
 
-    override fun toString(): String =
-        claims.toString()
+    override fun toString(): String = JwtUtils.toJsonString(claims)
 }
