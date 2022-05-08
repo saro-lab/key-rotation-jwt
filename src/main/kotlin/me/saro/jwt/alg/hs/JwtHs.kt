@@ -56,7 +56,7 @@ abstract class JwtHs: JwtAlgorithm {
         val lastPoint = jwt.lastIndexOf('.')
         if (firstPoint < lastPoint && firstPoint != -1) {
             if (signature(jwt.substring(0, lastPoint), key) == jwt.substring(lastPoint + 1)) {
-                return JwtUtils.toJwtClaimsWithoutVerify(jwt).apply { assertExpire() }
+                return JwtUtils.toJwtClaimsWithoutVerify(jwt).apply { assert() }
             } else {
                 throw JwtException(JwtExceptionCode.INVALID_SIGNATURE)
             }

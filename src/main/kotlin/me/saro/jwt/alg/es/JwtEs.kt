@@ -55,7 +55,7 @@ abstract class JwtEs: JwtAlgorithm{
             signature.initVerify((key as JwtEsKey).keyPair.public)
             signature.update(jwt.substring(0, lastPoint).toByteArray())
             if (signature.verify(JwtUtils.decodeBase64Url(jwt.substring(lastPoint + 1)))) {
-                return JwtUtils.toJwtClaimsWithoutVerify(jwt).apply { assertExpire() }
+                return JwtUtils.toJwtClaimsWithoutVerify(jwt).apply { assert() }
             } else {
                 throw JwtException(JwtExceptionCode.INVALID_SIGNATURE)
             }

@@ -65,4 +65,16 @@ class JwtClaims constructor(
             throw JwtException(JwtExceptionCode.DATE_EXPIRED)
         }
     }
+
+    @Throws(JwtException::class)
+    fun assertNotBefore() {
+        if (notBefore() != null && notBefore()!!.after(Date())) {
+            throw JwtException(JwtExceptionCode.DATE_EXPIRED)
+        }
+    }
+
+    fun assert() {
+        assertExpire()
+        assertNotBefore()
+    }
 }
