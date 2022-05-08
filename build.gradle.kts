@@ -33,7 +33,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  */
 
 plugins {
-	val kotlinVersion = "1.5.31"
+	val kotlinVersion = "1.6.21"
 	kotlin("jvm") version kotlinVersion
 	kotlin("kapt") version kotlinVersion
 	signing
@@ -42,7 +42,7 @@ plugins {
 
 val jwtGroupId = "me.saro"
 val jwtArtifactId = "jwt"
-val jwtVersion = "1.0.2"
+val jwtVersion = "2.0.0"
 
 configure<JavaPluginExtension> {
 	sourceCompatibility = JavaVersion.VERSION_11
