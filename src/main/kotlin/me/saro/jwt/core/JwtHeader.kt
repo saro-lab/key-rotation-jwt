@@ -1,13 +1,9 @@
 package me.saro.jwt.core
 
-import com.fasterxml.jackson.databind.ObjectMapper
-
 class JwtHeader(
     private val header: Map<String, Any>
 ) {
     companion object {
-        private val OBJECT_MAPPER = ObjectMapper()
-
         @JvmStatic
         fun create(algorithm: String): JwtHeader =
             JwtHeader(mapOf("typ" to "JWT", "alg" to algorithm))
@@ -27,5 +23,5 @@ class JwtHeader(
 
     fun toMap(): MutableMap<String, Any> = header.toMutableMap()
 
-    override fun toString(): String = OBJECT_MAPPER.writeValueAsString(header)
+    override fun toString(): String = JwtUtils.toJsonString(header)
 }
