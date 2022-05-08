@@ -1,3 +1,3 @@
 package me.saro.jwt.exception
 
-class JwtException(override val message: String): SecurityException(message)
+class JwtException(val code: JwtExceptionCode, override val message: String? = null): RuntimeException(message ?: code.toString())
