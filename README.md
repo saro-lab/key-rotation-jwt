@@ -24,6 +24,13 @@ compile 'me.saro:jwt:2.0.1'
 ```
 
 ## Java Example
+- [Example](https://github.com/saro-lab/jwt/blob/main/src/test/java/me/saro/jwt/java/core/Example.java)
+
+## Kotlin Example
+- [Example](https://github.com/saro-lab/jwt/blob/main/src/test/kotlin/me/saro/jwt/kotlin/core/Example.kt)
+
+
+## Java Test Code
 - [ES256](https://github.com/saro-lab/jwt/blob/main/src/test/java/me/saro/jwt/java/alg/ES256.java)
 - [ES384](https://github.com/saro-lab/jwt/blob/main/src/test/java/me/saro/jwt/java/alg/ES384.java)
 - [ES512](https://github.com/saro-lab/jwt/blob/main/src/test/java/me/saro/jwt/java/alg/ES512.java)
@@ -33,7 +40,7 @@ compile 'me.saro:jwt:2.0.1'
 - [HS512](https://github.com/saro-lab/jwt/blob/main/src/test/java/me/saro/jwt/java/alg/HS512.java)
 - [HSThreadTest](https://github.com/saro-lab/jwt/blob/main/src/test/java/me/saro/jwt/java/alg/HSThreadTest.java)
 
-## Kotlin Example
+## Kotlin Test Code
 - [ES256](https://github.com/saro-lab/jwt/blob/main/src/test/kotlin/me/saro/jwt/kotlin/alg/ES256.kt)
 - [ES384](https://github.com/saro-lab/jwt/blob/main/src/test/kotlin/me/saro/jwt/kotlin/alg/ES384.kt)
 - [ES512](https://github.com/saro-lab/jwt/blob/main/src/test/kotlin/me/saro/jwt/kotlin/alg/ES512.kt)
@@ -50,4 +57,5 @@ compile 'me.saro:jwt:2.0.1'
 
 ## see
 - [가리사니 개발자공간](https://gs.saro.me)
+- [JWT 라이브러리](https://gs.saro.me/lab?topicId=372)
 
