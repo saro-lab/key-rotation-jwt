@@ -33,7 +33,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  */
 
 plugins {
-	val kotlinVersion = "1.6.21"
+	val kotlinVersion = "1.7.10"
 	kotlin("jvm") version kotlinVersion
 	kotlin("kapt") version kotlinVersion
 	signing
@@ -64,7 +64,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
 	// jackson
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.2")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
 
 	// test
 	val junitVer = "5.8.2"
