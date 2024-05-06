@@ -33,7 +33,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  */
 
 plugins {
-	val kotlinVersion = "1.9.20-RC2"
+	val kotlinVersion = "2.0.0-RC1"
 	id("org.jetbrains.kotlin.jvm") version kotlinVersion
 	id("org.jetbrains.kotlin.kapt") version kotlinVersion
 	signing
@@ -59,15 +59,11 @@ java {
 }
 
 dependencies {
-	// koltin
-	//implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-	//implementation("org.jetbrains.kotlin:kotlin-reflect")
-
 	// jackson
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.0")
 
 	// test
-	val junitVer = "5.10.0"
+	val junitVer = "5.10.2"
 	testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVer")
 	testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVer")
 }
