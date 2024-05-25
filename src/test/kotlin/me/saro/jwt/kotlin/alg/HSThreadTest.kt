@@ -59,7 +59,7 @@ class HSThreadTest {
                     jwt!!, alg.newRandomJwtKey()
                 )
             }
-            Assertions.assertEquals(jc.id(), "abc")
+            Assertions.assertEquals(jc.id, "abc")
         }
         println("done")
     }

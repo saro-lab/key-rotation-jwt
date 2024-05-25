@@ -72,7 +72,7 @@ class ES512 {
             Assertions.assertThrows(
                 JwtException::class.java
             ) { alg.toJwtClaims(jwt!!, alg.newRandomJwtKey()) }
-            Assertions.assertEquals(jc.id(), "abc")
+            Assertions.assertEquals(jc.id, "abc")
         }
         println("done")
     }
@@ -133,10 +133,10 @@ class ES512 {
             )
         }
         println(njc)
-        Assertions.assertEquals(njc.id(), "jti value")
-        Assertions.assertEquals(njc.issuer(), "iss value")
-        Assertions.assertEquals(njc.subject(), "sub value")
-        Assertions.assertEquals(njc.audience(), "aud value")
+        Assertions.assertEquals(njc.id, "jti value")
+        Assertions.assertEquals(njc.issuer, "iss value")
+        Assertions.assertEquals(njc.subject, "sub value")
+        Assertions.assertEquals(njc.audience, "aud value")
         Assertions.assertEquals(njc.claim("custom"), "custom value")
     }
 }

@@ -44,10 +44,10 @@ class Example {
 
         println(newClaims)
 
-        Assertions.assertEquals(newClaims.id(), "jti value")
-        Assertions.assertEquals(newClaims.issuer(), "iss value")
-        Assertions.assertEquals(newClaims.subject(), "sub value")
-        Assertions.assertEquals(newClaims.audience(), "aud value")
+        Assertions.assertEquals(newClaims.id, "jti value")
+        Assertions.assertEquals(newClaims.issuer, "iss value")
+        Assertions.assertEquals(newClaims.subject, "sub value")
+        Assertions.assertEquals(newClaims.audience, "aud value")
         Assertions.assertEquals(newClaims.claim("custom"), "custom value")
     }
 
@@ -100,10 +100,10 @@ class Example {
             println(header)
             println(claims)
 
-            Assertions.assertEquals(claims.id(), "jti value $i")
-            Assertions.assertEquals(claims.issuer(), "iss value $i")
-            Assertions.assertEquals(claims.subject(), "sub value $i")
-            Assertions.assertEquals(claims.audience(), "aud value $i")
+            Assertions.assertEquals(claims.id, "jti value $i")
+            Assertions.assertEquals(claims.issuer, "iss value $i")
+            Assertions.assertEquals(claims.subject, "sub value $i")
+            Assertions.assertEquals(claims.audience, "aud value $i")
             Assertions.assertEquals(claims.claim("custom"), "custom value $i")
         }
     }
