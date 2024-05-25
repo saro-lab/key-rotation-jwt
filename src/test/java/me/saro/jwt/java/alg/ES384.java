@@ -68,7 +68,7 @@ public class ES384 {
             var jc = Assertions.assertDoesNotThrow(() -> alg.toJwtClaims(jwt, key));
             Assertions.assertThrows(JwtException.class, () -> alg.toJwtClaims(jwt, alg.newRandomJwtKey()));
 
-            Assertions.assertEquals(jc.id(), "abc");
+            Assertions.assertEquals(jc.getId(), "abc");
         });
         System.out.println("done");
     }
@@ -129,10 +129,10 @@ public class ES384 {
 
         System.out.println(njc);
 
-        Assertions.assertEquals(njc.id(), "jti value");
-        Assertions.assertEquals(njc.issuer(), "iss value");
-        Assertions.assertEquals(njc.subject(), "sub value");
-        Assertions.assertEquals(njc.audience(), "aud value");
+        Assertions.assertEquals(njc.getId(), "jti value");
+        Assertions.assertEquals(njc.getIssuer(), "iss value");
+        Assertions.assertEquals(njc.getSubject(), "sub value");
+        Assertions.assertEquals(njc.getAudience(), "aud value");
         Assertions.assertEquals(njc.claim("custom"), "custom value");
     }
 }

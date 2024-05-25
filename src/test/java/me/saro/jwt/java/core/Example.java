@@ -46,10 +46,10 @@ public class Example {
 
         System.out.println(newClaims);
 
-        Assertions.assertEquals(newClaims.id(), "jti value");
-        Assertions.assertEquals(newClaims.issuer(), "iss value");
-        Assertions.assertEquals(newClaims.subject(), "sub value");
-        Assertions.assertEquals(newClaims.audience(), "aud value");
+        Assertions.assertEquals(newClaims.getId(), "jti value");
+        Assertions.assertEquals(newClaims.getIssuer(), "iss value");
+        Assertions.assertEquals(newClaims.getSubject(), "sub value");
+        Assertions.assertEquals(newClaims.getAudience(), "aud value");
         Assertions.assertEquals(newClaims.claim("custom"), "custom value");
     }
 
@@ -104,10 +104,10 @@ public class Example {
             System.out.println(header);
             System.out.println(claims);
 
-            Assertions.assertEquals(claims.id(), "jti value " + i);
-            Assertions.assertEquals(claims.issuer(), "iss value " + i);
-            Assertions.assertEquals(claims.subject(), "sub value " + i);
-            Assertions.assertEquals(claims.audience(), "aud value " + i);
+            Assertions.assertEquals(claims.getId(), "jti value " + i);
+            Assertions.assertEquals(claims.getIssuer(), "iss value " + i);
+            Assertions.assertEquals(claims.getSubject(), "sub value " + i);
+            Assertions.assertEquals(claims.getAudience(), "aud value " + i);
             Assertions.assertEquals(claims.claim("custom"), "custom value " + i);
         }
     }

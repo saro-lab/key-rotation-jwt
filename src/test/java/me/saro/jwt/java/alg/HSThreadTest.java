@@ -60,7 +60,7 @@ public class HSThreadTest {
             var jc = Assertions.assertDoesNotThrow(() -> alg.toJwtClaims(jwt, key));
             Assertions.assertThrows(JwtException.class, () -> alg.toJwtClaims(jwt, alg.newRandomJwtKey()));
 
-            Assertions.assertEquals(jc.id(), "abc");
+            Assertions.assertEquals(jc.getId(), "abc");
         });
         System.out.println("done");
     }
