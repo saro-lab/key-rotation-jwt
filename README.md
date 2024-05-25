@@ -6,12 +6,12 @@
 
 ## gradle kts
 ```
-implementation('me.saro:jwt:2.0.1')
+implementation('me.saro:jwt:2.1.0')
 ```
 
 ## gradle
 ```
-compile 'me.saro:jwt:2.0.1'
+compile 'me.saro:jwt:2.1.0'
 ```
 
 ## maven
@@ -19,7 +19,7 @@ compile 'me.saro:jwt:2.0.1'
 <dependency>
   <groupId>me.saro</groupId>
   <artifactId>jwt</artifactId>
-  <version>2.0.1</version>
+  <version>2.1.0</version>
 </dependency>
 ```
 
@@ -56,6 +56,6 @@ compile 'me.saro:jwt:2.0.1'
 - https://mvnrepository.com/artifact/me.saro/jwt
 
 ## see
-- [가리사니 개발자공간](https://gs.saro.me)
+- [가리사니의 조각들...](https://gs.saro.me)
 - [JWT 라이브러리](https://gs.saro.me/lab?topicId=372)
 
