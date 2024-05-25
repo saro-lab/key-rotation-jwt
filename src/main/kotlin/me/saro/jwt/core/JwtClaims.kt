@@ -5,7 +5,7 @@ import me.saro.jwt.exception.JwtExceptionCode
 import java.time.OffsetDateTime
 import java.util.*
 
-class JwtClaims constructor(
+class JwtClaims (
     private val claims: MutableMap<String, Any>
 ) {
     companion object {
@@ -31,27 +31,27 @@ class JwtClaims constructor(
         }
     }
 
-    fun issuer() = claim("iss")
+    val issuer: Any? get() = claim("iss")
     fun issuer(value: Any) = claim("iss", value)
 
-    fun subject() = claim("sub") as String?
+    val subject: String? get() = claim("sub") as String?
     fun subject(value: String) = claim("sub", value)
 
-    fun audience() = claim("aud") as String?
+    val audience: String? get() = claim("aud") as String?
     fun audience(value: String) = claim("aud", value)
 
-    fun id() = claim("jti") as String?
+    val id: String? get() = claim("jti") as String?
     fun id(value: String) = claim("jti", value)
 
-    fun notBefore() = claimLong("nbf")?.let { Date(1000L * it) }
+    val notBefore: Date? get() = claimLong("nbf")?.let { Date(1000L * it) }
     fun notBefore(date: Date) = claim("nbf", date.time / 1000L)
     fun notBefore(date: OffsetDateTime) = claim("nbf", date.toEpochSecond())
 
-    fun issuedAt() = claimLong("iat")?.let { Date(1000L * it) }
+    val issuedAt: Date? get() = claimLong("iat")?.let { Date(1000L * it) }
     fun issuedAt(date: Date) = claim("iat", date.time / 1000L)
     fun issuedAt(date: OffsetDateTime) = claim("iat", date.toEpochSecond())
 
-    fun expire(): Date? = claimLong("exp")?.let { Date(1000L * it) }
+    val expire: Date? get() = claimLong("exp")?.let { Date(1000L * it) }
     fun expire(date: Date) = claim("exp", date.time / 1000L)
     fun expire(date: OffsetDateTime) = claim("exp", date.toEpochSecond())
 
@@ -61,14 +61,14 @@ class JwtClaims constructor(
 
     @Throws(JwtException::class)
     fun assertExpire() {
-        if (expire() != null && expire()!!.before(Date())) {
+        if (expire != null && expire!!.before(Date())) {
             throw JwtException(JwtExceptionCode.DATE_EXPIRED)
         }
     }
 
     @Throws(JwtException::class)
     fun assertNotBefore() {
-        if (notBefore() != null && notBefore()!!.after(Date())) {
+        if (notBefore != null && notBefore!!.after(Date())) {
             throw JwtException(JwtExceptionCode.DATE_EXPIRED)
         }
     }

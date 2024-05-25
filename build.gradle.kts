@@ -33,7 +33,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  */
 
 plugins {
-	val kotlinVersion = "2.0.0-RC1"
+	val kotlinVersion = "2.0.0"
 	id("org.jetbrains.kotlin.jvm") version kotlinVersion
 	id("org.jetbrains.kotlin.kapt") version kotlinVersion
 	signing
@@ -42,7 +42,7 @@ plugins {
 
 val jwtGroupId = "me.saro"
 val jwtArtifactId = "jwt"
-val jwtVersion = "2.0.1"
+val jwtVersion = "2.1.0"
 
 configure<JavaPluginExtension> {
 	sourceCompatibility = JavaVersion.VERSION_21
@@ -60,7 +60,7 @@ java {
 
 dependencies {
 	// jackson
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.0")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.1")
 
 	// test
 	val junitVer = "5.10.2"
