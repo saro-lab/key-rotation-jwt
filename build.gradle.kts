@@ -35,7 +35,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	val kotlinVersion = "2.0.0"
 	id("org.jetbrains.kotlin.jvm") version kotlinVersion
-	id("org.jetbrains.kotlin.kapt") version kotlinVersion
 	signing
 	`maven-publish`
 }
@@ -43,11 +42,6 @@ plugins {
 val jwtGroupId = "me.saro"
 val jwtArtifactId = "jwt"
 val jwtVersion = "2.1.0"
-
-configure<JavaPluginExtension> {
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
-}
 
 repositories {
 	mavenCentral()
@@ -63,9 +57,8 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.1")
 
 	// test
-	val junitVer = "5.10.2"
-	testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVer")
-	testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVer")
+	testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks.withType<Test> {
@@ -136,9 +129,7 @@ tasks.withType<Javadoc>().configureEach {
 	}
 }
 
-tasks.withType<KotlinCompile> {
-	kotlinOptions {
-		freeCompilerArgs = listOf("-Xjsr305=strict")
-		jvmTarget = "21"
-	}
+configure<JavaPluginExtension> {
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
 }
