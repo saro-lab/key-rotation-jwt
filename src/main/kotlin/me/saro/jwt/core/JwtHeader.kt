@@ -16,13 +16,14 @@ class JwtHeader(
             JwtHeader(mapOf("typ" to "JWT", "alg" to algorithm, "kid" to kid))
     }
 
-    val kid: String? get() = get("kid") as String?
+    val kid: String? get() = get("kid")
 
-    val type: String? get() = get("typ") as String?
+    val type: String? get() = get("typ")
 
-    val algorithm: String? get() = get("alg") as String?
+    val algorithm: String? get() = get("alg")
 
-    fun get(key: String): Any? = header[key]
+    @Suppress("UNCHECKED_CAST")
+    fun <T> get(key: String): T? = header[key] as T?
 
     fun toMap(): MutableMap<String, Any> = header.toMutableMap()
 

@@ -1,37 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
-/**
- * SARO JWT
- *
- * + publish
- * 1. gradle publish
- * 2. https://oss.sonatype.org/
- * 3. Staging Repositories
- * 4. Close -> Release
- *
- * + publish setting
- * 1. create gpg
- * 2. set gradle.properties
- *    - ex windows path) C:/Users/<USER_NAME>/.gradle/gradle.properties
- *    sonatype.username=<username>
- *    sonatype.password=<password>
- *    signing.keyId=<last 8/16 chars in key>
- *    signing.password=<secret>
- *    signing.secretKeyRingFile=<path of secring.gpg>
- *
- * + you can use "User Token" instead of id & password.
- *     - https://oss.sonatype.org -> profile -> User Token
- *
- * @See
- * https://github.com/saro-lab/jwt
- * https://docs.gradle.org/current/userguide/publishing_maven.html
- * https://docs.gradle.org/current/userguide/signing_plugin.html#signing_plugin
- * windows -> pgp4win
- * gpg --gen-key
- * gpg --list-keys --keyid-format short
- * gpg --export-secret-keys -o secring.gpg
- */
-
 plugins {
 	val kotlinVersion = "2.0.0"
 	id("org.jetbrains.kotlin.jvm") version kotlinVersion

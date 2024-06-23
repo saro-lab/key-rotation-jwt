@@ -19,8 +19,8 @@ abstract class JwtHs: JwtAlgorithm {
     abstract fun getMac(): Mac
 
     @Throws(JwtException::class)
-    override fun toJwtKey(secret: String): JwtKey = try {
-        JwtHsKey(SecretKeySpec(secret.toByteArray(), getKeyAlgorithm()))
+    override fun toJwtKey(key: String): JwtKey = try {
+        JwtHsKey(SecretKeySpec(key.toByteArray(), getKeyAlgorithm()))
     } catch (e: Exception) {
         throw JwtException(JwtExceptionCode.PARSE_ERROR)
     }
@@ -49,13 +49,13 @@ abstract class JwtHs: JwtAlgorithm {
     }
 
     @Throws(JwtException::class)
-    override fun toJwtClaims(jwt: String, key: JwtKey?): JwtClaims {
-        key ?: throw JwtException(JwtExceptionCode.JWT_KEY_IS_NULL)
+    override fun toJwtClaims(jwt: String, jwtKey: JwtKey?): JwtClaims {
+        jwtKey ?: throw JwtException(JwtExceptionCode.JWT_KEY_IS_NULL)
         toJwtHeader(jwt).assertAlgorithm(algorithm())
         val firstPoint = jwt.indexOf('.')
         val lastPoint = jwt.lastIndexOf('.')
         if (firstPoint < lastPoint && firstPoint != -1) {
-            if (signature(jwt.substring(0, lastPoint), key) == jwt.substring(lastPoint + 1)) {
+            if (signature(jwt.substring(0, lastPoint), jwtKey) == jwt.substring(lastPoint + 1)) {
                 return JwtUtils.toJwtClaimsWithoutVerify(jwt).apply { assert() }
             } else {
                 throw JwtException(JwtExceptionCode.INVALID_SIGNATURE)

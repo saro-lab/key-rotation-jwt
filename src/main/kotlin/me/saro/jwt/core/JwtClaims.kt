@@ -3,6 +3,7 @@ package me.saro.jwt.core
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
 import java.time.OffsetDateTime
+import java.time.ZonedDateTime
 import java.util.*
 
 class JwtClaims (
@@ -15,45 +16,67 @@ class JwtClaims (
         }
     }
 
-    fun claim(key: String, value: Any): JwtClaims {
-        claims[key] = value
-        return this
+    fun claim(key: String, value: Any): JwtClaims = this.apply { claims[key] = value }
+    fun claimTimestamp(key: String, value: Date): JwtClaims = claim(key, value.time / 1000L)
+    fun claimTimestamp(key: String, value: OffsetDateTime): JwtClaims = claim(key, value.toEpochSecond())
+    fun claimTimestamp(key: String, value: ZonedDateTime): JwtClaims = claim(key, value.toEpochSecond())
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T> claim(key: String): T? = claims[key] as T?
+    fun claimBoolean(key: String): Boolean? = when (val v = claims[key]) {
+        null -> null
+        is Boolean -> v
+        is Int -> v != 0
+        is Long -> v != 0L
+        is String -> v.lowercase().matches("true|yes|on|1".toRegex())
+        else -> v.toString().lowercase().matches("true|yes|on|1".toRegex())
     }
-    fun claim(key: String): Any? = claims[key]
-    fun claimLong(key: String): Long? {
-        val v = claims[key]
-            ?: return null
-        return when (v) {
-            is Int -> v.toLong()
-            is Long -> v
-            is String -> v.toLong()
-            else -> v.toString().toLong()
-        }
+    fun claimInt(key: String): Int? = when (val v = claims[key]) {
+        null -> null
+        is Int -> v
+        is Long -> v.toInt()
+        is String -> if (v.isNotBlank()) v.toInt() else null
+        else -> v.toString().toInt()
+    }
+    fun claimLong(key: String): Long? = when (val v = claims[key]) {
+        null -> null
+        is Int -> v.toLong()
+        is Long -> v
+        is String -> if (v.isNotBlank()) v.toLong() else null
+        else -> v.toString().toLong()
+    }
+    fun claimDateByTimestamp(key: String): Date? = when (val v = claims[key]) {
+        null -> null
+        is Date -> v
+        else -> claimLong(key)?.let { Date(1000L * it) }
     }
 
     val issuer: Any? get() = claim("iss")
-    fun issuer(value: Any) = claim("iss", value)
+    fun issuer(value: Any): JwtClaims = claim("iss", value)
 
-    val subject: String? get() = claim("sub") as String?
-    fun subject(value: String) = claim("sub", value)
+    val subject: String? get() = claim("sub")
+    fun subject(value: String): JwtClaims = claim("sub", value)
 
-    val audience: String? get() = claim("aud") as String?
-    fun audience(value: String) = claim("aud", value)
+    val audience: String? get() = claim("aud")
+    fun audience(value: String): JwtClaims = claim("aud", value)
 
-    val id: String? get() = claim("jti") as String?
-    fun id(value: String) = claim("jti", value)
+    val id: String? get() = claim("jti")
+    fun id(value: String): JwtClaims = claim("jti", value)
 
-    val notBefore: Date? get() = claimLong("nbf")?.let { Date(1000L * it) }
-    fun notBefore(date: Date) = claim("nbf", date.time / 1000L)
-    fun notBefore(date: OffsetDateTime) = claim("nbf", date.toEpochSecond())
+    val notBefore: Date? get() = claimDateByTimestamp("nbf")
+    fun notBefore(date: Date): JwtClaims = claimTimestamp("nbf", date)
+    fun notBefore(date: OffsetDateTime): JwtClaims = claimTimestamp("nbf", date)
+    fun notBefore(date: ZonedDateTime): JwtClaims = claimTimestamp("nbf", date)
 
-    val issuedAt: Date? get() = claimLong("iat")?.let { Date(1000L * it) }
-    fun issuedAt(date: Date) = claim("iat", date.time / 1000L)
-    fun issuedAt(date: OffsetDateTime) = claim("iat", date.toEpochSecond())
+    val issuedAt: Date? get() = claimDateByTimestamp("iat")
+    fun issuedAt(date: Date): JwtClaims = claimTimestamp("iat", date)
+    fun issuedAt(date: OffsetDateTime): JwtClaims = claimTimestamp("iat", date)
+    fun issuedAt(date: ZonedDateTime): JwtClaims = claimTimestamp("iat", date)
 
-    val expire: Date? get() = claimLong("exp")?.let { Date(1000L * it) }
-    fun expire(date: Date) = claim("exp", date.time / 1000L)
-    fun expire(date: OffsetDateTime) = claim("exp", date.toEpochSecond())
+    val expire: Date? get() = claimDateByTimestamp("exp")
+    fun expire(date: Date): JwtClaims = claimTimestamp("exp", date)
+    fun expire(date: OffsetDateTime): JwtClaims = claimTimestamp("exp", date)
+    fun expire(date: ZonedDateTime): JwtClaims = claimTimestamp("exp", date)
 
     override fun toString(): String = JwtUtils.toJsonString(claims)
 

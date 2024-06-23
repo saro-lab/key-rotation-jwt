@@ -57,5 +57,5 @@ compile 'me.saro:jwt:2.1.0'
 
 ## see
 - [가리사니의 조각들...](https://gs.saro.me)
-- [JWT 라이브러리](https://gs.saro.me/lab?topicId=372)
+- [JWT 라이브러리](https://gs.saro.me/2022/05/09/%EB%B0%B1%EC%97%85-%EA%B0%80%EB%A6%AC%EC%82%AC%EB%8B%88-JWT-%EB%9D%BC%EC%9D%B4%EB%B8%8C%EB%9F%AC%EB%A6%AC.html)
 

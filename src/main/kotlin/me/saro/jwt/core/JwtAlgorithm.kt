@@ -8,12 +8,10 @@ interface JwtAlgorithm {
     fun newRandomJwtKey(): JwtKey
 
     @Throws(JwtException::class)
-    fun signature(body: String, key: JwtKey): String
+    fun signature(body: String, jwtKey: JwtKey): String
 
     @Throws(JwtException::class)
     fun toJwtKey(key: String): JwtKey
-
-    // default
 
     fun defaultHeader(): Map<String, Any> =
         mapOf("TYP" to "JWT", "alg" to algorithm())
@@ -23,26 +21,26 @@ interface JwtAlgorithm {
         JwtUtils.toJwtHeader(jwt)
 
     @Throws(JwtException::class)
-    fun toJwt(key: JwtKey, claims: JwtClaims) =
-        toJwt(key, claims, mapOf())
+    fun toJwt(jwtKey: JwtKey, claims: JwtClaims): String =
+        toJwt(jwtKey, claims, mapOf())
 
     @Throws(JwtException::class)
-    fun toJwt(key: JwtKey, claims: JwtClaims, kid: String) =
-        toJwt(key, claims, mapOf("kid" to kid))
+    fun toJwt(jwtKey: JwtKey, claims: JwtClaims, kid: String): String =
+        toJwt(jwtKey, claims, mapOf("kid" to kid))
 
     @Throws(JwtException::class)
-    fun toJwt(key: JwtKey, claims: JwtClaims, appendHeader: Map<String, Any>): String =
+    fun toJwt(jwtKey: JwtKey, claims: JwtClaims, appendHeader: Map<String, Any>): String =
         JwtUtils
             .toJwtData(this.defaultHeader() + appendHeader, claims.toMap())
-            .let { body -> StringBuilder(512).append(body).append('.').append(signature(body, key)).toString() }
+            .let { body -> StringBuilder(512).append(body).append('.').append(signature(body, jwtKey)).toString() }
 
     @Throws(JwtException::class)
     fun toJwtClaimsWithoutVerify(jwt: String?): JwtClaims =
         JwtUtils.toJwtClaimsWithoutVerify(jwt)
 
-    fun toJwtClaimsOrNull(jwt: String, key: JwtKey): JwtClaims? =
-        try { toJwtClaims(jwt, key) } catch (e: Exception) { null }
+    fun toJwtClaimsOrNull(jwt: String, jwtKey: JwtKey): JwtClaims? =
+        try { toJwtClaims(jwt, jwtKey) } catch (e: Exception) { null }
 
     @Throws(JwtException::class)
-    fun toJwtClaims(jwt: String, key: JwtKey?): JwtClaims
+    fun toJwtClaims(jwt: String, jwtKey: JwtKey?): JwtClaims
 }

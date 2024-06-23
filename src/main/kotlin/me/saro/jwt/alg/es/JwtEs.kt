@@ -45,14 +45,14 @@ abstract class JwtEs: JwtAlgorithm{
     }
 
     @Throws(JwtException::class)
-    override fun toJwtClaims(jwt: String, key: JwtKey?): JwtClaims {
-        key ?: throw JwtException(JwtExceptionCode.JWT_KEY_IS_NULL)
+    override fun toJwtClaims(jwt: String, jwtKey: JwtKey?): JwtClaims {
+        jwtKey ?: throw JwtException(JwtExceptionCode.JWT_KEY_IS_NULL)
         toJwtHeader(jwt).assertAlgorithm(algorithm())
         val firstPoint = jwt.indexOf('.')
         val lastPoint = jwt.lastIndexOf('.')
         if (firstPoint < lastPoint && firstPoint != -1) {
             val signature = getSignature()
-            signature.initVerify((key as JwtEsKey).keyPair.public)
+            signature.initVerify((jwtKey as JwtEsKey).keyPair.public)
             signature.update(jwt.substring(0, lastPoint).toByteArray())
             if (signature.verify(JwtUtils.decodeBase64Url(jwt.substring(lastPoint + 1)))) {
                 return JwtUtils.toJwtClaimsWithoutVerify(jwt).apply { assert() }

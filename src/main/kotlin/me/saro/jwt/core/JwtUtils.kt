@@ -2,13 +2,14 @@ package me.saro.jwt.core
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jsonMapper
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
 import java.util.*
 
 class JwtUtils {
     companion object {
-        private val OBJECT_MAPPER: ObjectMapper = ObjectMapper()
+        private val OBJECT_MAPPER: ObjectMapper = jsonMapper()
         private val DE_BASE64_URL: Base64.Decoder = Base64.getUrlDecoder()
         private val TYPE_MAP = object: TypeReference<MutableMap<String, Any>>() {}
         private val DE_BASE64: Base64.Decoder = Base64.getDecoder()
@@ -39,7 +40,14 @@ class JwtUtils {
         @JvmStatic
         @Throws(JwtException::class)
         fun toJwtHeader(jwt: String?): JwtHeader = try {
-            JwtHeader(OBJECT_MAPPER.readValue(DE_BASE64_URL.decode(jwt!!.substring(0, jwt!!.indexOf('.'))), TYPE_MAP))
+            if (jwt.isNullOrBlank()) {
+                throw JwtException(JwtExceptionCode.PARSE_ERROR)
+            }
+            val token = jwt.split('.')
+            if (token.size !in 2..3) {
+                throw JwtException(JwtExceptionCode.PARSE_ERROR)
+            }
+            JwtHeader(OBJECT_MAPPER.readValue(DE_BASE64_URL.decode(token[0]), TYPE_MAP))
         } catch (e: Exception) {
             throw JwtException(JwtExceptionCode.PARSE_ERROR)
         }
@@ -47,7 +55,14 @@ class JwtUtils {
         @JvmStatic
         @Throws(JwtException::class)
         fun toJwtClaimsWithoutVerify(jwt: String?): JwtClaims = try {
-            JwtClaims(OBJECT_MAPPER.readValue(DE_BASE64_URL.decode(jwt!!.substring(jwt!!.indexOf('.') + 1, jwt!!.lastIndexOf('.'))), TYPE_MAP))
+            if (jwt.isNullOrBlank()) {
+                throw JwtException(JwtExceptionCode.PARSE_ERROR)
+            }
+            val token = jwt.split('.')
+            if (token.size !in 2..3) {
+                throw JwtException(JwtExceptionCode.PARSE_ERROR)
+            }
+            JwtClaims(OBJECT_MAPPER.readValue(DE_BASE64_URL.decode(token[1]), TYPE_MAP))
         } catch (e: Exception) {
             throw JwtException(JwtExceptionCode.PARSE_ERROR)
         }
