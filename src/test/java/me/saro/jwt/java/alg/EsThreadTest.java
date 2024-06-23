@@ -1,9 +1,6 @@
 package me.saro.jwt.java.alg;
 
-import me.saro.jwt.core.Jwt;
-import me.saro.jwt.core.JwtAlgorithm;
-import me.saro.jwt.core.JwtClaims;
-import me.saro.jwt.core.JwtKey;
+import me.saro.jwt.core.*;
 import me.saro.jwt.exception.JwtException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -42,7 +39,7 @@ public class EsThreadTest {
             // but this case is unknown alg
             // use JwtUtils.toJwtHeader
             var jh = Jwt.toJwtHeader(jwt);
-            JwtAlgorithm _alg = null;
+            JwtAlgorithmKeyPair _alg = null;
             switch (jh.getAlgorithm()) {
                 case "ES256": _alg = Jwt.es256(); break;
                 case "ES384": _alg = Jwt.es384(); break;

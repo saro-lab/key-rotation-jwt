@@ -13,7 +13,7 @@ import java.util.*
 
 @DisplayName("[Java] example")
 class Example {
-    fun alg(): JwtAlgorithm = Jwt.es256()
+    fun alg() = Jwt.es256()
 
     @Test
     @DisplayName("basic")

@@ -1,9 +1,6 @@
 package me.saro.jwt.java.core;
 
-import me.saro.jwt.core.Jwt;
-import me.saro.jwt.core.JwtAlgorithm;
-import me.saro.jwt.core.JwtClaims;
-import me.saro.jwt.core.JwtKey;
+import me.saro.jwt.core.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +13,7 @@ import java.util.UUID;
 @DisplayName("[Java] example")
 public class Example {
 
-    public JwtAlgorithm alg() {
+    public JwtAlgorithmKeyPair alg() {
         return Jwt.es256();
     }
 

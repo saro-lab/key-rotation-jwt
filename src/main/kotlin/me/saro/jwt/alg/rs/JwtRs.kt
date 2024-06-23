@@ -1,4 +1,4 @@
-package me.saro.jwt.alg.es
+package me.saro.jwt.alg.rs
 
 import me.saro.jwt.core.*
 import me.saro.jwt.exception.JwtException
@@ -7,16 +7,14 @@ import java.security.KeyFactory
 import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.Signature
-import java.security.spec.ECGenParameterSpec
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 
-abstract class JwtEs: JwtAlgorithmKeyPair{
+abstract class JwtRs: JwtAlgorithmPemKeyPair{
     companion object {
-        private const val KEY_ALGORITHM = "EC"
+        private const val KEY_ALGORITHM = "RSA"
     }
 
-    abstract fun getECGenParameterSpec(): ECGenParameterSpec
     abstract fun getSignature(): Signature
 
     override fun signature(body: String, jwtKey: JwtKey): String {
@@ -26,16 +24,18 @@ abstract class JwtEs: JwtAlgorithmKeyPair{
         return JwtUtils.encodeToBase64UrlWopString(signature.sign())
     }
 
-    override fun newRandomJwtKey(): JwtKey =
-        JwtEsKey(
+    override fun newRandomJwtKey(bit: Int): JwtKey =
+        JwtRsKey(
             KeyPairGenerator.getInstance(KEY_ALGORITHM)
-                .apply { initialize(getECGenParameterSpec()) }
+                .apply { initialize(bit) }
                 .genKeyPair()
         )
 
     override fun toJwtKey(publicKey: String, privateKey: String): JwtKey =
         KeyFactory.getInstance(KEY_ALGORITHM).run {
-            JwtEsKey(KeyPair(generatePublic(X509EncodedKeySpec(JwtUtils.decodeBase64(publicKey))), generatePrivate(PKCS8EncodedKeySpec(JwtUtils.decodeBase64(privateKey)))))
+            val pubKey = generatePublic(X509EncodedKeySpec(JwtUtils.decodeBase64(JwtUtils.normalizePem(publicKey))))
+            val priKey = generatePrivate(PKCS8EncodedKeySpec(JwtUtils.decodeBase64(JwtUtils.normalizePem(privateKey))))
+            JwtRsKey(KeyPair(pubKey, priKey))
         }
 
     @Throws(JwtException::class)
@@ -48,7 +48,12 @@ abstract class JwtEs: JwtAlgorithmKeyPair{
             val signature = getSignature()
             signature.initVerify(jwtKey.public)
             signature.update(jwt.substring(0, lastPoint).toByteArray())
-            if (signature.verify(JwtUtils.decodeBase64Url(jwt.substring(lastPoint + 1)))) {
+            val verify = try {
+                signature.verify(JwtUtils.decodeBase64Url(jwt.substring(lastPoint + 1)))
+            } catch (e: Exception) {
+                throw JwtException(JwtExceptionCode.INVALID_SIGNATURE)
+            }
+            if (verify) {
                 return Jwt.toJwtClaimsWithoutVerify(jwt).apply { assert() }
             } else {
                 throw JwtException(JwtExceptionCode.INVALID_SIGNATURE)

@@ -9,18 +9,21 @@ import org.junit.jupiter.api.Test
 import java.time.OffsetDateTime
 import java.util.*
 
-@DisplayName("[Kotlin] HS Thread And Random KID Test")
-class HsThreadTest {
+@DisplayName("[Kotlin] RS Thread And Random KID Test")
+class RsThreadTest {
+
+    fun randomKeyBit() = listOf(2048, 3072, 4096)[(Math.random() * 3).toInt()]
+
     @Test
     @DisplayName("Thread And Random KID Test")
     fun t1() {
-        val algs = listOf(Jwt.hs256(), Jwt.hs384(), Jwt.hs512())
+        val algs = listOf(Jwt.rs256(), Jwt.rs384(), Jwt.rs512())
         val keys = HashMap<String?, JwtKey>()
         val jwts = ArrayList<String>()
         for (i in 0..29) {
             val alg = algs[(Math.random() * 3).toInt()]
             val kid = UUID.randomUUID().toString()
-            val key = alg.newRandomJwtKey()
+            val key = alg.newRandomJwtKey(randomKeyBit())
             keys[kid] = key
             val jc = create()
             jc.id("abc")
@@ -32,11 +35,11 @@ class HsThreadTest {
             // but this case is unknown alg
             // use JwtUtils.toJwtHeader
             val jh = Jwt.toJwtHeader(jwt)
-            var _alg: JwtAlgorithmHash? = null
+            var _alg: JwtAlgorithmPemKeyPair? = null
             when (jh.algorithm) {
-                "HS256" -> _alg = Jwt.hs256()
-                "HS384" -> _alg = Jwt.hs384()
-                "HS512" -> _alg = Jwt.hs512()
+                "RS256" -> _alg = Jwt.rs256()
+                "RS384" -> _alg = Jwt.rs384()
+                "RS512" -> _alg = Jwt.rs512()
             }
             val alg = _alg
             Assertions.assertNotNull(alg)
@@ -49,7 +52,7 @@ class HsThreadTest {
             }
             Assertions.assertThrows(JwtException::class.java) {
                 alg!!.toJwtClaims(
-                    jwt!!, alg.newRandomJwtKey()
+                    jwt!!, alg.newRandomJwtKey(randomKeyBit())
                 )
             }
             Assertions.assertEquals(jc.id, "abc")

@@ -6,6 +6,9 @@ import me.saro.jwt.alg.es.JwtEs512
 import me.saro.jwt.alg.hs.JwtHs256
 import me.saro.jwt.alg.hs.JwtHs384
 import me.saro.jwt.alg.hs.JwtHs512
+import me.saro.jwt.alg.rs.JwtRs256
+import me.saro.jwt.alg.rs.JwtRs384
+import me.saro.jwt.alg.rs.JwtRs512
 import me.saro.jwt.core.JwtUtils.Companion.encodeToBase64UrlWopString
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
@@ -18,6 +21,14 @@ class Jwt {
         fun es384(): JwtEs384 = JwtEs384()
         @JvmStatic
         fun es512(): JwtEs512 = JwtEs512()
+
+        @JvmStatic
+        fun rs256(): JwtRs256 = JwtRs256()
+        @JvmStatic
+        fun rs384(): JwtRs384 = JwtRs384()
+        @JvmStatic
+        fun rs512(): JwtRs512 = JwtRs512()
+
         @JvmStatic
         fun hs256(): JwtHs256 = JwtHs256()
         @JvmStatic

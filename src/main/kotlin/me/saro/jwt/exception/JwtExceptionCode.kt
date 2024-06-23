@@ -8,7 +8,7 @@ enum class JwtExceptionCode {
     NOT_EQUALS_HEADER_ALGORITHM,
 
     // KEY
-    JWT_KEY_IS_NULL,
+    INVALID_KEY,
     INVALID_SIGNATURE,
 
     // CLAIMS

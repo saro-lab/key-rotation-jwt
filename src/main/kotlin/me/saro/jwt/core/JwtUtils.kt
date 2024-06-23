@@ -12,6 +12,7 @@ class JwtUtils {
         private val DE_BASE64: Base64.Decoder = Base64.getDecoder()
         private val TYPE_MAP = object: TypeReference<MutableMap<String, Any>>() {}
         private val EN_BASE64_URL_WOP: Base64.Encoder = Base64.getUrlEncoder().withoutPadding()
+        private val REGEX_PEM_NORMALIZE = Regex("(\\s+|-----(BEGIN|END) .*?-----)")
 
         @JvmStatic
         fun writeValueAsBytes(obj: Any): ByteArray = OBJECT_MAPPER.writeValueAsBytes(obj)
@@ -30,5 +31,8 @@ class JwtUtils {
 
         @JvmStatic
         fun encodeToBase64UrlWopString(src: ByteArray): String = EN_BASE64_URL_WOP.encodeToString(src)
+
+        @JvmStatic
+        fun normalizePem(key: String) = key.replace(REGEX_PEM_NORMALIZE, "")
     }
 }

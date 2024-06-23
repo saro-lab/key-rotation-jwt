@@ -47,7 +47,7 @@ abstract class JwtHs: JwtAlgorithmHash {
 
     @Throws(JwtException::class)
     override fun toJwtClaims(jwt: String, jwtKey: JwtKey?): JwtClaims {
-        jwtKey ?: throw JwtException(JwtExceptionCode.JWT_KEY_IS_NULL)
+        jwtKey ?: throw JwtException(JwtExceptionCode.INVALID_KEY)
         toJwtHeader(jwt).assertAlgorithm(algorithm())
         val firstPoint = jwt.indexOf('.')
         val lastPoint = jwt.lastIndexOf('.')

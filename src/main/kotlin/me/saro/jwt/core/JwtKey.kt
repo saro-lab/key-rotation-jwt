@@ -17,7 +17,11 @@ interface JwtKey {
     val secretString: String get() = String(secret.encoded, Charsets.UTF_8)
 
     val public: PublicKey get() = throw JwtException(JwtExceptionCode.NOT_SUPPORT, "$algorithm algorithm does not support public key")
-    val private: PrivateKey  get() = throw JwtException(JwtExceptionCode.NOT_SUPPORT, "$algorithm algorithm does not support private key")
+    val publicKeySize: Int get() = public.encoded.size * 8
     val publicKeyString: String get() = EN_BASE64.encodeToString(public.encoded)
+    val private: PrivateKey  get() = throw JwtException(JwtExceptionCode.NOT_SUPPORT, "$algorithm algorithm does not support private key")
+    val privateKeySize: Int get() = private.encoded.size * 8
     val privateKeyString: String get() = EN_BASE64.encodeToString(private.encoded)
+
+    val stringify: String
 }

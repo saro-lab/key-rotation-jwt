@@ -5,7 +5,8 @@ import me.saro.jwt.exception.JwtException
 interface JwtAlgorithm {
     fun algorithm(): String
 
-    fun newRandomJwtKey(): JwtKey
+    @Throws(JwtException::class)
+    fun toJwtKeyByStringify(stringify: String): JwtKey
 
     @Throws(JwtException::class)
     fun signature(body: String, jwtKey: JwtKey): String

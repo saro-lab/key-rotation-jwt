@@ -3,7 +3,7 @@ package me.saro.jwt.core
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
 
-interface JwtAlgorithmKeyPair : JwtAlgorithm {
+interface JwtAlgorithmPemKeyPair : JwtAlgorithm {
     @Throws(JwtException::class)
     fun toJwtKey(publicKey: String, privateKey: String): JwtKey
 
@@ -13,5 +13,5 @@ interface JwtAlgorithmKeyPair : JwtAlgorithm {
         toJwtKey(it.substring(0, iof), it.substring(iof + 1))
     }
 
-    fun newRandomJwtKey(): JwtKey
+    fun newRandomJwtKey(bit: Int): JwtKey
 }
