@@ -14,7 +14,7 @@ implementation('me.saro:jwt:3.0.0')
 <dependency>
   <groupId>me.saro</groupId>
   <artifactId>jwt</artifactId>
-  <version>2.1.0</version>
+  <version>3.0.0</version>
 </dependency>
 ```
 
