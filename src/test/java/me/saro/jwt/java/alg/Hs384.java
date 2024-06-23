@@ -1,7 +1,7 @@
 package me.saro.jwt.java.alg;
 
 import me.saro.jwt.alg.hs.JwtHs384;
-import me.saro.jwt.core.JwtAlgorithm;
+import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtClaims;
 import me.saro.jwt.core.JwtKey;
 import me.saro.jwt.exception.JwtException;
@@ -16,16 +16,16 @@ import java.util.HashMap;
 import java.util.UUID;
 
 @DisplayName("[Java] HS384")
-public class HS384 {
+public class Hs384 {
 
-    public JwtAlgorithm alg() {
-        return new JwtHs384();
+    public JwtHs384 alg() {
+        return Jwt.hs384();
     }
 
     @Test
     @DisplayName("check jwt.io example")
     public void t1() {
-        var alg = new JwtHs384();
+        var alg = Jwt.hs384();
 
         var jwt = "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.bQTnz6AuMJvmXXQsVPrxeQNvzDkimo7VNXxHeSBfClLufmCVZRUuyTwJF311JHuh";
         var secret = "your-384-bit-secret";

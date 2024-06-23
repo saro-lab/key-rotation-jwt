@@ -4,11 +4,8 @@ import me.saro.jwt.core.JwtKey
 import javax.crypto.spec.SecretKeySpec
 
 data class JwtHsKey(
-    val key: SecretKeySpec
+    override val secret: SecretKeySpec,
 ): JwtKey {
-    override fun stringify(): String =
-        String(key.encoded, Charsets.UTF_8)
-
-    override fun toString(): String =
-        "JwtHsKey(${stringify()})"
+    override fun toString(): String = secretString
+    override val algorithm: String get() = "HS"
 }

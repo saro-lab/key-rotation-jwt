@@ -6,7 +6,7 @@ import java.time.OffsetDateTime
 import java.time.ZonedDateTime
 import java.util.*
 
-class JwtClaims (
+class JwtClaims internal constructor(
     private val claims: MutableMap<String, Any>
 ) {
     companion object {

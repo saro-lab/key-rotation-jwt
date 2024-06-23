@@ -1,15 +1,12 @@
 package me.saro.jwt.alg.hs
 
-import me.saro.jwt.core.JwtAlgorithm
-import me.saro.jwt.core.JwtClaims
-import me.saro.jwt.core.JwtKey
-import me.saro.jwt.core.JwtUtils
+import me.saro.jwt.core.*
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-abstract class JwtHs: JwtAlgorithm {
+abstract class JwtHs: JwtAlgorithmHash {
     companion object {
         private val MOLD = "1234567890!@#$%^&*()+=-_/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
         private val MOLD_LEN = MOLD.size
@@ -19,8 +16,8 @@ abstract class JwtHs: JwtAlgorithm {
     abstract fun getMac(): Mac
 
     @Throws(JwtException::class)
-    override fun toJwtKey(key: String): JwtKey = try {
-        JwtHsKey(SecretKeySpec(key.toByteArray(), getKeyAlgorithm()))
+    override fun toJwtKey(secret: String): JwtKey = try {
+       JwtHsKey(SecretKeySpec(secret.toByteArray(), getKeyAlgorithm()))
     } catch (e: Exception) {
         throw JwtException(JwtExceptionCode.PARSE_ERROR)
     }
@@ -42,7 +39,7 @@ abstract class JwtHs: JwtAlgorithm {
 
     @Throws(JwtException::class)
     override fun signature(body: String, jwtKey: JwtKey): String = try {
-        val mac = getMac().apply { init((jwtKey as JwtHsKey).key) }
+        val mac = getMac().apply { init(jwtKey.secret) }
         JwtUtils.encodeToBase64UrlWopString(mac.doFinal(body.toByteArray()))
     } catch (e: Exception) {
         throw JwtException(JwtExceptionCode.PARSE_ERROR)
@@ -56,7 +53,7 @@ abstract class JwtHs: JwtAlgorithm {
         val lastPoint = jwt.lastIndexOf('.')
         if (firstPoint < lastPoint && firstPoint != -1) {
             if (signature(jwt.substring(0, lastPoint), jwtKey) == jwt.substring(lastPoint + 1)) {
-                return JwtUtils.toJwtClaimsWithoutVerify(jwt).apply { assert() }
+                return Jwt.toJwtClaimsWithoutVerify(jwt).apply { assert() }
             } else {
                 throw JwtException(JwtExceptionCode.INVALID_SIGNATURE)
             }

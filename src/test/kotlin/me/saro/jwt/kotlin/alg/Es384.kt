@@ -1,7 +1,6 @@
 package me.saro.jwt.kotlin.alg
 
-import me.saro.jwt.alg.es.JwtEs384
-import me.saro.jwt.core.JwtAlgorithm
+import me.saro.jwt.core.Jwt
 import me.saro.jwt.core.JwtClaims
 import me.saro.jwt.core.JwtClaims.Companion.create
 import me.saro.jwt.core.JwtKey
@@ -14,11 +13,9 @@ import java.time.OffsetDateTime
 import java.util.*
 
 @DisplayName("[Kotlin] ES384")
-class ES384 {
+class Es384 {
 
-    fun alg(): JwtAlgorithm {
-        return JwtEs384()
-    }
+    fun alg() = Jwt.es384()
 
     @Test
     @DisplayName("check jwt.io example")
@@ -28,7 +25,7 @@ class ES384 {
         val privateKey = "MIG2AgEAMBAGByqGSM49AgEGBSuBBAAiBIGeMIGbAgEBBDCAHpFQ62QnGCEvYh/pE9QmR1C9aLcDItRbslbmhen/h1tt8AyMhskeenT+rAyyPhGhZANiAAQLW5ZJePZzMIPAxMtZXkEWbDF0zo9f2n4+T1h/2sh/fviblc/VTyrv10GEtIi5qiOy85Pf1RRw8lE5IPUWpgu553SteKigiKLUPeNpbqmYZUkWGh3MLfVzLmx85ii2vMU="
 
         val alg = alg()
-        val key = alg.toJwtKey("$publicKey $privateKey")
+        val key = alg.toJwtKey(publicKey, privateKey)
 
         println("example")
         Assertions.assertDoesNotThrow<JwtClaims> { alg.toJwtClaims(jwt, key) }

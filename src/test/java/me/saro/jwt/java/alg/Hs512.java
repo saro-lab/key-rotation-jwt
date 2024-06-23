@@ -1,7 +1,7 @@
 package me.saro.jwt.java.alg;
 
 import me.saro.jwt.alg.hs.JwtHs512;
-import me.saro.jwt.core.JwtAlgorithm;
+import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtClaims;
 import me.saro.jwt.core.JwtKey;
 import me.saro.jwt.exception.JwtException;
@@ -16,16 +16,16 @@ import java.util.HashMap;
 import java.util.UUID;
 
 @DisplayName("[Java] HS512")
-public class HS512 {
+public class Hs512 {
 
-    public JwtAlgorithm alg() {
-        return new JwtHs512();
+    public JwtHs512 alg() {
+        return Jwt.hs512();
     }
 
     @Test
     @DisplayName("check jwt.io example")
     public void t1() {
-        var alg = new JwtHs512();
+        var alg = Jwt.hs512();
 
         var jwt = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.VFb0qJ1LRg_4ujbZoRMXnVkUgiuKq5KxWqNdbKq_G9Vvz-S1zZa9LPxtHWKa64zDl2ofkT8F6jBt_K4riU-fPg";
         var secret = "your-512-bit-secret";

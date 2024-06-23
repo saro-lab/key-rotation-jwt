@@ -12,5 +12,8 @@ enum class JwtExceptionCode {
     INVALID_SIGNATURE,
 
     // CLAIMS
-    DATE_EXPIRED
+    DATE_EXPIRED,
+
+    // OTHER
+    NOT_SUPPORT,
 }

@@ -1,9 +1,7 @@
 package me.saro.jwt.kotlin.alg
 
-import me.saro.jwt.alg.es.JwtEs512
-import me.saro.jwt.core.JwtAlgorithm
+import me.saro.jwt.core.Jwt
 import me.saro.jwt.core.JwtClaims
-import me.saro.jwt.core.JwtClaims.Companion.create
 import me.saro.jwt.core.JwtKey
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
@@ -13,28 +11,25 @@ import org.junit.jupiter.api.Test
 import java.time.OffsetDateTime
 import java.util.*
 
-@DisplayName("[Kotlin] ES512")
-class ES512 {
+@DisplayName("[Kotlin] HS384")
+class Hs384 {
 
-    fun alg(): JwtAlgorithm {
-        return JwtEs512()
-    }
+    fun alg() = Jwt.hs384()
 
     @Test
     @DisplayName("check jwt.io example")
     fun t1() {
-        val jwt = "eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.AbVUinMiT3J_03je8WTOIl-VdggzvoFgnOsdouAs-DLOtQzau9valrq-S6pETyi9Q18HH-EuwX49Q7m3KC0GuNBJAc9Tksulgsdq8GqwIqZqDKmG7hNmDzaQG1Dpdezn2qzv-otf3ZZe-qNOXUMRImGekfQFIuH_MjD2e8RZyww6lbZk"
-        val publicKey = "MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQBgc4HZz+/fBbC7lmEww0AO3NK9wVZPDZ0VEnsaUFLEYpTzb90nITtJUcPUbvOsdZIZ1Q8fnbquAYgxXL5UgHMoywAib476MkyyYgPk0BXZq3mq4zImTRNuaU9slj9TVJ3ScT3L1bXwVuPJDzpr5GOFpaj+WwMAl8G7CqwoJOsW7Kddns="
-        val privateKey = "MIHuAgEAMBAGByqGSM49AgEGBSuBBAAjBIHWMIHTAgEBBEIBiyAa7aRHFDCh2qga9sTUGINE5jHAFnmM8xWeT/uni5I4tNqhV5Xx0pDrmCV9mbroFtfEa0XVfKuMAxxfZ6LM/yKhgYkDgYYABAGBzgdnP798FsLuWYTDDQA7c0r3BVk8NnRUSexpQUsRilPNv3SchO0lRw9Ru86x1khnVDx+duq4BiDFcvlSAcyjLACJvjvoyTLJiA+TQFdmrearjMiZNE25pT2yWP1NUndJxPcvVtfBW48kPOmvkY4WlqP5bAwCXwbsKrCgk6xbsp12ew=="
-
         val alg = alg()
-        val key = alg.toJwtKey("$publicKey $privateKey")
+
+        val jwt = "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.bQTnz6AuMJvmXXQsVPrxeQNvzDkimo7VNXxHeSBfClLufmCVZRUuyTwJF311JHuh"
+        val secret = "your-384-bit-secret"
+        val key = alg.toJwtKey(secret)
 
         println("example")
         Assertions.assertDoesNotThrow<JwtClaims> { alg.toJwtClaims(jwt, key) }
         println("example jwt toJwt - pass")
 
-        Assertions.assertThrows(JwtException::class.java) { alg.toJwtClaims(jwt, alg.newRandomJwtKey()) }
+        Assertions.assertThrows(JwtException::class.java) { alg.toJwtClaims(jwt, alg.toJwtKey("is not key")) }
         println("example jwt error text - pass")
     }
 
@@ -48,7 +43,7 @@ class ES512 {
             val kid = UUID.randomUUID().toString()
             val key = alg.newRandomJwtKey()
             keys[kid] = key
-            val jc = create()
+            val jc = JwtClaims.create()
             jc.id("abc")
             jc.expire(OffsetDateTime.now().plusMinutes(30))
             jwtList.add(Assertions.assertDoesNotThrow<String> {
@@ -82,10 +77,10 @@ class ES512 {
     fun t3() {
         val alg = alg()
         val key = alg.newRandomJwtKey()
-        val jcp = create()
+        val jcp = JwtClaims.create()
         jcp.expire(OffsetDateTime.now().plusMinutes(30))
         Assertions.assertDoesNotThrow<JwtClaims> { alg.toJwtClaims(alg.toJwt(key, jcp), key) }
-        val jce = create()
+        val jce = JwtClaims.create()
         jce.expire(OffsetDateTime.now().minusMinutes(30))
         Assertions.assertThrowsExactly(
             JwtException::class.java,
@@ -98,10 +93,10 @@ class ES512 {
     fun t4() {
         val alg = alg()
         val key = alg.newRandomJwtKey()
-        val jcp = create()
+        val jcp = JwtClaims.create()
         jcp.notBefore(OffsetDateTime.now().minusMinutes(30))
         Assertions.assertDoesNotThrow<JwtClaims> { alg.toJwtClaims(alg.toJwt(key, jcp), key) }
-        val jce = create()
+        val jce = JwtClaims.create()
         jce.notBefore(OffsetDateTime.now().plusMinutes(30))
         Assertions.assertThrowsExactly(
             JwtException::class.java,
@@ -114,7 +109,7 @@ class ES512 {
     fun t5() {
         val alg = alg()
         val key = alg.newRandomJwtKey()
-        val jc = create()
+        val jc = JwtClaims.create()
         jc.issuedAt(OffsetDateTime.now())
         jc.notBefore(OffsetDateTime.now().minusMinutes(1))
         jc.expire(OffsetDateTime.now().plusMinutes(30))

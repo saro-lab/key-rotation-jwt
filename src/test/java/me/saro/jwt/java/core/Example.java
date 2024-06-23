@@ -1,6 +1,6 @@
 package me.saro.jwt.java.core;
 
-import me.saro.jwt.alg.es.JwtEs256;
+import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtAlgorithm;
 import me.saro.jwt.core.JwtClaims;
 import me.saro.jwt.core.JwtKey;
@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Example {
 
     public JwtAlgorithm alg() {
-        return new JwtEs256();
+        return Jwt.es256();
     }
 
     @Test

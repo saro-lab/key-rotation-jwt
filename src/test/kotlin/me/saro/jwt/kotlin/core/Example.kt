@@ -1,6 +1,6 @@
 package me.saro.jwt.kotlin.core
 
-import me.saro.jwt.alg.es.JwtEs256
+import me.saro.jwt.core.Jwt
 import me.saro.jwt.core.JwtAlgorithm
 import me.saro.jwt.core.JwtClaims
 import me.saro.jwt.core.JwtClaims.Companion.create
@@ -13,9 +13,7 @@ import java.util.*
 
 @DisplayName("[Java] example")
 class Example {
-    fun alg(): JwtAlgorithm {
-        return JwtEs256()
-    }
+    fun alg(): JwtAlgorithm = Jwt.es256()
 
     @Test
     @DisplayName("basic")

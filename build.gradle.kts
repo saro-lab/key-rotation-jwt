@@ -7,7 +7,7 @@ plugins {
 
 val jwtGroupId = "me.saro"
 val jwtArtifactId = "jwt"
-val jwtVersion = "2.1.0"
+val jwtVersion = "3.0.0"
 
 repositories {
 	mavenCentral()

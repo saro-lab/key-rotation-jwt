@@ -1,7 +1,7 @@
 package me.saro.jwt.java.alg;
 
 import me.saro.jwt.alg.es.JwtEs512;
-import me.saro.jwt.core.JwtAlgorithm;
+import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtClaims;
 import me.saro.jwt.core.JwtKey;
 import me.saro.jwt.exception.JwtException;
@@ -16,10 +16,10 @@ import java.util.HashMap;
 import java.util.UUID;
 
 @DisplayName("[Java] ES512")
-public class ES512 {
+public class Es512 {
 
-    public JwtAlgorithm alg() {
-        return new JwtEs512();
+    public JwtEs512 alg() {
+        return Jwt.es512();
     }
 
     @Test
@@ -30,7 +30,7 @@ public class ES512 {
         var privateKey = "MIHuAgEAMBAGByqGSM49AgEGBSuBBAAjBIHWMIHTAgEBBEIBiyAa7aRHFDCh2qga9sTUGINE5jHAFnmM8xWeT/uni5I4tNqhV5Xx0pDrmCV9mbroFtfEa0XVfKuMAxxfZ6LM/yKhgYkDgYYABAGBzgdnP798FsLuWYTDDQA7c0r3BVk8NnRUSexpQUsRilPNv3SchO0lRw9Ru86x1khnVDx+duq4BiDFcvlSAcyjLACJvjvoyTLJiA+TQFdmrearjMiZNE25pT2yWP1NUndJxPcvVtfBW48kPOmvkY4WlqP5bAwCXwbsKrCgk6xbsp12ew==";
 
         var alg = alg();
-        var key = alg.toJwtKey(publicKey + " " + privateKey);
+        var key = alg.toJwtKey(publicKey, privateKey);
 
         System.out.println("example");
         Assertions.assertDoesNotThrow(() -> alg.toJwtClaims(jwt, key));

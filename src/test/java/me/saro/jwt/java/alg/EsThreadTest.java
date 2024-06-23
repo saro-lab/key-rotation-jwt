@@ -1,12 +1,9 @@
 package me.saro.jwt.java.alg;
 
-import me.saro.jwt.alg.es.JwtEs256;
-import me.saro.jwt.alg.es.JwtEs384;
-import me.saro.jwt.alg.es.JwtEs512;
+import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtAlgorithm;
 import me.saro.jwt.core.JwtClaims;
 import me.saro.jwt.core.JwtKey;
-import me.saro.jwt.core.JwtUtils;
 import me.saro.jwt.exception.JwtException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -19,11 +16,11 @@ import java.util.List;
 import java.util.UUID;
 
 @DisplayName("[Java] ES Thread And Random KID Test")
-public class ESThreadTest {
+public class EsThreadTest {
     @Test
     @DisplayName("Thread And Random KID Test")
     public void t1() {
-        var algs = List.of(new JwtEs256(), new JwtEs384(), new JwtEs512());
+        var algs = List.of(Jwt.es256(), Jwt.es384(), Jwt.es512());
         var keys = new HashMap<String, JwtKey>();
         var jwts = new ArrayList<String>();
 
@@ -44,12 +41,12 @@ public class ESThreadTest {
             // use alg.toJwtHeader
             // but this case is unknown alg
             // use JwtUtils.toJwtHeader
-            var jh = JwtUtils.toJwtHeader(jwt);
+            var jh = Jwt.toJwtHeader(jwt);
             JwtAlgorithm _alg = null;
             switch (jh.getAlgorithm()) {
-                case "ES256": _alg = new JwtEs256(); break;
-                case "ES384": _alg = new JwtEs384(); break;
-                case "ES512": _alg = new JwtEs512(); break;
+                case "ES256": _alg = Jwt.es256(); break;
+                case "ES384": _alg = Jwt.es384(); break;
+                case "ES512": _alg = Jwt.es512(); break;
             }
             var alg = _alg;
             Assertions.assertNotNull(alg);

@@ -1,7 +1,7 @@
 package me.saro.jwt.java.alg;
 
 import me.saro.jwt.alg.es.JwtEs384;
-import me.saro.jwt.core.JwtAlgorithm;
+import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtClaims;
 import me.saro.jwt.core.JwtKey;
 import me.saro.jwt.exception.JwtException;
@@ -16,10 +16,10 @@ import java.util.HashMap;
 import java.util.UUID;
 
 @DisplayName("[Java] ES384")
-public class ES384 {
+public class Es384 {
 
-    public JwtAlgorithm alg() {
-        return new JwtEs384();
+    public JwtEs384 alg() {
+        return Jwt.es384();
     }
 
     @Test
@@ -30,7 +30,7 @@ public class ES384 {
         var privateKey = "MIG2AgEAMBAGByqGSM49AgEGBSuBBAAiBIGeMIGbAgEBBDCAHpFQ62QnGCEvYh/pE9QmR1C9aLcDItRbslbmhen/h1tt8AyMhskeenT+rAyyPhGhZANiAAQLW5ZJePZzMIPAxMtZXkEWbDF0zo9f2n4+T1h/2sh/fviblc/VTyrv10GEtIi5qiOy85Pf1RRw8lE5IPUWpgu553SteKigiKLUPeNpbqmYZUkWGh3MLfVzLmx85ii2vMU=";
 
         var alg = alg();
-        var key = alg.toJwtKey(publicKey + " " + privateKey);
+        var key = alg.toJwtKey(publicKey, privateKey);
 
         System.out.println("example");
         Assertions.assertDoesNotThrow(() -> alg.toJwtClaims(jwt, key));
