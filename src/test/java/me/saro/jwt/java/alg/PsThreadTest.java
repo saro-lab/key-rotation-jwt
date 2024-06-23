@@ -1,6 +1,6 @@
 package me.saro.jwt.java.alg;
 
-import me.saro.jwt.alg.rs.JwtRs;
+import me.saro.jwt.alg.ps.JwtPs;
 import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtClaims;
 import me.saro.jwt.core.JwtKey;
@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-@DisplayName("[Java] RS Thread And Random KID Test")
-public class RsThreadTest {
+@DisplayName("[Java] PS Thread And Random KID Test")
+public class PsThreadTest {
 
     public int randomKeyBit() {
         return List.of(2048, 3072, 4096).get((int)(Math.random() * 3));
@@ -25,7 +25,7 @@ public class RsThreadTest {
     @Test
     @DisplayName("Thread And Random KID Test")
     public void t1() {
-        var algs = List.of(Jwt.rs256(), Jwt.rs384(), Jwt.rs512());
+        var algs = List.of(Jwt.ps256(), Jwt.ps384(), Jwt.ps512());
         var keys = new HashMap<String, JwtKey>();
         var jwts = new ArrayList<String>();
 
@@ -47,11 +47,11 @@ public class RsThreadTest {
             // but this case is unknown alg
             // use JwtUtils.toJwtHeader
             var jh = Jwt.toJwtHeader(jwt);
-            JwtRs _alg = null;
+            JwtPs _alg = null;
             switch (jh.getAlgorithm()) {
-                case "RS256": _alg = Jwt.rs256(); break;
-                case "RS384": _alg = Jwt.rs384(); break;
-                case "RS512": _alg = Jwt.rs512(); break;
+                case "PS256": _alg = Jwt.ps256(); break;
+                case "PS384": _alg = Jwt.ps384(); break;
+                case "PS512": _alg = Jwt.ps512(); break;
             }
             var alg = _alg;
             Assertions.assertNotNull(alg);

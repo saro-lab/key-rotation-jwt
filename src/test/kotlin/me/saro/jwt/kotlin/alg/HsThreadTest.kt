@@ -1,7 +1,10 @@
 package me.saro.jwt.kotlin.alg
 
-import me.saro.jwt.core.*
+import me.saro.jwt.alg.hs.JwtHs
+import me.saro.jwt.core.Jwt
+import me.saro.jwt.core.JwtClaims
 import me.saro.jwt.core.JwtClaims.Companion.create
+import me.saro.jwt.core.JwtKey
 import me.saro.jwt.exception.JwtException
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
@@ -32,7 +35,7 @@ class HsThreadTest {
             // but this case is unknown alg
             // use JwtUtils.toJwtHeader
             val jh = Jwt.toJwtHeader(jwt)
-            var _alg: JwtAlgorithmHash? = null
+            var _alg: JwtHs? = null
             when (jh.algorithm) {
                 "HS256" -> _alg = Jwt.hs256()
                 "HS384" -> _alg = Jwt.hs384()

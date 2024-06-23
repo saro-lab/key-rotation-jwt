@@ -6,6 +6,9 @@ import me.saro.jwt.alg.es.JwtEs512
 import me.saro.jwt.alg.hs.JwtHs256
 import me.saro.jwt.alg.hs.JwtHs384
 import me.saro.jwt.alg.hs.JwtHs512
+import me.saro.jwt.alg.ps.JwtPs256
+import me.saro.jwt.alg.ps.JwtPs384
+import me.saro.jwt.alg.ps.JwtPs512
 import me.saro.jwt.alg.rs.JwtRs256
 import me.saro.jwt.alg.rs.JwtRs384
 import me.saro.jwt.alg.rs.JwtRs512
@@ -28,6 +31,13 @@ class Jwt {
         fun rs384(): JwtRs384 = JwtRs384()
         @JvmStatic
         fun rs512(): JwtRs512 = JwtRs512()
+
+        @JvmStatic
+        fun ps256(): JwtPs256 = JwtPs256()
+        @JvmStatic
+        fun ps384(): JwtPs384 = JwtPs384()
+        @JvmStatic
+        fun ps512(): JwtPs512 = JwtPs512()
 
         @JvmStatic
         fun hs256(): JwtHs256 = JwtHs256()

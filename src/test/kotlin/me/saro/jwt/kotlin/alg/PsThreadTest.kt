@@ -1,6 +1,6 @@
 package me.saro.jwt.kotlin.alg
 
-import me.saro.jwt.alg.rs.JwtRs
+import me.saro.jwt.alg.ps.JwtPs
 import me.saro.jwt.core.Jwt
 import me.saro.jwt.core.JwtClaims
 import me.saro.jwt.core.JwtClaims.Companion.create
@@ -12,15 +12,15 @@ import org.junit.jupiter.api.Test
 import java.time.OffsetDateTime
 import java.util.*
 
-@DisplayName("[Kotlin] RS Thread And Random KID Test")
-class RsThreadTest {
+@DisplayName("[Kotlin] PS Thread And Random KID Test")
+class PsThreadTest {
 
     fun randomKeyBit() = listOf(2048, 3072, 4096)[(Math.random() * 3).toInt()]
 
     @Test
     @DisplayName("Thread And Random KID Test")
     fun t1() {
-        val algs = listOf(Jwt.rs256(), Jwt.rs384(), Jwt.rs512())
+        val algs = listOf(Jwt.ps256(), Jwt.ps384(), Jwt.ps512())
         val keys = HashMap<String?, JwtKey>()
         val jwts = ArrayList<String>()
         for (i in 0..29) {
@@ -38,11 +38,11 @@ class RsThreadTest {
             // but this case is unknown alg
             // use JwtUtils.toJwtHeader
             val jh = Jwt.toJwtHeader(jwt)
-            var _alg: JwtRs? = null
+            var _alg: JwtPs? = null
             when (jh.algorithm) {
-                "RS256" -> _alg = Jwt.rs256()
-                "RS384" -> _alg = Jwt.rs384()
-                "RS512" -> _alg = Jwt.rs512()
+                "PS256" -> _alg = Jwt.ps256()
+                "PS384" -> _alg = Jwt.ps384()
+                "PS512" -> _alg = Jwt.ps512()
             }
             val alg = _alg
             Assertions.assertNotNull(alg)

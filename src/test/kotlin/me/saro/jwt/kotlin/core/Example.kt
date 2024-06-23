@@ -1,7 +1,6 @@
 package me.saro.jwt.kotlin.core
 
 import me.saro.jwt.core.Jwt
-import me.saro.jwt.core.JwtAlgorithm
 import me.saro.jwt.core.JwtClaims
 import me.saro.jwt.core.JwtClaims.Companion.create
 import me.saro.jwt.core.JwtKey

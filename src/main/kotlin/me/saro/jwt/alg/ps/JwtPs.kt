@@ -1,4 +1,4 @@
-package me.saro.jwt.alg.rs
+package me.saro.jwt.alg.ps
 
 import me.saro.jwt.core.JwtAlgorithmKeyPair
 import me.saro.jwt.core.JwtKey
@@ -9,13 +9,13 @@ import java.security.KeyPairGenerator
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 
-abstract class JwtRs: JwtAlgorithmKeyPair{
+abstract class JwtPs: JwtAlgorithmKeyPair{
     companion object {
         private const val KEY_ALGORITHM = "RSA"
     }
 
     fun newRandomJwtKey(bit: Int): JwtKey =
-        JwtRsKey(
+        JwtPsKey(
             KeyPairGenerator.getInstance(KEY_ALGORITHM)
                 .apply { initialize(bit) }
                 .genKeyPair()
@@ -25,6 +25,6 @@ abstract class JwtRs: JwtAlgorithmKeyPair{
         KeyFactory.getInstance(KEY_ALGORITHM).run {
             val pubKey = generatePublic(X509EncodedKeySpec(JwtUtils.decodeBase64(JwtUtils.normalizePem(publicKey))))
             val priKey = generatePrivate(PKCS8EncodedKeySpec(JwtUtils.decodeBase64(JwtUtils.normalizePem(privateKey))))
-            JwtRsKey(KeyPair(pubKey, priKey))
+            JwtPsKey(KeyPair(pubKey, priKey))
         }
 }
