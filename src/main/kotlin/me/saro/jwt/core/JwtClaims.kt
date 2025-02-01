@@ -83,21 +83,21 @@ class JwtClaims internal constructor(
     fun toMap(): Map<String, Any> = claims.toMutableMap()
 
     @Throws(JwtException::class)
-    fun assertExpire() {
+    fun validExpire() {
         if (expire != null && expire!!.before(Date())) {
             throw JwtException(JwtExceptionCode.DATE_EXPIRED)
         }
     }
 
     @Throws(JwtException::class)
-    fun assertNotBefore() {
+    fun validNotBefore() {
         if (notBefore != null && notBefore!!.after(Date())) {
             throw JwtException(JwtExceptionCode.DATE_EXPIRED)
         }
     }
 
-    fun assert() {
-        assertExpire()
-        assertNotBefore()
+    fun valid() {
+        validExpire()
+        validNotBefore()
     }
 }

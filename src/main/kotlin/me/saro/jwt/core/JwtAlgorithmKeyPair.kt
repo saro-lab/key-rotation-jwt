@@ -26,7 +26,7 @@ interface JwtAlgorithmKeyPair : JwtAlgorithm {
     @Throws(JwtException::class)
     override fun toJwtClaims(jwt: String, jwtKey: JwtKey?): JwtClaims {
         jwtKey ?: throw JwtException(JwtExceptionCode.INVALID_KEY)
-        toJwtHeader(jwt).assertAlgorithm(algorithm())
+        toJwtHeader(jwt).validAlgorithm(algorithm())
         val firstPoint = jwt.indexOf('.')
         val lastPoint = jwt.lastIndexOf('.')
         if (firstPoint < lastPoint && firstPoint != -1) {
@@ -39,7 +39,7 @@ interface JwtAlgorithmKeyPair : JwtAlgorithm {
                 throw JwtException(JwtExceptionCode.INVALID_SIGNATURE)
             }
             if (verify) {
-                return Jwt.toJwtClaimsWithoutVerify(jwt).apply { assert() }
+                return Jwt.toJwtClaimsWithoutVerify(jwt).apply { valid() }
             } else {
                 throw JwtException(JwtExceptionCode.INVALID_SIGNATURE)
             }

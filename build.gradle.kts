@@ -1,13 +1,14 @@
 plugins {
-	val kotlinVersion = "2.0.0"
-	id("org.jetbrains.kotlin.jvm") version kotlinVersion
+	id("org.jetbrains.kotlin.jvm") version "2.1.20-Beta2"
+	id("org.ec4j.editorconfig") version "0.1.0"
+	id("idea")
 	signing
 	`maven-publish`
 }
 
 val jwtGroupId = "me.saro"
 val jwtArtifactId = "jwt"
-val jwtVersion = "3.0.0"
+val jwtVersion = "4.0.0"
 
 repositories {
 	mavenCentral()
@@ -20,10 +21,10 @@ java {
 
 dependencies {
 	// jackson
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.1")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
 
 	// test
-	testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
+	testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

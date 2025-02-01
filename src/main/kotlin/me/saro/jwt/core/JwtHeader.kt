@@ -30,7 +30,7 @@ class JwtHeader(
     override fun toString(): String = JwtUtils.toJsonString(header)
 
     @Throws(JwtException::class)
-    fun assertAlgorithm(algorithm: String) {
+    fun validAlgorithm(algorithm: String) {
         if (this.algorithm != algorithm) {
             throw JwtException(JwtExceptionCode.NOT_EQUALS_HEADER_ALGORITHM)
         }
