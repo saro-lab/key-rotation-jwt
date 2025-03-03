@@ -1,5 +1,6 @@
 package me.saro.jwt.core
 
+import me.saro.jwt.alg.es.JwtEs
 import me.saro.jwt.alg.es.JwtEs256
 import me.saro.jwt.alg.es.JwtEs384
 import me.saro.jwt.alg.es.JwtEs512
@@ -18,33 +19,21 @@ import me.saro.jwt.exception.JwtExceptionCode
 
 class Jwt {
     companion object {
-        @JvmStatic
-        fun es256(): JwtEs256 = JwtEs256()
-        @JvmStatic
-        fun es384(): JwtEs384 = JwtEs384()
-        @JvmStatic
-        fun es512(): JwtEs512 = JwtEs512()
+        @JvmField val ES256: JwtEs256 = JwtEs256()
+        @JvmField val ES384: JwtEs384 = JwtEs384()
+        @JvmField val ES512: JwtEs512 = JwtEs512()
 
-        @JvmStatic
-        fun rs256(): JwtRs256 = JwtRs256()
-        @JvmStatic
-        fun rs384(): JwtRs384 = JwtRs384()
-        @JvmStatic
-        fun rs512(): JwtRs512 = JwtRs512()
+        @JvmField val RS256: JwtRs256 = JwtRs256()
+        @JvmField val RS384: JwtRs384 = JwtRs384()
+        @JvmField val RS512: JwtRs512 = JwtRs512()
 
-        @JvmStatic
-        fun ps256(): JwtPs256 = JwtPs256()
-        @JvmStatic
-        fun ps384(): JwtPs384 = JwtPs384()
-        @JvmStatic
-        fun ps512(): JwtPs512 = JwtPs512()
+        @JvmField val PS256: JwtPs256 = JwtPs256()
+        @JvmField val PS384: JwtPs384 = JwtPs384()
+        @JvmField val PS512: JwtPs512 = JwtPs512()
 
-        @JvmStatic
-        fun hs256(): JwtHs256 = JwtHs256()
-        @JvmStatic
-        fun hs384(): JwtHs384 = JwtHs384()
-        @JvmStatic
-        fun hs512(): JwtHs512 = JwtHs512()
+        @JvmField val HS256: JwtHs256 = JwtHs256()
+        @JvmField val HS384: JwtHs384 = JwtHs384()
+        @JvmField val HS512: JwtHs512 = JwtHs512()
 
         @JvmStatic
         fun builder(): Builder =

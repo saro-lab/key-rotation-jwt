@@ -95,16 +95,14 @@ open class JwtNode internal constructor(
         fun toJwt(algorithm: JwtAlgorithm, key: JwtKey): String {
             header["alg"] = algorithm.algorithm
 
-            val header = encodeToBase64UrlWopString(JwtUtils.writeValueAsBytes(header))
-            val payload = encodeToBase64UrlWopString(JwtUtils.writeValueAsBytes(payload))
+            val body = StringBuilder(1000)
+                .append(encodeToBase64UrlWopString(JwtUtils.writeValueAsBytes(header)))
+                .append('.')
+                .append(encodeToBase64UrlWopString(JwtUtils.writeValueAsBytes(payload)))
 
-            return StringBuilder(1000)
-                .append(header)
-                .append('.')
-                .append(payload)
-                .append('.')
-                .append(algorithm.signature(payload, key))
-                .toString()
+            val signature = algorithm.signature(body.toString(), key)
+
+            return body.append('.').append(signature).toString()
         }
 
         override fun toString(): String {

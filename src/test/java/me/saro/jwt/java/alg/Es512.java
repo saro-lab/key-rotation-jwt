@@ -17,16 +17,16 @@ import java.util.UUID;
 @DisplayName("[Java] ES512")
 public class Es512 {
 
-    JwtEs512 alg = Jwt.es512();
+    JwtEs512 alg = Jwt.ES512;
 
     @Test
     @DisplayName("check jwt.io example")
     public void t1() {
-        var jwt = "eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.AbVUinMiT3J_03je8WTOIl-VdggzvoFgnOsdouAs-DLOtQzau9valrq-S6pETyi9Q18HH-EuwX49Q7m3KC0GuNBJAc9Tksulgsdq8GqwIqZqDKmG7hNmDzaQG1Dpdezn2qzv-otf3ZZe-qNOXUMRImGekfQFIuH_MjD2e8RZyww6lbZk";
-        var publicKey = "MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQBgc4HZz+/fBbC7lmEww0AO3NK9wVZPDZ0VEnsaUFLEYpTzb90nITtJUcPUbvOsdZIZ1Q8fnbquAYgxXL5UgHMoywAib476MkyyYgPk0BXZq3mq4zImTRNuaU9slj9TVJ3ScT3L1bXwVuPJDzpr5GOFpaj+WwMAl8G7CqwoJOsW7Kddns=";
-        var privateKey = "MIHuAgEAMBAGByqGSM49AgEGBSuBBAAjBIHWMIHTAgEBBEIBiyAa7aRHFDCh2qga9sTUGINE5jHAFnmM8xWeT/uni5I4tNqhV5Xx0pDrmCV9mbroFtfEa0XVfKuMAxxfZ6LM/yKhgYkDgYYABAGBzgdnP798FsLuWYTDDQA7c0r3BVk8NnRUSexpQUsRilPNv3SchO0lRw9Ru86x1khnVDx+duq4BiDFcvlSAcyjLACJvjvoyTLJiA+TQFdmrearjMiZNE25pT2yWP1NUndJxPcvVtfBW48kPOmvkY4WlqP5bAwCXwbsKrCgk6xbsp12ew==";
+        String jwt = "eyJhbGciOiJFUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.AbVUinMiT3J_03je8WTOIl-VdggzvoFgnOsdouAs-DLOtQzau9valrq-S6pETyi9Q18HH-EuwX49Q7m3KC0GuNBJAc9Tksulgsdq8GqwIqZqDKmG7hNmDzaQG1Dpdezn2qzv-otf3ZZe-qNOXUMRImGekfQFIuH_MjD2e8RZyww6lbZk";
+        String publicKey = "MIGbMBAGByqGSM49AgEGBSuBBAAjA4GGAAQBgc4HZz+/fBbC7lmEww0AO3NK9wVZPDZ0VEnsaUFLEYpTzb90nITtJUcPUbvOsdZIZ1Q8fnbquAYgxXL5UgHMoywAib476MkyyYgPk0BXZq3mq4zImTRNuaU9slj9TVJ3ScT3L1bXwVuPJDzpr5GOFpaj+WwMAl8G7CqwoJOsW7Kddns=";
+        String privateKey = "MIHuAgEAMBAGByqGSM49AgEGBSuBBAAjBIHWMIHTAgEBBEIBiyAa7aRHFDCh2qga9sTUGINE5jHAFnmM8xWeT/uni5I4tNqhV5Xx0pDrmCV9mbroFtfEa0XVfKuMAxxfZ6LM/yKhgYkDgYYABAGBzgdnP798FsLuWYTDDQA7c0r3BVk8NnRUSexpQUsRilPNv3SchO0lRw9Ru86x1khnVDx+duq4BiDFcvlSAcyjLACJvjvoyTLJiA+TQFdmrearjMiZNE25pT2yWP1NUndJxPcvVtfBW48kPOmvkY4WlqP5bAwCXwbsKrCgk6xbsp12ew==";
 
-        var key = alg.toJwtKey(publicKey, privateKey);
+        JwtKey key = alg.toJwtKey(publicKey, privateKey);
 
         System.out.println("example");
         Assertions.assertDoesNotThrow(() -> Jwt.parse(jwt, node -> alg.with(key)));
@@ -40,12 +40,12 @@ public class Es512 {
     @DisplayName("kid test")
     public void t2() {
 
-        var keys = new HashMap<String, JwtKey>();
-        var jwtList = new ArrayList<String>();
+        HashMap<String, JwtKey> keys = new HashMap<String, JwtKey>();
+        ArrayList<String> jwtList = new ArrayList<String>();
 
         for (int i = 0 ; i < 30 ; i++) {
-            var kid = UUID.randomUUID().toString();
-            var key = alg.newRandomJwtKey();
+            String kid = UUID.randomUUID().toString();
+            JwtKey key = alg.newRandomJwtKey();
             keys.put(kid, key);
 
             jwtList.add(Assertions.assertDoesNotThrow(() ->
@@ -59,7 +59,8 @@ public class Es512 {
 
         jwtList.parallelStream().forEach(jwt -> {
             Assertions.assertThrows(JwtException.class, () -> Jwt.parse(jwt, node -> alg.with(alg.newRandomJwtKey())));
-            var jwtNode = Assertions.assertDoesNotThrow(() -> Jwt.parse(jwt, node -> alg.with(keys.get(node.getKid()))));
+            System.out.println(jwt);
+            JwtNode jwtNode = Assertions.assertDoesNotThrow(() -> Jwt.parse(jwt, node -> alg.with(keys.get(node.getKid()))));
             Assertions.assertEquals("abc", jwtNode.getId());
         });
         System.out.println("done");
@@ -68,24 +69,24 @@ public class Es512 {
     @Test
     @DisplayName("expire test")
     public void t3() {
-        var key = alg.newRandomJwtKey();
+        JwtKey key = alg.newRandomJwtKey();
 
-        var jwtPass = Jwt.builder().expire(OffsetDateTime.now().plusMinutes(30)).toJwt(alg, key);
+        String jwtPass = Jwt.builder().expire(OffsetDateTime.now().plusMinutes(30)).toJwt(alg, key);
         Assertions.assertDoesNotThrow(() -> Jwt.parse(jwtPass, node -> alg.with(key)));
 
-        var jwtFail = Jwt.builder().expire(OffsetDateTime.now().minusMinutes(30)).toJwt(alg, key);
+        String jwtFail = Jwt.builder().expire(OffsetDateTime.now().minusMinutes(30)).toJwt(alg, key);
         Assertions.assertThrowsExactly(JwtException.class, () -> Jwt.parse(jwtFail, node -> alg.with(key)));
     }
 
     @Test
     @DisplayName("not before test")
     public void t4() {
-        var key = alg.newRandomJwtKey();
+        JwtKey key = alg.newRandomJwtKey();
 
-        var jwtPass = Jwt.builder().notBefore(OffsetDateTime.now().minusMinutes(30)).toJwt(alg, key);
+        String jwtPass = Jwt.builder().notBefore(OffsetDateTime.now().minusMinutes(30)).toJwt(alg, key);
         Assertions.assertDoesNotThrow(() -> Jwt.parse(jwtPass, node -> alg.with(key)));
 
-        var jwtFail = Jwt.builder().notBefore(OffsetDateTime.now().plusMinutes(30)).toJwt(alg, key);
+        String jwtFail = Jwt.builder().notBefore(OffsetDateTime.now().plusMinutes(30)).toJwt(alg, key);
         Assertions.assertThrowsExactly(JwtException.class, () -> Jwt.parse(jwtFail, node -> alg.with(key)));
     }
 
@@ -93,9 +94,9 @@ public class Es512 {
     @DisplayName("data test")
     public void t5() {
 
-        var key = alg.newRandomJwtKey();
+        JwtKey key = alg.newRandomJwtKey();
 
-        var jwt = Jwt.builder()
+        String jwt = Jwt.builder()
                 .issuedAt(OffsetDateTime.now())
                 .notBefore(OffsetDateTime.now().minusMinutes(1))
                 .expire(OffsetDateTime.now().plusMinutes(30))

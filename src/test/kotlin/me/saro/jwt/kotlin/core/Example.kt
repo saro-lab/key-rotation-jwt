@@ -1,107 +1,117 @@
-//package me.saro.jwt.kotlin.core
-//
-//import me.saro.jwt.core1.Jwt
-//import me.saro.jwt.core1.JwtClaims
-//import me.saro.jwt.core1.JwtClaims.Companion.create
-//import me.saro.jwt.core.JwtKey
-//import org.junit.jupiter.api.Assertions
-//import org.junit.jupiter.api.DisplayName
-//import org.junit.jupiter.api.Test
-//import java.time.OffsetDateTime
-//import java.util.*
-//
-//@DisplayName("[Java] example")
-//class Example {
-//    fun alg() = Jwt.es256()
-//
-//    @Test
-//    @DisplayName("basic")
-//    fun t1() {
-//
-//        val alg = alg()
-//        val key = alg.newRandomJwtKey()
-//        val claims = create()
-//
-//        claims.issuedAt(OffsetDateTime.now())
-//        claims.notBefore(OffsetDateTime.now().minusMinutes(1))
-//        claims.expire(OffsetDateTime.now().plusMinutes(30))
-//        claims.id("jti value")
-//        claims.issuer("iss value")
-//        claims.subject("sub value")
-//        claims.audience("aud value")
-//        claims.claim("custom", "custom value")
-//
-//        println(claims)
-//
-//        val jwt = alg.toJwt(key, claims)
-//
-//        println(jwt)
-//
-//        val newClaims = Assertions.assertDoesNotThrow<JwtClaims> { alg.toJwtClaims(jwt, key) }
-//
-//        println(newClaims)
-//
-//        Assertions.assertEquals(newClaims.id, "jti value")
-//        Assertions.assertEquals(newClaims.issuer, "iss value")
-//        Assertions.assertEquals(newClaims.subject, "sub value")
-//        Assertions.assertEquals(newClaims.audience, "aud value")
-//        Assertions.assertEquals(newClaims.claim("custom"), "custom value")
-//    }
-//
-//    @Test
-//    @DisplayName("dynamic key")
-//    fun t2() {
-//        val alg = alg()
-//        val keyMap = HashMap<String?, JwtKey>()
-//        val jwtList = ArrayList<String>()
-//
-//        // make keys
-//        for (i in 0..29) {
-//            val kid = UUID.randomUUID().toString()
-//            val key = alg.newRandomJwtKey()
-//            keyMap[kid] = key
-//            // key to string (save DB)
-//            // - key.stringify()
-//            // string to key (load DB)
-//            // - alg.toJwtKey(key.stringify())
-//        }
-//
-//        // make jwt list with random key
-//        for (i in 0..9) {
-//            val claims = create()
-//            claims.issuedAt(OffsetDateTime.now())
-//            claims.notBefore(OffsetDateTime.now().minusMinutes(1))
-//            claims.expire(OffsetDateTime.now().plusMinutes(30))
-//            claims.id("jti value $i")
-//            claims.issuer("iss value $i")
-//            claims.subject("sub value $i")
-//            claims.audience("aud value $i")
-//            claims.claim("custom", "custom value $i")
-//            val randomKid = keyMap.keys.toTypedArray()[(Math.random() * keyMap.size).toInt()] as String
-//            val randomKey = keyMap[randomKid]
-//
-//            // make jwt with key / kid(header)
-//            val jwt = alg.toJwt(randomKey!!, claims, randomKid)
-//            jwtList.add(jwt)
-//        }
-//
-//        // decode
-//        for (i in 0..9) {
-//            val jwt = jwtList[i]
-//            val header = alg.toJwtHeader(jwt)
-//            val key = keyMap[header.kid]
-//            val claims = alg.toJwtClaims(jwt, key)
-//
-//            println()
-//            println("jwt : $jwt")
-//            println(header)
-//            println(claims)
-//
-//            Assertions.assertEquals(claims.id, "jti value $i")
-//            Assertions.assertEquals(claims.issuer, "iss value $i")
-//            Assertions.assertEquals(claims.subject, "sub value $i")
-//            Assertions.assertEquals(claims.audience, "aud value $i")
-//            Assertions.assertEquals(claims.claim("custom"), "custom value $i")
-//        }
-//    }
-//}
+package me.saro.jwt.kotlin.core
+
+import me.saro.jwt.alg.es.JwtEs256
+import me.saro.jwt.core.Jwt
+import me.saro.jwt.core.Jwt.Companion.builder
+import me.saro.jwt.core.Jwt.Companion.parse
+import me.saro.jwt.core.JwtKey
+import me.saro.jwt.core.JwtNode
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import java.time.OffsetDateTime
+import java.util.*
+
+@DisplayName("[Java] example")
+class Example {
+    var alg: JwtEs256 = Jwt.ES256
+
+    @Test
+    @DisplayName("basic")
+    fun t1() {
+        val key = alg.newRandomJwtKey()
+
+        val jwtNode = builder()
+            .issuedAt(OffsetDateTime.now())
+            .notBefore(OffsetDateTime.now().minusMinutes(1))
+            .expire(OffsetDateTime.now().plusMinutes(30))
+            .id("jti value")
+            .issuer("iss value")
+            .subject("sub value")
+            .audience("aud value")
+            .claim("custom", "custom value")
+
+        println(jwtNode)
+
+        val jwt = Assertions.assertDoesNotThrow<String> { jwtNode.toJwt(alg, key) }
+
+        println(jwt)
+
+        val readJwtNode = Assertions.assertDoesNotThrow<JwtNode> {
+            parse(jwt) { node: JwtNode? ->
+                alg.with(
+                    key
+                )
+            }
+        }
+
+        println(readJwtNode)
+
+        Assertions.assertEquals("jti value", readJwtNode.id)
+        Assertions.assertEquals("iss value", readJwtNode.issuer)
+        Assertions.assertEquals("sub value", readJwtNode.subject)
+        Assertions.assertEquals("aud value", readJwtNode.audience)
+        Assertions.assertEquals("custom value", readJwtNode.claim("custom"))
+    }
+
+    @Test
+    @DisplayName("dynamic key")
+    fun t2() {
+        val keyMap = HashMap<String?, JwtKey>()
+        val jwtList = ArrayList<String>()
+
+        // make keys
+        for (i in 0..29) {
+            val kid = UUID.randomUUID().toString()
+            val key = alg.newRandomJwtKey()
+            keyMap[kid] = key
+        }
+
+        // make jwt list with random key
+        for (i in 0..9) {
+            val jwtNode = builder()
+                .issuedAt(OffsetDateTime.now())
+                .notBefore(OffsetDateTime.now().minusMinutes(1))
+                .expire(OffsetDateTime.now().plusMinutes(30))
+                .id("jti value $i")
+                .issuer("iss value $i")
+                .subject("sub value $i")
+                .audience("aud value $i")
+                .claim("custom", "custom value $i")
+
+            val randomKid = keyMap.keys.toTypedArray()[(Math.random() * keyMap.size).toInt()] as String
+            val randomKey = keyMap[randomKid]
+
+            // make jwt with key / kid(header)
+            val jwt = Assertions.assertDoesNotThrow<String> {
+                jwtNode.kid(randomKid).toJwt(
+                    alg,
+                    randomKey!!
+                )
+            }
+            jwtList.add(jwt)
+        }
+
+        // decode
+        for (i in 0..9) {
+            val jwt = jwtList[i]
+
+            println()
+            println("jwt : $jwt")
+
+            val readJwtNode = Assertions.assertDoesNotThrow<JwtNode> {
+                parse(jwt) { node: JwtNode ->
+                    alg.with(
+                        keyMap[node.kid]!!
+                    )
+                }
+            }
+
+            Assertions.assertEquals(readJwtNode.id, "jti value $i")
+            Assertions.assertEquals(readJwtNode.issuer, "iss value $i")
+            Assertions.assertEquals(readJwtNode.subject, "sub value $i")
+            Assertions.assertEquals(readJwtNode.audience, "aud value $i")
+            Assertions.assertEquals(readJwtNode.claim("custom"), "custom value $i")
+        }
+    }
+}
