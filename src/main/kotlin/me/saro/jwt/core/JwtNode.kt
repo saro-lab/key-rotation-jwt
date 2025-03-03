@@ -53,6 +53,8 @@ open class JwtNode internal constructor(
     val issuedAt: Date? get() = claimDateByTimestamp("iat")
     val expire: Date? get() = claimDateByTimestamp("exp")
 
+    fun toBuilder(): Builder = Builder(header.toMutableMap(), payload.toMutableMap())
+
     override fun toString(): String {
         return """
             |header: $header

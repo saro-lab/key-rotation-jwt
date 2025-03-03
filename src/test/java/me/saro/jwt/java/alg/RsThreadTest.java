@@ -4,7 +4,6 @@ import me.saro.jwt.alg.rs.JwtRs;
 import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtAlgorithm;
 import me.saro.jwt.core.JwtKey;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

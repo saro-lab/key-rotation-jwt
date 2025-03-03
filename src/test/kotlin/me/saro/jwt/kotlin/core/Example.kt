@@ -2,8 +2,6 @@ package me.saro.jwt.kotlin.core
 
 import me.saro.jwt.alg.es.JwtEs256
 import me.saro.jwt.core.Jwt
-import me.saro.jwt.core.Jwt.Companion.builder
-import me.saro.jwt.core.Jwt.Companion.parse
 import me.saro.jwt.core.JwtKey
 import me.saro.jwt.core.JwtNode
 import org.junit.jupiter.api.Assertions
@@ -12,7 +10,7 @@ import org.junit.jupiter.api.Test
 import java.time.OffsetDateTime
 import java.util.*
 
-@DisplayName("[Java] example")
+@DisplayName("[Kotlin] example")
 class Example {
     var alg: JwtEs256 = Jwt.ES256
 
@@ -21,7 +19,7 @@ class Example {
     fun t1() {
         val key = alg.newRandomJwtKey()
 
-        val jwtNode = builder()
+        val jwtNode: JwtNode.Builder = Jwt.builder()
             .issuedAt(OffsetDateTime.now())
             .notBefore(OffsetDateTime.now().minusMinutes(1))
             .expire(OffsetDateTime.now().plusMinutes(30))
@@ -33,16 +31,12 @@ class Example {
 
         println(jwtNode)
 
-        val jwt = Assertions.assertDoesNotThrow<String> { jwtNode.toJwt(alg, key) }
+        val jwt: String = Assertions.assertDoesNotThrow<String> { jwtNode.toJwt(alg, key) }
 
         println(jwt)
 
         val readJwtNode = Assertions.assertDoesNotThrow<JwtNode> {
-            parse(jwt) { node: JwtNode? ->
-                alg.with(
-                    key
-                )
-            }
+            Jwt.parse(jwt) { alg.with(key) }
         }
 
         println(readJwtNode)
@@ -69,7 +63,7 @@ class Example {
 
         // make jwt list with random key
         for (i in 0..9) {
-            val jwtNode = builder()
+            val jwtNode: JwtNode.Builder = Jwt.builder()
                 .issuedAt(OffsetDateTime.now())
                 .notBefore(OffsetDateTime.now().minusMinutes(1))
                 .expire(OffsetDateTime.now().plusMinutes(30))
@@ -84,10 +78,7 @@ class Example {
 
             // make jwt with key / kid(header)
             val jwt = Assertions.assertDoesNotThrow<String> {
-                jwtNode.kid(randomKid).toJwt(
-                    alg,
-                    randomKey!!
-                )
+                jwtNode.kid(randomKid).toJwt(alg, randomKey!!)
             }
             jwtList.add(jwt)
         }
@@ -100,11 +91,7 @@ class Example {
             println("jwt : $jwt")
 
             val readJwtNode = Assertions.assertDoesNotThrow<JwtNode> {
-                parse(jwt) { node: JwtNode ->
-                    alg.with(
-                        keyMap[node.kid]!!
-                    )
-                }
+                Jwt.parse(jwt) { alg.with(keyMap[it.kid]!!) }
             }
 
             Assertions.assertEquals(readJwtNode.id, "jti value $i")

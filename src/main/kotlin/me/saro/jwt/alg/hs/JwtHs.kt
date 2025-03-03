@@ -13,9 +13,9 @@ abstract class JwtHs: JwtAlgorithmHash {
     abstract fun getMac(): Mac
 
     @Throws(JwtException::class)
-    override fun signature(payload: String, jwtKey: JwtKey): String = try {
+    override fun signature(body: String, jwtKey: JwtKey): String = try {
         val mac = getMac().apply { init(jwtKey.secret) }
-        JwtUtils.encodeToBase64UrlWopString(mac.doFinal(payload.toByteArray()))
+        JwtUtils.encodeToBase64UrlWopString(mac.doFinal(body.toByteArray()))
     } catch (e: Exception) {
         throw JwtException(JwtExceptionCode.PARSE_ERROR)
     }

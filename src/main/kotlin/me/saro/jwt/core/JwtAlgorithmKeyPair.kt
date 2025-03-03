@@ -31,10 +31,10 @@ interface JwtAlgorithmKeyPair : JwtAlgorithm {
             false
         }
 
-    override fun signature(payload: String, jwtKey: JwtKey): String {
+    override fun signature(body: String, jwtKey: JwtKey): String {
         val signature = getSignature()
         signature.initSign(jwtKey.private)
-        signature.update(payload.toByteArray())
+        signature.update(body.toByteArray())
         return JwtUtils.encodeToBase64UrlWopString(signature.sign())
     }
 }

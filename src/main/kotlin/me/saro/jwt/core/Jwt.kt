@@ -1,6 +1,5 @@
 package me.saro.jwt.core
 
-import me.saro.jwt.alg.es.JwtEs
 import me.saro.jwt.alg.es.JwtEs256
 import me.saro.jwt.alg.es.JwtEs384
 import me.saro.jwt.alg.es.JwtEs512

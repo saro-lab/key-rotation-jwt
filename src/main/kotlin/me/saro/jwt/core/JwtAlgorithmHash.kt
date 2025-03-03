@@ -8,7 +8,7 @@ interface JwtAlgorithmHash : JwtAlgorithm {
 
     override fun verifySignature(jwtToken: List<String>, jwtKey: JwtKey): Boolean =
         try {
-            jwtToken.size == 3 && jwtToken[2].isNotBlank() && signature("${jwtToken[0]}.${jwtToken[1]}", jwtKey) == jwtToken[3]
+            jwtToken.size == 3 && jwtToken[2].isNotBlank() && signature("${jwtToken[0]}.${jwtToken[1]}", jwtKey) == jwtToken[2]
         } catch (_: Exception) {
             false
         }
