@@ -11,6 +11,7 @@ class JwtUtils {
         private val DE_BASE64_URL: Base64.Decoder = Base64.getUrlDecoder()
         private val DE_BASE64: Base64.Decoder = Base64.getDecoder()
         private val TYPE_MAP = object: TypeReference<MutableMap<String, Any>>() {}
+        private val TYPE_TEXT_MAP = object: TypeReference<MutableMap<String, String>>() {}
         private val EN_BASE64_URL_WOP: Base64.Encoder = Base64.getUrlEncoder().withoutPadding()
         private val REGEX_PEM_NORMALIZE = Regex("(\\s+|-----(BEGIN|END) .*?-----)")
 
@@ -21,7 +22,7 @@ class JwtUtils {
         fun readMap(src: ByteArray): MutableMap<String, Any> = OBJECT_MAPPER.readValue(src, TYPE_MAP)
 
         @JvmStatic
-        fun toJsonString(obj: Any): String = OBJECT_MAPPER.writeValueAsString(obj)
+        fun readTextMap(src: ByteArray): MutableMap<String, String> = OBJECT_MAPPER.readValue(src, TYPE_TEXT_MAP)
 
         @JvmStatic
         fun decodeBase64(src: String): ByteArray = DE_BASE64.decode(src)

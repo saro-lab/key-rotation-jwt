@@ -12,7 +12,7 @@ import me.saro.jwt.alg.ps.JwtPs512
 import me.saro.jwt.alg.rs.JwtRs256
 import me.saro.jwt.alg.rs.JwtRs384
 import me.saro.jwt.alg.rs.JwtRs512
-import me.saro.jwt.core.JwtUtils.Companion.encodeToBase64UrlWopString
+import me.saro.jwt.core.JwtNode.Builder
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
 
@@ -46,43 +46,52 @@ class Jwt {
         @JvmStatic
         fun hs512(): JwtHs512 = JwtHs512()
 
-        /** jwt data is header + payload */
         @JvmStatic
-        fun toJwtData(header: Map<String, Any>, claims: Map<String, Any>): String =
-            StringBuilder(200)
-                .append(encodeToBase64UrlWopString(JwtUtils.writeValueAsBytes(header)))
-                .append('.')
-                .append(encodeToBase64UrlWopString(JwtUtils.writeValueAsBytes(claims)))
-                .toString()
+        fun builder(): Builder =
+            Builder(
+                header = mutableMapOf<String, String>("typ" to "JWT"),
+                payload = mutableMapOf<String, Any>(),
+            )
 
         @JvmStatic
-        @Throws(JwtException::class)
-        fun toJwtHeader(jwt: String?): JwtHeader = try {
+        fun parse(jwt: String?, getAlgorithmWithKey: (jwtNode: JwtNode) -> Pair<JwtAlgorithm, JwtKey>): JwtNode {
             if (jwt.isNullOrBlank()) {
-                throw JwtException(JwtExceptionCode.PARSE_ERROR)
+                throw JwtException(JwtExceptionCode.PARSE_ERROR, "jwt is null or blank")
             }
-            val token = jwt.split('.')
-            if (token.size !in 2..3) {
-                throw JwtException(JwtExceptionCode.PARSE_ERROR)
+            val token: List<String> = jwt.split('.')
+            if (token.size != 3) {
+                throw JwtException(JwtExceptionCode.PARSE_ERROR, "jwt must be header.payload.signature: $jwt")
             }
-            JwtHeader(JwtUtils.readMap(JwtUtils.decodeBase64Url(token[0])))
-        } catch (e: Exception) {
-            throw JwtException(JwtExceptionCode.PARSE_ERROR)
-        }
-
-        @JvmStatic
-        @Throws(JwtException::class)
-        fun toJwtClaimsWithoutVerify(jwt: String?): JwtClaims = try {
-            if (jwt.isNullOrBlank()) {
-                throw JwtException(JwtExceptionCode.PARSE_ERROR)
+            if (token.any { it.isBlank() }) {
+                throw JwtException(JwtExceptionCode.PARSE_ERROR, "jwt must be header.payload.signature: $jwt")
             }
-            val token = jwt.split('.')
-            if (token.size !in 2..3) {
-                throw JwtException(JwtExceptionCode.PARSE_ERROR)
+            val header: MutableMap<String, String> = try {
+                JwtUtils.readTextMap(JwtUtils.decodeBase64Url(token[0]));
+            } catch (e: Exception) {
+                throw JwtException(JwtExceptionCode.PARSE_ERROR, "header parse error: $jwt")
             }
-            JwtClaims(JwtUtils.readMap(JwtUtils.decodeBase64Url(token[1])))
-        } catch (e: Exception) {
-            throw JwtException(JwtExceptionCode.PARSE_ERROR)
+            val payload: MutableMap<String, Any> = try {
+                JwtUtils.readMap(JwtUtils.decodeBase64Url(token[1]));
+            } catch (e: Exception) {
+                throw JwtException(JwtExceptionCode.PARSE_ERROR, "payload parse error: $jwt")
+            }
+            val jwtNode: JwtNode = JwtNode(header, payload)
+            jwtNode.expire?.also {
+                if (it.time < System.currentTimeMillis()) {
+                    throw JwtException(JwtExceptionCode.DATE_EXPIRED, "jwt is expired: $jwt")
+                }
+            }
+            jwtNode.notBefore?.also {
+                if (it.time > System.currentTimeMillis()) {
+                    throw JwtException(JwtExceptionCode.DATE_BEFORE, "jwt is not before: $jwt")
+                }
+            }
+            try {
+                if (getAlgorithmWithKey(jwtNode).let { (algorithm, key) -> algorithm.verifySignature(token, key) }) {
+                    return jwtNode
+                }
+            } catch (_: Exception) { }
+            throw JwtException(JwtExceptionCode.INVALID_SIGNATURE, "signature verify error: $jwt")
         }
     }
 }

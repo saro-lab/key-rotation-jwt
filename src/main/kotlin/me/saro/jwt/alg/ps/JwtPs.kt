@@ -9,7 +9,7 @@ import java.security.KeyPairGenerator
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 
-abstract class JwtPs: JwtAlgorithmKeyPair{
+abstract class JwtPs: JwtAlgorithmKeyPair {
     companion object {
         private const val KEY_ALGORITHM = "RSA"
     }

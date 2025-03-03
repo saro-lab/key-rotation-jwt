@@ -1,5 +1,5 @@
 plugins {
-	id("org.jetbrains.kotlin.jvm") version "2.1.20-Beta2"
+	id("org.jetbrains.kotlin.jvm") version "2.1.20-RC"
 	id("org.ec4j.editorconfig") version "0.1.0"
 	id("idea")
 	signing
@@ -21,10 +21,10 @@ java {
 
 dependencies {
 	// jackson
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.3")
 
 	// test
-	testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+	testImplementation("org.junit.jupiter:junit-jupiter:5.12.0")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

@@ -1,6 +1,8 @@
 package me.saro.jwt.alg.hs
 
-import me.saro.jwt.core.*
+import me.saro.jwt.core.JwtAlgorithmHash
+import me.saro.jwt.core.JwtKey
+import me.saro.jwt.core.JwtUtils
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
 import javax.crypto.Mac
@@ -11,16 +13,16 @@ abstract class JwtHs: JwtAlgorithmHash {
     abstract fun getMac(): Mac
 
     @Throws(JwtException::class)
-    override fun signature(body: String, jwtKey: JwtKey): String = try {
+    override fun signature(payload: String, jwtKey: JwtKey): String = try {
         val mac = getMac().apply { init(jwtKey.secret) }
-        JwtUtils.encodeToBase64UrlWopString(mac.doFinal(body.toByteArray()))
+        JwtUtils.encodeToBase64UrlWopString(mac.doFinal(payload.toByteArray()))
     } catch (e: Exception) {
         throw JwtException(JwtExceptionCode.PARSE_ERROR)
     }
 
     @Throws(JwtException::class)
-    override fun toJwtKey(secret: String): JwtKey = try {
-       JwtHsKey(SecretKeySpec(secret.toByteArray(), getKeyAlgorithm()))
+    override fun toJwtKey(stringify: String): JwtKey = try {
+       JwtHsKey(SecretKeySpec(stringify.toByteArray(), getKeyAlgorithm()))
     } catch (e: Exception) {
         throw JwtException(JwtExceptionCode.PARSE_ERROR)
     }
