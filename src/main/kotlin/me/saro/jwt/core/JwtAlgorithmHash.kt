@@ -6,9 +6,9 @@ interface JwtAlgorithmHash : JwtAlgorithm {
         private val MOLD_LEN = MOLD.size
     }
 
-    override fun verifySignature(jwtToken: List<String>, jwtKey: JwtKey): Boolean =
+    override fun verifySignature(body: ByteArray, signature: ByteArray, jwtKey: JwtKey): Boolean =
         try {
-            jwtToken.size == 3 && jwtToken[2].isNotBlank() && signature("${jwtToken[0]}.${jwtToken[1]}", jwtKey) == jwtToken[2]
+            signature(body, jwtKey).contentEquals(signature)
         } catch (_: Exception) {
             false
         }

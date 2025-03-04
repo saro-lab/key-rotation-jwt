@@ -28,10 +28,10 @@ class JwtUtils {
         fun decodeBase64(src: String): ByteArray = DE_BASE64.decode(src)
 
         @JvmStatic
-        fun decodeBase64Url(src: String): ByteArray = DE_BASE64_URL.decode(src)
+        fun decodeBase64Url(src: ByteArray): ByteArray = DE_BASE64_URL.decode(src)
 
         @JvmStatic
-        fun encodeToBase64UrlWopString(src: ByteArray): String = EN_BASE64_URL_WOP.encodeToString(src)
+        fun encodeToBase64UrlWop(src: ByteArray): ByteArray = EN_BASE64_URL_WOP.encode(src)
 
         @JvmStatic
         fun normalizePem(key: String) = key.replace(REGEX_PEM_NORMALIZE, "")
