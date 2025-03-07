@@ -7,12 +7,12 @@ import java.security.PrivateKey
 import java.security.PublicKey
 
 data class JwtEsKey(
-    val jwtEs: JwtEsAlgorithm,
+    override val algorithm: JwtEsAlgorithm,
     val keyPair: KeyPair,
-): JwtKey(jwtEs) {
-    override val stringify: String get() = "${jwtEs.fullname} $publicKeyString $privateKeyString"
+): JwtKey(algorithm) {
+    override val stringify: String get() = "${algorithm.fullname} $publicKeyString $privateKeyString"
     override fun signature(body: ByteArray): ByteArray {
-        TODO("Not yet implemented")
+        
     }
 
     override fun signature(body: ByteBuffer): ByteArray {

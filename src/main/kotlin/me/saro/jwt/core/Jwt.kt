@@ -12,7 +12,6 @@ import me.saro.jwt.alg.ps.JwtPs512Algorithm
 import me.saro.jwt.alg.rs.JwtRs256Algorithm
 import me.saro.jwt.alg.rs.JwtRs384Algorithm
 import me.saro.jwt.alg.rs.JwtRs512Algorithm
-import me.saro.jwt.core.JwtNode.Builder
 
 class Jwt {
     companion object {
@@ -48,9 +47,6 @@ class Jwt {
             "HS512" -> HS512 as T
             else -> throw IllegalArgumentException("not support algorithm: $algorithm")
         }
-
-        @JvmStatic
-        fun builder(): Builder = Builder()
 
         @JvmStatic
         fun parse(jwt: String?, getAlgorithmWithKey: (jwtNode: JwtNode) -> Pair<JwtAlgorithm, JwtKey>): JwtNode =
