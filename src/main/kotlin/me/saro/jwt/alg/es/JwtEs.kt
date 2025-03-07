@@ -15,14 +15,13 @@ abstract class JwtEs: JwtAlgorithmKeyPair {
         private const val KEY_ALGORITHM = "EC"
     }
 
-    abstract fun getECGenParameterSpec(): ECGenParameterSpec
+    abstract val genParameterSpec: ECGenParameterSpec
 
-    fun newRandomJwtKey(): JwtKey =
-        JwtEsKey(
-            KeyPairGenerator.getInstance(KEY_ALGORITHM)
-                .apply { initialize(getECGenParameterSpec()) }
-                .genKeyPair()
-        )
+    override fun newRandomJwtKey(): JwtKey {
+        val kp = KeyPairGenerator.getInstance(KEY_ALGORITHM)
+        kp.initialize(genParameterSpec)
+        JwtEsKey(this, kp.genKeyPair())
+    }
 
     override fun toJwtKey(publicKey: String, privateKey: String): JwtKey =
         KeyFactory.getInstance(KEY_ALGORITHM).run {

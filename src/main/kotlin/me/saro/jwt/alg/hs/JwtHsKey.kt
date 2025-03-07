@@ -7,6 +7,6 @@ data class JwtHsKey(
     override val secret: SecretKeySpec,
 ): JwtKey {
     override val stringify: String get() = secretString
-    override val algorithm: String get() = "HS"
+    override val keyAlgorithm: String get() = "HS"
     override fun toString(): String = "JwtHsKey($secretString)"
 }

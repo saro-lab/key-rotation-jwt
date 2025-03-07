@@ -32,6 +32,23 @@ class Jwt {
         @JvmField val HS384: JwtHs384 = JwtHs384()
         @JvmField val HS512: JwtHs512 = JwtHs512()
 
+        @Suppress("UNCHECKED_CAST")
+        fun <T: JwtAlgorithm> getAlgorithm(algorithm: String): T = when (algorithm) {
+            "ES256" -> ES256 as T
+            "ES384" -> ES384 as T
+            "ES512" -> ES512 as T
+            "RS256" -> RS256 as T
+            "RS384" -> RS384 as T
+            "RS512" -> RS512 as T
+            "PS256" -> PS256 as T
+            "PS384" -> PS384 as T
+            "PS512" -> PS512 as T
+            "HS256" -> HS256 as T
+            "HS384" -> HS384 as T
+            "HS512" -> HS512 as T
+            else -> throw IllegalArgumentException("not support algorithm: $algorithm")
+        }
+
         @JvmStatic
         fun builder(): Builder = Builder()
 

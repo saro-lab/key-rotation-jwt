@@ -6,11 +6,12 @@ import java.security.PrivateKey
 import java.security.PublicKey
 
 data class JwtEsKey(
-    val keyPair: KeyPair
-): JwtKey {
-    override val stringify: String get() = "$publicKeyString $privateKeyString"
-    override val algorithm: String get() = "ES"
+    val jwtEs: JwtEs,
+    val keyPair: KeyPair,
+): JwtKey(jwtEs) {
+    override val stringify: String get() = "${jwtEs.algorithm} $publicKeyString $privateKeyString"
+    override val keyAlgorithm: String = "ES"
     override val public: PublicKey get() = keyPair.public
     override val private: PrivateKey get() = keyPair.private
-    override fun toString(): String = "JwtEsKey($publicKeyString,$privateKeyString)"
+    override fun toString(): String = stringify
 }
