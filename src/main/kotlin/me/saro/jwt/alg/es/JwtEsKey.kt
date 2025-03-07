@@ -1,5 +1,6 @@
 package me.saro.jwt.alg.es
 
+import me.saro.jwt.core.JwtEsAlgorithm
 import me.saro.jwt.core.JwtKey
 import java.nio.ByteBuffer
 import java.security.KeyPair
@@ -12,7 +13,7 @@ data class JwtEsKey(
 ): JwtKey(algorithm) {
     override val stringify: String get() = "${algorithm.fullname} $publicKeyString $privateKeyString"
     override fun signature(body: ByteArray): ByteArray {
-        
+
     }
 
     override fun signature(body: ByteBuffer): ByteArray {

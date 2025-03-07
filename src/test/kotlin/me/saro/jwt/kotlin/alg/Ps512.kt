@@ -1,9 +1,9 @@
 package me.saro.jwt.kotlin.alg
 
 import me.saro.jwt.alg.ps.JwtPs512Algorithm
-import me.saro.jwt.core.Jwt
-import me.saro.jwt.core.Jwt.Companion.builder
-import me.saro.jwt.core.Jwt.Companion.parse
+import me.saro.jwt.Jwt
+import me.saro.jwt.Jwt.Companion.builder
+import me.saro.jwt.Jwt.Companion.parse
 import me.saro.jwt.core.JwtKey
 import me.saro.jwt.core.JwtNode
 import me.saro.jwt.exception.JwtException

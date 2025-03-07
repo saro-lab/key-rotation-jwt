@@ -1,5 +1,6 @@
 package me.saro.jwt.alg.es
 
+import me.saro.jwt.core.JwtEsAlgorithm
 import java.security.Signature
 import java.security.spec.ECGenParameterSpec
 

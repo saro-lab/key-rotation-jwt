@@ -1,4 +1,4 @@
-package me.saro.jwt.core
+package me.saro.jwt
 
 import me.saro.jwt.alg.es.JwtEs256Algorithm
 import me.saro.jwt.alg.es.JwtEs384Algorithm
@@ -12,6 +12,9 @@ import me.saro.jwt.alg.ps.JwtPs512Algorithm
 import me.saro.jwt.alg.rs.JwtRs256Algorithm
 import me.saro.jwt.alg.rs.JwtRs384Algorithm
 import me.saro.jwt.alg.rs.JwtRs512Algorithm
+import me.saro.jwt.core.JwtAlgorithm
+import me.saro.jwt.core.JwtKey
+import me.saro.jwt.core.JwtNode
 
 class Jwt {
     companion object {

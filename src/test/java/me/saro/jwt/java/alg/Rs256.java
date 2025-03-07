@@ -2,7 +2,7 @@ package me.saro.jwt.java.alg;
 
 
 import me.saro.jwt.alg.rs.JwtRs256Algorithm;
-import me.saro.jwt.core.Jwt;
+import me.saro.jwt.Jwt;
 import me.saro.jwt.core.JwtKey;
 import me.saro.jwt.core.JwtNode;
 import me.saro.jwt.exception.JwtException;

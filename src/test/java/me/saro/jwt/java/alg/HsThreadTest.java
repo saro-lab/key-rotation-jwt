@@ -1,7 +1,7 @@
 package me.saro.jwt.java.alg;
 
 import me.saro.jwt.alg.hs.JwtHsAlgorithm;
-import me.saro.jwt.core.Jwt;
+import me.saro.jwt.Jwt;
 import me.saro.jwt.core.JwtAlgorithm;
 import me.saro.jwt.core.JwtKey;
 import org.junit.jupiter.api.Assertions;
