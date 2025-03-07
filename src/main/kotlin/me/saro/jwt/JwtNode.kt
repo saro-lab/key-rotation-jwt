@@ -1,4 +1,4 @@
-package me.saro.jwt.core
+package me.saro.jwt
 
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
@@ -65,7 +65,7 @@ open class JwtNode internal constructor(
         private const val DOT_BYTE: Byte = '.'.code.toByte()
         private const val DOT_INT: Int = '.'.code
 
-        fun parse(jwt: String?, getAlgorithmWithKey: (jwtNode: JwtNode) -> Pair<JwtAlgorithm, JwtKey>): JwtNode {
+        fun parse(jwt: String?, getJwtKey: (jwtNode: JwtNode) -> JwtKey?): JwtNode {
             if (jwt.isNullOrBlank()) {
                 throw JwtException(JwtExceptionCode.PARSE_ERROR, "jwt is null or blank")
             }
@@ -101,7 +101,9 @@ open class JwtNode internal constructor(
                 }
             }
             try {
-                if (getAlgorithmWithKey(jwtNode).let { (algorithm, key) -> algorithm.verifySignature(jwtByte.copyOfRange(0, lastDot), jwtByte.copyOfRange(lastDot + 1, jwt.length), key) }) {
+                val body = jwtByte.copyOfRange(0, lastDot)
+                val signature = jwtByte.copyOfRange(lastDot + 1, jwt.length)
+                if (getJwtKey(jwtNode)?.verifySignature(body, signature) == true) {
                     return jwtNode
                 }
             } catch (_: Exception) { }
@@ -142,16 +144,17 @@ open class JwtNode internal constructor(
         fun expire(date: OffsetDateTime): Builder = claimTimestamp("exp", date)
         fun expire(date: ZonedDateTime): Builder = claimTimestamp("exp", date)
 
-        fun toJwt(algorithm: JwtAlgorithm, key: JwtKey): String {
-            header["alg"] = algorithm.fullname
+        fun toJwt(): String {
+            header["alg"] = key.algorithm.algorithmFullName
 
             val jwt = ByteArrayOutputStream(10)
             jwt.write(JwtUtils.encodeToBase64UrlWop(JwtUtils.writeValueAsBytes(header)))
             jwt.write(DOT_INT)
             jwt.write(JwtUtils.encodeToBase64UrlWop(JwtUtils.writeValueAsBytes(payload)))
-            val sig = algorithm.signature(jwt.toByteArray(), key)
+
+            val signature = key.signature(jwt.toByteArray())
             jwt.write(DOT_INT)
-            jwt.write(sig)
+            jwt.write(signature)
 
             return String(jwt.toByteArray())
         }

@@ -1,38 +1,27 @@
 package me.saro.jwt
 
-import me.saro.jwt.alg.es.JwtEs256Algorithm
-import me.saro.jwt.alg.es.JwtEs384Algorithm
-import me.saro.jwt.alg.es.JwtEs512Algorithm
-import me.saro.jwt.alg.hs.JwtHs256Algorithm
-import me.saro.jwt.alg.hs.JwtHs384Algorithm
-import me.saro.jwt.alg.hs.JwtHs512Algorithm
-import me.saro.jwt.alg.ps.JwtPs256Algorithm
-import me.saro.jwt.alg.ps.JwtPs384Algorithm
-import me.saro.jwt.alg.ps.JwtPs512Algorithm
-import me.saro.jwt.alg.rs.JwtRs256Algorithm
-import me.saro.jwt.alg.rs.JwtRs384Algorithm
-import me.saro.jwt.alg.rs.JwtRs512Algorithm
-import me.saro.jwt.core.JwtAlgorithm
-import me.saro.jwt.core.JwtKey
-import me.saro.jwt.core.JwtNode
+import me.saro.jwt.impl.JwtEsAlgorithm
+import me.saro.jwt.impl.JwtHsAlgorithm
+import me.saro.jwt.impl.JwtPsAlgorithm
+import me.saro.jwt.impl.JwtRsAlgorithm
 
 class Jwt {
     companion object {
-        @JvmField val ES256: JwtEs256Algorithm = JwtEs256Algorithm()
-        @JvmField val ES384: JwtEs384Algorithm = JwtEs384Algorithm()
-        @JvmField val ES512: JwtEs512Algorithm = JwtEs512Algorithm()
+        @JvmField val ES256: JwtEsAlgorithm = JwtEsAlgorithm("ES256")
+        @JvmField val ES384: JwtEsAlgorithm = JwtEsAlgorithm("ES384")
+        @JvmField val ES512: JwtEsAlgorithm = JwtEsAlgorithm("ES512")
 
-        @JvmField val RS256: JwtRs256Algorithm = JwtRs256Algorithm()
-        @JvmField val RS384: JwtRs384Algorithm = JwtRs384Algorithm()
-        @JvmField val RS512: JwtRs512Algorithm = JwtRs512Algorithm()
+        @JvmField val RS256: JwtRsAlgorithm = JwtRsAlgorithm("RS256")
+        @JvmField val RS384: JwtRsAlgorithm = JwtRsAlgorithm("RS384")
+        @JvmField val RS512: JwtRsAlgorithm = JwtRsAlgorithm("RS512")
 
-        @JvmField val PS256: JwtPs256Algorithm = JwtPs256Algorithm()
-        @JvmField val PS384: JwtPs384Algorithm = JwtPs384Algorithm()
-        @JvmField val PS512: JwtPs512Algorithm = JwtPs512Algorithm()
+        @JvmField val PS256: JwtPsAlgorithm = JwtPsAlgorithm("PS256")
+        @JvmField val PS384: JwtPsAlgorithm = JwtPsAlgorithm("PS384")
+        @JvmField val PS512: JwtPsAlgorithm = JwtPsAlgorithm("PS512")
 
-        @JvmField val HS256: JwtHs256Algorithm = JwtHs256Algorithm()
-        @JvmField val HS384: JwtHs384Algorithm = JwtHs384Algorithm()
-        @JvmField val HS512: JwtHs512Algorithm = JwtHs512Algorithm()
+        @JvmField val HS256: JwtHsAlgorithm = JwtHsAlgorithm("HS256")
+        @JvmField val HS384: JwtHsAlgorithm = JwtHsAlgorithm("HS384")
+        @JvmField val HS512: JwtHsAlgorithm = JwtHsAlgorithm("HS512")
 
         @Suppress("UNCHECKED_CAST")
         fun <T: JwtAlgorithm> getAlgorithm(algorithm: String): T = when (algorithm) {
@@ -52,15 +41,27 @@ class Jwt {
         }
 
         @JvmStatic
-        fun parse(jwt: String?, getAlgorithmWithKey: (jwtNode: JwtNode) -> Pair<JwtAlgorithm, JwtKey>): JwtNode =
-            JwtNode.parse(jwt, getAlgorithmWithKey)
+        fun parseJwt(jwt: String?, getJwtKey: (jwtNode: JwtNode) -> JwtKey?): JwtNode =
+            JwtNode.parse(jwt, getJwtKey)
 
         @JvmStatic
-        fun parseOrNull(jwt: String?, getAlgorithmWithKey: (jwtNode: JwtNode) -> Pair<JwtAlgorithm, JwtKey>): JwtNode? =
-            try {
-                JwtNode.parse(jwt, getAlgorithmWithKey)
-            } catch (_: Exception) {
-                null
+        fun parseKey(stringify: String): JwtKey {
+            val args = stringify.split(" ")
+            val algorithm = getAlgorithm<JwtAlgorithm>(args[0])
+            if (algorithm is JwtKeyPairAlgorithm<*>) {
+                if (args.size != 3) {
+                    throw IllegalArgumentException("Invalid ${algorithm.algorithmFullName} key format: $stringify")
+                }
+                return algorithm.toJwtKey(args[1], args[2])
+            } else if (algorithm is JwtHsAlgorithm) {
+                if (args.size != 2) {
+                    throw IllegalArgumentException("Invalid ${algorithm.algorithmFullName} key format: $stringify")
+                }
+                return algorithm.toJwtKey(stringify)
+            } else {
+                throw IllegalArgumentException("Unsupported algorithm: ${algorithm.algorithmFullName}")
             }
+        }
+
     }
 }
