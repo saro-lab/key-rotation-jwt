@@ -1,6 +1,6 @@
 package me.saro.jwt.java.alg;
 
-import me.saro.jwt.alg.es.JwtEs256;
+import me.saro.jwt.alg.es.JwtEs256Algorithm;
 import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtKey;
 import me.saro.jwt.core.JwtNode;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @DisplayName("[Java] ES256")
 public class Es256 {
 
-    JwtEs256 alg = Jwt.ES256;
+    JwtEs256Algorithm alg = Jwt.ES256;
 
     @Test
     @DisplayName("check jwt.io example")

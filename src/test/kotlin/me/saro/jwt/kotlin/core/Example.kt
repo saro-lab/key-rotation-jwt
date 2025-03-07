@@ -1,6 +1,6 @@
 package me.saro.jwt.kotlin.core
 
-import me.saro.jwt.alg.es.JwtEs256
+import me.saro.jwt.alg.es.JwtEs256Algorithm
 import me.saro.jwt.core.Jwt
 import me.saro.jwt.core.JwtKey
 import me.saro.jwt.core.JwtNode
@@ -12,7 +12,7 @@ import java.util.*
 
 @DisplayName("[Kotlin] example")
 class Example {
-    var alg: JwtEs256 = Jwt.ES256
+    var alg: JwtEs256Algorithm = Jwt.ES256
 
     @Test
     @DisplayName("basic")

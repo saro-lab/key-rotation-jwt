@@ -1,6 +1,6 @@
 package me.saro.jwt.java.alg;
 
-import me.saro.jwt.alg.hs.JwtHs384;
+import me.saro.jwt.alg.hs.JwtHs384Algorithm;
 import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtKey;
 import me.saro.jwt.core.JwtNode;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @DisplayName("[Java] HS384")
 public class Hs384 {
 
-    JwtHs384 alg = Jwt.HS384;
+    JwtHs384Algorithm alg = Jwt.HS384;
 
     @Test
     @DisplayName("check jwt.io example")

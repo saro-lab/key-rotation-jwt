@@ -1,6 +1,6 @@
 package me.saro.jwt.kotlin.alg
 
-import me.saro.jwt.alg.rs.JwtRs512
+import me.saro.jwt.alg.rs.JwtRs512Algorithm
 import me.saro.jwt.core.Jwt
 import me.saro.jwt.core.Jwt.Companion.builder
 import me.saro.jwt.core.Jwt.Companion.parse
@@ -15,7 +15,7 @@ import java.util.*
 
 @DisplayName("[Kotlin] RS512")
 class Rs512 {
-    var alg: JwtRs512 = Jwt.RS512
+    var alg: JwtRs512Algorithm = Jwt.RS512
 
     fun randomKeyBit(): Int {
         return listOf(2048, 3072, 4096)[(Math.random() * 3).toInt()]

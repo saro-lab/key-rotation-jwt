@@ -1,6 +1,6 @@
 package me.saro.jwt.alg.es
 
-import me.saro.jwt.core.JwtAlgorithmKeyPair
+import me.saro.jwt.core.JwtKeyPairAlgorithm
 import me.saro.jwt.core.JwtKey
 import me.saro.jwt.core.JwtUtils
 import java.security.KeyFactory
@@ -10,14 +10,12 @@ import java.security.spec.ECGenParameterSpec
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 
-abstract class JwtEs: JwtAlgorithmKeyPair {
+abstract class JwtEsAlgorithm: JwtKeyPairAlgorithm {
     companion object {
         private const val KEY_ALGORITHM = "EC"
     }
 
     abstract val genParameterSpec: ECGenParameterSpec
-
-    override val keyAlgorithm: String = "EC"
 
     override fun newRandomJwtKey(): JwtKey {
         val kp = KeyPairGenerator.getInstance(KEY_ALGORITHM)

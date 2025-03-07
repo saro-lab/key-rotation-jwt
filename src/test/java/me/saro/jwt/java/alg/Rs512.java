@@ -1,6 +1,6 @@
 package me.saro.jwt.java.alg;
 
-import me.saro.jwt.alg.rs.JwtRs512;
+import me.saro.jwt.alg.rs.JwtRs512Algorithm;
 import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtKey;
 import me.saro.jwt.core.JwtNode;
@@ -18,7 +18,7 @@ import java.util.UUID;
 @DisplayName("[Java] RS512")
 public class Rs512 {
 
-    JwtRs512 alg = Jwt.RS512;
+    JwtRs512Algorithm alg = Jwt.RS512;
 
     public int randomKeyBit() {
         return List.of(2048, 3072, 4096).get((int)(Math.random() * 3));

@@ -1,6 +1,6 @@
 package me.saro.jwt.alg.hs
 
-import me.saro.jwt.core.JwtAlgorithmHash
+import me.saro.jwt.core.JwtHashAlgorithm
 import me.saro.jwt.core.JwtKey
 import me.saro.jwt.core.JwtUtils
 import me.saro.jwt.exception.JwtException
@@ -9,7 +9,7 @@ import java.nio.ByteBuffer
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-abstract class JwtHs: JwtAlgorithmHash {
+abstract class JwtHsAlgorithm: JwtHashAlgorithm {
     abstract fun getKeyAlgorithm(): String
     abstract fun getMac(): Mac
 

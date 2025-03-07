@@ -1,6 +1,6 @@
 package me.saro.jwt.kotlin.alg
 
-import me.saro.jwt.alg.hs.JwtHs512
+import me.saro.jwt.alg.hs.JwtHs512Algorithm
 import me.saro.jwt.core.Jwt
 import me.saro.jwt.core.Jwt.Companion.builder
 import me.saro.jwt.core.Jwt.Companion.parse
@@ -15,7 +15,7 @@ import java.util.*
 
 @DisplayName("[Kotlin] HS512")
 class Hs512 {
-    var alg: JwtHs512 = Jwt.HS512
+    var alg: JwtHs512Algorithm = Jwt.HS512
 
     @Test
     @DisplayName("check jwt.io example")

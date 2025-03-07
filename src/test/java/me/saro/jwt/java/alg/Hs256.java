@@ -1,6 +1,6 @@
 package me.saro.jwt.java.alg;
 
-import me.saro.jwt.alg.hs.JwtHs256;
+import me.saro.jwt.alg.hs.JwtHs256Algorithm;
 import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtKey;
 import me.saro.jwt.core.JwtNode;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @DisplayName("[Java] HS256")
 public class Hs256 {
 
-    JwtHs256 alg = Jwt.HS256;
+    JwtHs256Algorithm alg = Jwt.HS256;
 
     @Test
     @DisplayName("check jwt.io example")

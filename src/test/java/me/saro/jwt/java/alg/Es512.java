@@ -1,6 +1,6 @@
 package me.saro.jwt.java.alg;
 
-import me.saro.jwt.alg.es.JwtEs512;
+import me.saro.jwt.alg.es.JwtEs512Algorithm;
 import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtKey;
 import me.saro.jwt.core.JwtNode;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @DisplayName("[Java] ES512")
 public class Es512 {
 
-    JwtEs512 alg = Jwt.ES512;
+    JwtEs512Algorithm alg = Jwt.ES512;
 
     @Test
     @DisplayName("check jwt.io example")

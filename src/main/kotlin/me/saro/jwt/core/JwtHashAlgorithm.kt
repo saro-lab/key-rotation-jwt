@@ -1,6 +1,6 @@
 package me.saro.jwt.core
 
-interface JwtAlgorithmHash : JwtAlgorithm {
+interface JwtHashAlgorithm : JwtAlgorithm {
     companion object {
         private val MOLD = "1234567890!@#$%^&*()+=-_/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()
         private val MOLD_LEN = MOLD.size

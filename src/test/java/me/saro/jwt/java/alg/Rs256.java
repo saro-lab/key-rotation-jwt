@@ -1,7 +1,7 @@
 package me.saro.jwt.java.alg;
 
 
-import me.saro.jwt.alg.rs.JwtRs256;
+import me.saro.jwt.alg.rs.JwtRs256Algorithm;
 import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtKey;
 import me.saro.jwt.core.JwtNode;
@@ -19,7 +19,7 @@ import java.util.UUID;
 @DisplayName("[Java] RS256")
 public class Rs256 {
 
-    JwtRs256 alg = Jwt.RS256;
+    JwtRs256Algorithm alg = Jwt.RS256;
 
     public int randomKeyBit() {
         return List.of(2048, 3072, 4096).get((int)(Math.random() * 3));

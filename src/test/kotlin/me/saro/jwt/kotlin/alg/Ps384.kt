@@ -1,6 +1,6 @@
 package me.saro.jwt.kotlin.alg
 
-import me.saro.jwt.alg.ps.JwtPs384
+import me.saro.jwt.alg.ps.JwtPs384Algorithm
 import me.saro.jwt.core.Jwt
 import me.saro.jwt.core.Jwt.Companion.builder
 import me.saro.jwt.core.Jwt.Companion.parse
@@ -15,7 +15,7 @@ import java.util.*
 
 @DisplayName("[Kotlin] PS384")
 class Ps384 {
-    var alg: JwtPs384 = Jwt.PS384
+    var alg: JwtPs384Algorithm = Jwt.PS384
 
     fun randomKeyBit(): Int {
         return listOf(2048, 3072, 4096)[(Math.random() * 3).toInt()]

@@ -2,8 +2,8 @@ package me.saro.jwt.alg.hs
 
 import javax.crypto.Mac
 
-class JwtHs384 internal constructor(): JwtHs() {
+class JwtHs384Algorithm internal constructor(): JwtHsAlgorithm() {
     override fun getKeyAlgorithm(): String = "HmacSHA384"
     override fun getMac(): Mac = Mac.getInstance(getKeyAlgorithm())
-    override val algorithm: String = "HS384"
+    override val fullname: String = "HS384"
 }

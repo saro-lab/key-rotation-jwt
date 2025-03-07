@@ -1,36 +1,36 @@
 package me.saro.jwt.core
 
-import me.saro.jwt.alg.es.JwtEs256
-import me.saro.jwt.alg.es.JwtEs384
-import me.saro.jwt.alg.es.JwtEs512
-import me.saro.jwt.alg.hs.JwtHs256
-import me.saro.jwt.alg.hs.JwtHs384
-import me.saro.jwt.alg.hs.JwtHs512
-import me.saro.jwt.alg.ps.JwtPs256
-import me.saro.jwt.alg.ps.JwtPs384
-import me.saro.jwt.alg.ps.JwtPs512
-import me.saro.jwt.alg.rs.JwtRs256
-import me.saro.jwt.alg.rs.JwtRs384
-import me.saro.jwt.alg.rs.JwtRs512
+import me.saro.jwt.alg.es.JwtEs256Algorithm
+import me.saro.jwt.alg.es.JwtEs384Algorithm
+import me.saro.jwt.alg.es.JwtEs512Algorithm
+import me.saro.jwt.alg.hs.JwtHs256Algorithm
+import me.saro.jwt.alg.hs.JwtHs384Algorithm
+import me.saro.jwt.alg.hs.JwtHs512Algorithm
+import me.saro.jwt.alg.ps.JwtPs256Algorithm
+import me.saro.jwt.alg.ps.JwtPs384Algorithm
+import me.saro.jwt.alg.ps.JwtPs512Algorithm
+import me.saro.jwt.alg.rs.JwtRs256Algorithm
+import me.saro.jwt.alg.rs.JwtRs384Algorithm
+import me.saro.jwt.alg.rs.JwtRs512Algorithm
 import me.saro.jwt.core.JwtNode.Builder
 
 class Jwt {
     companion object {
-        @JvmField val ES256: JwtEs256 = JwtEs256()
-        @JvmField val ES384: JwtEs384 = JwtEs384()
-        @JvmField val ES512: JwtEs512 = JwtEs512()
+        @JvmField val ES256: JwtEs256Algorithm = JwtEs256Algorithm()
+        @JvmField val ES384: JwtEs384Algorithm = JwtEs384Algorithm()
+        @JvmField val ES512: JwtEs512Algorithm = JwtEs512Algorithm()
 
-        @JvmField val RS256: JwtRs256 = JwtRs256()
-        @JvmField val RS384: JwtRs384 = JwtRs384()
-        @JvmField val RS512: JwtRs512 = JwtRs512()
+        @JvmField val RS256: JwtRs256Algorithm = JwtRs256Algorithm()
+        @JvmField val RS384: JwtRs384Algorithm = JwtRs384Algorithm()
+        @JvmField val RS512: JwtRs512Algorithm = JwtRs512Algorithm()
 
-        @JvmField val PS256: JwtPs256 = JwtPs256()
-        @JvmField val PS384: JwtPs384 = JwtPs384()
-        @JvmField val PS512: JwtPs512 = JwtPs512()
+        @JvmField val PS256: JwtPs256Algorithm = JwtPs256Algorithm()
+        @JvmField val PS384: JwtPs384Algorithm = JwtPs384Algorithm()
+        @JvmField val PS512: JwtPs512Algorithm = JwtPs512Algorithm()
 
-        @JvmField val HS256: JwtHs256 = JwtHs256()
-        @JvmField val HS384: JwtHs384 = JwtHs384()
-        @JvmField val HS512: JwtHs512 = JwtHs512()
+        @JvmField val HS256: JwtHs256Algorithm = JwtHs256Algorithm()
+        @JvmField val HS384: JwtHs384Algorithm = JwtHs384Algorithm()
+        @JvmField val HS512: JwtHs512Algorithm = JwtHs512Algorithm()
 
         @Suppress("UNCHECKED_CAST")
         fun <T: JwtAlgorithm> getAlgorithm(algorithm: String): T = when (algorithm) {

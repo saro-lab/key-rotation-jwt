@@ -5,7 +5,7 @@ import me.saro.jwt.exception.JwtExceptionCode
 import java.nio.ByteBuffer
 import java.security.Signature
 
-interface JwtAlgorithmKeyPair : JwtAlgorithm {
+interface JwtKeyPairAlgorithm : JwtAlgorithm {
     fun toJwtKey(publicKey: String, privateKey: String): JwtKey
 
     override fun toJwtKey(stringify: String): JwtKey = stringify.let {

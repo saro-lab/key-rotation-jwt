@@ -1,6 +1,6 @@
 package me.saro.jwt.java.alg;
 
-import me.saro.jwt.alg.rs.JwtRs384;
+import me.saro.jwt.alg.rs.JwtRs384Algorithm;
 import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtKey;
 import me.saro.jwt.core.JwtNode;
@@ -18,7 +18,7 @@ import java.util.UUID;
 @DisplayName("[Java] RS384")
 public class Rs384 {
 
-    JwtRs384 alg = Jwt.RS384;
+    JwtRs384Algorithm alg = Jwt.RS384;
 
     public int randomKeyBit() {
         return List.of(2048, 3072, 4096).get((int)(Math.random() * 3));

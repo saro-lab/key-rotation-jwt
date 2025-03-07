@@ -1,6 +1,6 @@
 package me.saro.jwt.alg.rs
 
-import me.saro.jwt.core.JwtAlgorithmKeyPair
+import me.saro.jwt.core.JwtKeyPairAlgorithm
 import me.saro.jwt.core.JwtKey
 import me.saro.jwt.core.JwtUtils
 import java.security.KeyFactory
@@ -9,7 +9,7 @@ import java.security.KeyPairGenerator
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.X509EncodedKeySpec
 
-abstract class JwtRs: JwtAlgorithmKeyPair {
+abstract class JwtRsAlgorithm: JwtKeyPairAlgorithm {
     companion object {
         private const val KEY_ALGORITHM = "RSA"
     }

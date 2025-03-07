@@ -1,6 +1,6 @@
 package me.saro.jwt.kotlin.alg
 
-import me.saro.jwt.alg.ps.JwtPs256
+import me.saro.jwt.alg.ps.JwtPs256Algorithm
 import me.saro.jwt.core.Jwt
 import me.saro.jwt.core.Jwt.Companion.builder
 import me.saro.jwt.core.Jwt.Companion.parse
@@ -16,7 +16,7 @@ import java.util.*
 
 @DisplayName("[Kotlin] PS256")
 class Ps256 {
-    var alg: JwtPs256 = Jwt.PS256
+    var alg: JwtPs256Algorithm = Jwt.PS256
 
     fun randomKeyBit(): Int {
         return listOf(2048, 3072, 4096)[(Math.random() * 3).toInt()]

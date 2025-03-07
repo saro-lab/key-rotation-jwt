@@ -142,7 +142,7 @@ open class JwtNode internal constructor(
         fun expire(date: ZonedDateTime): Builder = claimTimestamp("exp", date)
 
         fun toJwt(algorithm: JwtAlgorithm, key: JwtKey): String {
-            header["alg"] = algorithm.algorithm
+            header["alg"] = algorithm.fullname
 
             val jwt = ByteArrayOutputStream(10)
             jwt.write(JwtUtils.encodeToBase64UrlWop(JwtUtils.writeValueAsBytes(header)))

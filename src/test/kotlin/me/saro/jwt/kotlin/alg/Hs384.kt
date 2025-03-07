@@ -1,6 +1,6 @@
 package me.saro.jwt.kotlin.alg
 
-import me.saro.jwt.alg.hs.JwtHs384
+import me.saro.jwt.alg.hs.JwtHs384Algorithm
 import me.saro.jwt.core.Jwt
 import me.saro.jwt.core.Jwt.Companion.builder
 import me.saro.jwt.core.Jwt.Companion.parse
@@ -15,7 +15,7 @@ import java.util.*
 
 @DisplayName("[Kotlin] HS384")
 class Hs384 {
-    var alg: JwtHs384 = Jwt.HS384
+    var alg: JwtHs384Algorithm = Jwt.HS384
 
     @Test
     @DisplayName("check jwt.io example")

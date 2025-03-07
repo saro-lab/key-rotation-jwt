@@ -1,6 +1,6 @@
 package me.saro.jwt.java.alg;
 
-import me.saro.jwt.alg.rs.JwtRs;
+import me.saro.jwt.alg.rs.JwtRsAlgorithm;
 import me.saro.jwt.core.Jwt;
 import me.saro.jwt.core.JwtAlgorithm;
 import me.saro.jwt.core.JwtKey;
@@ -21,13 +21,13 @@ public class RsThreadTest {
     @Test
     @DisplayName("Thread And Random KID Test")
     public void t1() {
-        List<JwtRs> algs = List.of(Jwt.RS256, Jwt.RS384, Jwt.RS512);
-        Map<String, JwtAlgorithm> algMap = algs.stream().collect(HashMap::new, (m, a) -> m.put(a.getAlgorithm(), a), HashMap::putAll);
+        List<JwtRsAlgorithm> algs = List.of(Jwt.RS256, Jwt.RS384, Jwt.RS512);
+        Map<String, JwtAlgorithm> algMap = algs.stream().collect(HashMap::new, (m, a) -> m.put(a.getFullname(), a), HashMap::putAll);
         HashMap<String, JwtKey> keys = new HashMap<String, JwtKey>();
         ArrayList<String> jwts = new ArrayList<String>();
 
         for (int i = 0 ; i < 30 ; i++) {
-            JwtRs alg = algs.get((int)(Math.random() * 3));
+            JwtRsAlgorithm alg = algs.get((int)(Math.random() * 3));
             String kid = UUID.randomUUID().toString();
             JwtKey key = alg.newRandomJwtKey( randomKeyBit());
             keys.put(kid, key);

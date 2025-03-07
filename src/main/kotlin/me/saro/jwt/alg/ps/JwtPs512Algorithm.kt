@@ -4,8 +4,8 @@ import java.security.Signature
 import java.security.spec.MGF1ParameterSpec
 import java.security.spec.PSSParameterSpec
 
-class JwtPs384 internal constructor(): JwtPs() {
-    override val algorithm: String = "PS384"
+class JwtPs512Algorithm internal constructor(): JwtPsAlgorithm() {
+    override val fullname: String = "PS512"
     override fun getSignature(): Signature = Signature.getInstance("RSASSA-PSS")
-        .apply { setParameter(PSSParameterSpec("SHA-384", "MGF1", MGF1ParameterSpec.SHA384, 48, 1)) }
+        .apply { setParameter(PSSParameterSpec("SHA-512", "MGF1", MGF1ParameterSpec.SHA512, 64, 1)) }
 }

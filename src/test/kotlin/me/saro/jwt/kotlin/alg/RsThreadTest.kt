@@ -1,6 +1,6 @@
 package me.saro.jwt.kotlin.alg
 
-import me.saro.jwt.alg.rs.JwtRs
+import me.saro.jwt.alg.rs.JwtRsAlgorithm
 import me.saro.jwt.core.Jwt
 import me.saro.jwt.core.Jwt.Companion.builder
 import me.saro.jwt.core.Jwt.Companion.parse
@@ -25,7 +25,7 @@ class RsThreadTest {
         val algs = listOf(Jwt.RS256, Jwt.RS384, Jwt.RS512)
         val algMap: Map<String?, JwtAlgorithm> = algs.stream().collect(
             { HashMap() },
-            { m: HashMap<String?, JwtAlgorithm>, a: JwtRs -> m[a.algorithm] = a },
+            { m: HashMap<String?, JwtAlgorithm>, a: JwtRsAlgorithm -> m[a.fullname] = a },
             { obj: HashMap<String?, JwtAlgorithm>, m: HashMap<String?, JwtAlgorithm>? ->
                 obj.putAll(
                     m!!

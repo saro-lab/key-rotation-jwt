@@ -1,6 +1,6 @@
 package me.saro.jwt.kotlin.alg
 
-import me.saro.jwt.alg.es.JwtEs
+import me.saro.jwt.alg.es.JwtEsAlgorithm
 import me.saro.jwt.core.Jwt
 import me.saro.jwt.core.Jwt.Companion.builder
 import me.saro.jwt.core.Jwt.Companion.parse
@@ -21,7 +21,7 @@ class EsThreadTest {
         val algs = listOf(Jwt.ES256, Jwt.ES384, Jwt.ES512)
         val algMap: Map<String?, JwtAlgorithm> = algs.stream().collect(
             { HashMap() },
-            { m: HashMap<String?, JwtAlgorithm>, a: JwtEs -> m[a.algorithm] = a },
+            { m: HashMap<String?, JwtAlgorithm>, a: JwtEsAlgorithm -> m[a.fullname] = a },
             { obj: HashMap<String?, JwtAlgorithm>, m: HashMap<String?, JwtAlgorithm>? ->
                 obj.putAll(
                     m!!
