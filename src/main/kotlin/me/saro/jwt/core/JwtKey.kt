@@ -2,6 +2,7 @@ package me.saro.jwt.core
 
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
+import java.nio.ByteBuffer
 import java.security.PrivateKey
 import java.security.PublicKey
 import java.util.*
@@ -14,10 +15,11 @@ abstract class JwtKey(
         private val EN_BASE64 = Base64.getEncoder()
     }
 
-    abstract val keyAlgorithm: String
     abstract val stringify: String
 
-    abstract fun newRandomJwtKey(): JwtKey
+    abstract fun signature(body: ByteArray): ByteArray
+    abstract fun signature(body: ByteBuffer): ByteArray
+    abstract fun verifySignature(body: ByteArray, signature: ByteArray): Boolean
 
     val secret: SecretKeySpec get() = throw JwtException(JwtExceptionCode.NOT_SUPPORT, "${jwtAlgorithm.algorithm} does not support secret key")
     val secretString: String get() = String(secret.encoded, Charsets.UTF_8)

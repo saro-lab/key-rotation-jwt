@@ -17,6 +17,8 @@ abstract class JwtEs: JwtAlgorithmKeyPair {
 
     abstract val genParameterSpec: ECGenParameterSpec
 
+    override val keyAlgorithm: String = "EC"
+
     override fun newRandomJwtKey(): JwtKey {
         val kp = KeyPairGenerator.getInstance(KEY_ALGORITHM)
         kp.initialize(genParameterSpec)
