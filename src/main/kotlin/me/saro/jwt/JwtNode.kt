@@ -56,7 +56,7 @@ open class JwtNode internal constructor(
     val issuedAt: Date? get() = claimDateByTimestamp("iat")
     val expire: Date? get() = claimDateByTimestamp("exp")
 
-    fun toBuilder(key: JwtKey): Builder = Builder(header.toMutableMap(), payload.toMutableMap(), key)
+    fun toBuilder(key: JwtKey): Builder = Builder(key, header.toMutableMap(), payload.toMutableMap())
 
     override fun toString(): String {
         return "$header.$payload"
@@ -113,9 +113,9 @@ open class JwtNode internal constructor(
     }
 
     open class Builder(
+        private val key: JwtKey,
         override val header: MutableMap<String, String> = mutableMapOf("typ" to "JWT"),
-        override val payload: MutableMap<String, Any> = mutableMapOf(),
-        private val key: JwtKey
+        override val payload: MutableMap<String, Any> = mutableMapOf()
     ): JwtNode(header, payload) {
         fun header(key: String, value: String): Builder = this.apply { header[key] = value }
         fun kid(value: String): Builder = this.apply { header["kid"] = value }

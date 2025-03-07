@@ -22,6 +22,9 @@ open class JwtRsAlgorithm(
     override fun toJwtKey(keyPair: KeyPair): JwtRsKey =
         JwtRsKey(algorithmFullName, keyPair)
 
+    override fun newRandomJwtKey(): JwtRsKey =
+        newRandomJwtKey(2048)
+
     // 2048, 3072, 4096
     fun newRandomJwtKey(bit: Int): JwtRsKey =
         KeyPairGenerator.getInstance(keyAlgorithmName).run {

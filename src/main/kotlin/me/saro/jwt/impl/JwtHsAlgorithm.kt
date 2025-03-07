@@ -26,6 +26,9 @@ open class JwtHsAlgorithm(
     fun toJwtKeyByBase64Url(key: String): JwtKey =
         toJwtKey(JwtUtils.decodeBase64Url(key))
 
+    override fun newRandomJwtKey(): JwtKey =
+        newRandomJwtKey(32)
+
     fun newRandomJwtKey(minKeySize: Int, maxKeySize: Int): JwtKey {
         if (minKeySize > maxKeySize) {
             throw IllegalArgumentException("minKeySize must be less than or equal to maxKeySize")

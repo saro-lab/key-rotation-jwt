@@ -1,5 +1,6 @@
 package me.saro.jwt.impl
 
+import me.saro.jwt.JwtKey
 import me.saro.jwt.JwtKeyPairAlgorithm
 import me.saro.jwt.JwtUtils
 import java.security.KeyPair
@@ -26,6 +27,9 @@ open class JwtPsAlgorithm(
 
     override fun toJwtKey(keyPair: KeyPair): JwtPsKey =
         JwtPsKey(algorithmFullName, keyPair)
+
+    override fun newRandomJwtKey(): JwtKey =
+        newRandomJwtKey(2048)
 
     // 2048, 3072, 4096
     fun newRandomJwtKey(bit: Int): JwtPsKey =

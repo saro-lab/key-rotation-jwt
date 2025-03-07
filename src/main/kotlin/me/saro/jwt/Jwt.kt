@@ -69,5 +69,7 @@ class Jwt {
             }
         }
 
+        @JvmStatic
+        fun create(jwtKey: JwtKey): JwtNode.Builder = JwtNode.Builder(jwtKey)
     }
 }

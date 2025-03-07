@@ -25,7 +25,7 @@ open class JwtEsAlgorithm(
     override fun toJwtKey(keyPair: KeyPair): JwtEsKey =
         JwtEsKey(algorithmFullName, keyPair)
 
-    fun newRandomJwtKey(): JwtEsKey =
+    override fun newRandomJwtKey(): JwtEsKey =
         KeyPairGenerator.getInstance(keyAlgorithmName).run {
             initialize(genParameterSpec)
             JwtEsKey(algorithmFullName, genKeyPair())
