@@ -89,6 +89,14 @@ signing {
 	sign(publishing.publications["maven"])
 }
 
+tasks.withType<Test> {
+	useJUnitPlatform()
+	testLogging {
+		events("passed", "failed", "skipped")
+		showStandardStreams = true
+	}
+}
+
 tasks.withType<Javadoc>().configureEach {
 	options {
 		this as StandardJavadocDocletOptions

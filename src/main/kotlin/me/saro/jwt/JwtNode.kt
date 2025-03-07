@@ -19,6 +19,7 @@ open class JwtNode internal constructor(
 
     @Suppress("UNCHECKED_CAST")
     fun <T> claim(key: String): T? = payload[key] as T?
+    fun claimString(key: String): String? = payload[key]?.toString()
     fun claimBoolean(key: String): Boolean? = when (val v = payload[key]) {
         null -> null
         is Boolean -> v
@@ -88,16 +89,16 @@ open class JwtNode internal constructor(
             }
             val jwtNode: JwtNode = JwtNode(header, payload)
             if (jwtNode.algorithm.isNullOrBlank()) {
-                throw JwtException(JwtExceptionCode.PARSE_ERROR, "algorithm is null or blank: $jwt, $JwtNode")
+                throw JwtException(JwtExceptionCode.PARSE_ERROR, "algorithm is null or blank: $jwt, $jwtNode")
             }
             jwtNode.expire?.also {
                 if (it.time < System.currentTimeMillis()) {
-                    throw JwtException(JwtExceptionCode.DATE_EXPIRED, "jwt is expired: $jwt, $JwtNode")
+                    throw JwtException(JwtExceptionCode.DATE_EXPIRED, "jwt is expired: $jwt, $jwtNode")
                 }
             }
             jwtNode.notBefore?.also {
                 if (it.time > System.currentTimeMillis()) {
-                    throw JwtException(JwtExceptionCode.DATE_BEFORE, "jwt is not before: $jwt, $JwtNode")
+                    throw JwtException(JwtExceptionCode.DATE_BEFORE, "jwt is not before: $jwt, $jwtNode")
                 }
             }
             try {
@@ -107,7 +108,7 @@ open class JwtNode internal constructor(
                     return jwtNode
                 }
             } catch (_: Exception) { }
-            throw JwtException(JwtExceptionCode.INVALID_SIGNATURE, "signature verify error: $jwt, $JwtNode")
+            throw JwtException(JwtExceptionCode.INVALID_SIGNATURE, "signature verify error: $jwt, $jwtNode")
         }
     }
 

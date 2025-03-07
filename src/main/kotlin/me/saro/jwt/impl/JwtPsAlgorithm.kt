@@ -1,13 +1,16 @@
 package me.saro.jwt.impl
 
 import me.saro.jwt.JwtKeyPairAlgorithm
+import me.saro.jwt.JwtUtils
 import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.Signature
 import java.security.spec.MGF1ParameterSpec
+import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.PSSParameterSpec
+import java.security.spec.X509EncodedKeySpec
 
-class JwtPsAlgorithm(
+open class JwtPsAlgorithm(
     algorithmFullNameCopy: String
 ): JwtKeyPairAlgorithm<JwtPsKey> {
     override val algorithmName: String = "PS"
@@ -29,6 +32,16 @@ class JwtPsAlgorithm(
         KeyPairGenerator.getInstance(keyAlgorithmName).run {
             initialize(bit)
             JwtPsKey(algorithmFullName, genKeyPair())
+        }
+
+    override fun toJwtKey(publicKey: String, privateKey: String): JwtPsKey =
+        getKeyFactory().run {
+            toJwtKey(
+                KeyPair(
+                    generatePublic(X509EncodedKeySpec(JwtUtils.decodeBase64(JwtUtils.normalizePem(publicKey)))),
+                    generatePrivate(PKCS8EncodedKeySpec(JwtUtils.decodeBase64(JwtUtils.normalizePem(privateKey))))
+                )
+            )
         }
 
     companion object {

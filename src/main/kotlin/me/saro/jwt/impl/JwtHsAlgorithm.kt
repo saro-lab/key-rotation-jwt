@@ -23,7 +23,8 @@ open class JwtHsAlgorithm(
         throw JwtException(JwtExceptionCode.PARSE_ERROR)
     }
 
-    fun toJwtKey(key: String): JwtKey = toJwtKey(JwtUtils.decodeBase64Url(key.toByteArray()))
+    fun toJwtKeyByBase64Url(key: String): JwtKey =
+        toJwtKey(JwtUtils.decodeBase64Url(key))
 
     fun newRandomJwtKey(minKeySize: Int, maxKeySize: Int): JwtKey {
         if (minKeySize > maxKeySize) {

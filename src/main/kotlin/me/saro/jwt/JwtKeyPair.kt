@@ -24,4 +24,13 @@ interface JwtKeyPair: JwtKey {
         keyPairSignature.update(body)
         return JwtUtils.encodeToBase64UrlWop(keyPairSignature.sign())
     }
+
+    override fun verifySignature(body: ByteArray, signature: ByteArray): Boolean = try {
+        val keyPairSignature = getKeyPairSignature()
+        keyPairSignature.initVerify(public)
+        keyPairSignature.update(body)
+        keyPairSignature.verify(JwtUtils.decodeBase64Url(signature))
+    } catch (_: Exception) {
+        false
+    }
 }

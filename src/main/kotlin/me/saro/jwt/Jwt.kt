@@ -23,6 +23,7 @@ class Jwt {
         @JvmField val HS384: JwtHsAlgorithm = JwtHsAlgorithm("HS384")
         @JvmField val HS512: JwtHsAlgorithm = JwtHsAlgorithm("HS512")
 
+        @JvmStatic
         @Suppress("UNCHECKED_CAST")
         fun <T: JwtAlgorithm> getAlgorithm(algorithm: String): T = when (algorithm) {
             "ES256" -> ES256 as T
@@ -47,19 +48,24 @@ class Jwt {
         @JvmStatic
         fun parseKey(stringify: String): JwtKey {
             val args = stringify.split(" ")
-            val algorithm = getAlgorithm<JwtAlgorithm>(args[0])
-            if (algorithm is JwtKeyPairAlgorithm<*>) {
-                if (args.size != 3) {
-                    throw IllegalArgumentException("Invalid ${algorithm.algorithmFullName} key format: $stringify")
+            when (val algorithm = getAlgorithm<JwtAlgorithm>(args[0])) {
+                is JwtKeyPairAlgorithm<*> -> {
+                    if (args.size != 3) {
+                        throw IllegalArgumentException("Invalid ${algorithm.algorithmFullName} key format: $stringify")
+                    }
+                    return algorithm.toJwtKey(args[1], args[2])
                 }
-                return algorithm.toJwtKey(args[1], args[2])
-            } else if (algorithm is JwtHsAlgorithm) {
-                if (args.size != 2) {
-                    throw IllegalArgumentException("Invalid ${algorithm.algorithmFullName} key format: $stringify")
+
+                is JwtHsAlgorithm -> {
+                    if (args.size != 2) {
+                        throw IllegalArgumentException("Invalid ${algorithm.algorithmFullName} key format: $stringify")
+                    }
+                    return algorithm.toJwtKeyByBase64Url(args[1])
                 }
-                return algorithm.toJwtKey(stringify)
-            } else {
-                throw IllegalArgumentException("Unsupported algorithm: ${algorithm.algorithmFullName}")
+
+                else -> {
+                    throw IllegalArgumentException("Unsupported algorithm: ${algorithm.algorithmFullName}")
+                }
             }
         }
 

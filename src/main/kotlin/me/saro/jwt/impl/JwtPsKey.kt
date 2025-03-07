@@ -11,7 +11,7 @@ import java.security.Signature
 class JwtPsKey(
     algorithmFullNameCopy: String,
     override val keyPair: KeyPair
-): JwtRsAlgorithm(algorithmFullNameCopy), JwtKeyPair {
+): JwtPsAlgorithm(algorithmFullNameCopy), JwtKeyPair {
     override val stringify: String = "$algorithmFullNameCopy $publicKeyString $privateKeyString"
     override val algorithm: JwtAlgorithm = this
 
@@ -21,5 +21,5 @@ class JwtPsKey(
 
     override val public: PublicKey get() = keyPair.public
     override val private: PrivateKey get() = keyPair.private
-    override fun getKeyPairSignature(): Signature = super<JwtRsAlgorithm>.getKeyPairSignature()
+    override fun getKeyPairSignature(): Signature = super<JwtPsAlgorithm>.getKeyPairSignature()
 }

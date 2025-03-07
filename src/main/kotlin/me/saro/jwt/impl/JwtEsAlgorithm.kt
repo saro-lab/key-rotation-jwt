@@ -1,10 +1,13 @@
 package me.saro.jwt.impl
 
 import me.saro.jwt.JwtKeyPairAlgorithm
+import me.saro.jwt.JwtUtils
 import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.Signature
 import java.security.spec.ECGenParameterSpec
+import java.security.spec.PKCS8EncodedKeySpec
+import java.security.spec.X509EncodedKeySpec
 
 open class JwtEsAlgorithm(
     algorithmFullNameCopy: String
@@ -26,6 +29,16 @@ open class JwtEsAlgorithm(
         KeyPairGenerator.getInstance(keyAlgorithmName).run {
             initialize(genParameterSpec)
             JwtEsKey(algorithmFullName, genKeyPair())
+        }
+
+    override fun toJwtKey(publicKey: String, privateKey: String): JwtEsKey =
+        getKeyFactory().run {
+            toJwtKey(
+                KeyPair(
+                    generatePublic(X509EncodedKeySpec(JwtUtils.decodeBase64(publicKey))),
+                    generatePrivate(PKCS8EncodedKeySpec(JwtUtils.decodeBase64(privateKey)))
+                )
+            )
         }
 
     companion object {
