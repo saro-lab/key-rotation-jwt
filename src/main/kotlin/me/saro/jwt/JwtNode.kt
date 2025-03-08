@@ -169,7 +169,7 @@ open class JwtNode internal constructor(
         fun toJwt(): String {
             header["alg"] = key.algorithm.algorithmFullName
 
-            val jwt = ByteArrayOutputStream(10)
+            val jwt = ByteArrayOutputStream(2000)
             jwt.write(JwtUtils.encodeToBase64UrlWop(JwtUtils.writeValueAsBytes(header)))
             jwt.write(DOT_INT)
             jwt.write(JwtUtils.encodeToBase64UrlWop(JwtUtils.writeValueAsBytes(payload)))

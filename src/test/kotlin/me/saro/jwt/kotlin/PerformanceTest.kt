@@ -49,7 +49,7 @@ class PerformanceTest {
     @Test
     @DisplayName("[Kotlin] PS fixed keys test")
     fun f_ps() {
-        fixedKeys(1000, Jwt.PS256, Jwt.PS384, Jwt.PS512)
+        fixedKeys(5000, Jwt.PS256, Jwt.PS384, Jwt.PS512)
     }
 
     @Test

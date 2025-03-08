@@ -44,7 +44,7 @@ public class PerformanceTest {
     @Test
     @DisplayName("[Java] HS fixed keys test")
     public void f_hs() {
-        fixedKeys(1000, Jwt.HS256, Jwt.HS384, Jwt.HS512);
+        fixedKeys(5000, Jwt.HS256, Jwt.HS384, Jwt.HS512);
     }
 
     @Test
