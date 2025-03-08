@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@DisplayName("[Java] Key ID test")
+@DisplayName("[Java] all test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 public class AllTest {
@@ -24,7 +24,7 @@ public class AllTest {
 
     @Test
     @DisplayName("[Java] 01 created Keys")
-    public void _01_create_keys() {
+    public void test01() {
         long start = System.currentTimeMillis();
 
         // HS Algorithm
@@ -89,7 +89,9 @@ public class AllTest {
 
     @Test
     @DisplayName("[Java] 02 stringify keys")
-    public void _02_stringify_keys() {
+    public void test02() {
+        Assertions.assertNotEquals(0, createKeyMap.size(), "This function cannot be tested independently. Please run the entire test.");
+
         long start = System.currentTimeMillis();
 
         createKeyMap.forEach((kid, key) -> stringKeyMap.put(kid, key.getStringify()) );
@@ -102,7 +104,9 @@ public class AllTest {
 
     @Test
     @DisplayName("[Java] 03 convert string keys")
-    public void _03_convert_string_keys() {
+    public void test03() {
+        Assertions.assertNotEquals(0, stringKeyMap.size(), "This function cannot be tested independently. Please run the entire test.");
+
         long start = System.currentTimeMillis();
 
         stringKeyMap.forEach((kid, key) -> convertKeyMap.put(kid, Jwt.parseKey(key)));
@@ -114,7 +118,7 @@ public class AllTest {
 
     @Test
     @DisplayName("[Java] 04 expired")
-    public void _04_expired() {
+    public void test04() {
         Assertions.assertNotEquals(0, createKeyMap.size(), "This function cannot be tested independently. Please run the entire test.");
 
         long start = System.currentTimeMillis();
@@ -134,7 +138,7 @@ public class AllTest {
 
     @Test
     @DisplayName("[Java] 05 not before")
-    public void _05_not_before() {
+    public void test05() {
         Assertions.assertNotEquals(0, createKeyMap.size(), "This function cannot be tested independently. Please run the entire test.");
 
         long start = System.currentTimeMillis();
@@ -154,7 +158,7 @@ public class AllTest {
 
     @Test
     @DisplayName("[Java] 06 pass")
-    public void _06_pass() {
+    public void test06() {
         Assertions.assertNotEquals(0, createKeyMap.size(), "This function cannot be tested independently. Please run the entire test.");
 
         long start = System.currentTimeMillis();
@@ -172,7 +176,7 @@ public class AllTest {
 
     @Test
     @DisplayName("[Java] 07 data")
-    public void _07_data() {
+    public void test07() {
         Assertions.assertNotEquals(0, createKeyMap.size(), "This function cannot be tested independently. Please run the entire test.");
 
         long start = System.currentTimeMillis();

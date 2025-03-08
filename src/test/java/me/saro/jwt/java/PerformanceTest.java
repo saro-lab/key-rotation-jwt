@@ -59,7 +59,7 @@ public class PerformanceTest {
         fixedKeys(1000, Jwt.RS256, Jwt.RS384, Jwt.RS512);
     }
 
-    public void dynamicKeys(int loop, JwtAlgorithm... algs) {
+    private void dynamicKeys(int loop, JwtAlgorithm... algs) {
         for (JwtAlgorithm alg : algs) {
             long start = System.currentTimeMillis();
             for (int i = 0 ; i < loop ; i++) {
@@ -81,7 +81,7 @@ public class PerformanceTest {
         }
     }
 
-    public void fixedKeys(int loop, JwtAlgorithm... algs) {
+    private void fixedKeys(int loop, JwtAlgorithm... algs) {
         for (JwtAlgorithm alg : algs) {
             JwtKey key = alg.newRandomJwtKey();
             long start = System.currentTimeMillis();
