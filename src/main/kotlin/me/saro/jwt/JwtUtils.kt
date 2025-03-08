@@ -30,13 +30,19 @@ class JwtUtils {
         fun decodeBase64(src: String): ByteArray = DE_BASE64.decode(src)
 
         @JvmStatic
-        fun decodeBase64Url(src: String): ByteArray = DE_BASE64_URL.decode(src)
-
-        @JvmStatic
         fun decodeBase64Url(src: ByteArray): ByteArray = DE_BASE64_URL.decode(src)
 
         @JvmStatic
+        fun encodeBase64String(src: ByteArray): String = EN_BASE64.encodeToString(src)
+
+        @JvmStatic
+        fun encodeBase64String(src: String): String = EN_BASE64.encodeToString(src.toByteArray())
+
+        @JvmStatic
         fun encodeBase64UrlString(src: ByteArray): String = EN_BASE64_URL.encodeToString(src)
+
+        @JvmStatic
+        fun encodeBase64UrlString(src: String): String = EN_BASE64_URL.encodeToString(src.toByteArray())
 
         @JvmStatic
         fun encodeToBase64UrlWop(src: ByteArray): ByteArray = EN_BASE64_URL_WOP.encode(src)

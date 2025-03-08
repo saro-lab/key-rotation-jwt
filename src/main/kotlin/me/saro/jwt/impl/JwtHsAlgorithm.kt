@@ -23,8 +23,11 @@ open class JwtHsAlgorithm(
         throw JwtException(JwtExceptionCode.PARSE_ERROR)
     }
 
-    fun toJwtKeyByBase64Url(key: String): JwtKey =
-        toJwtKey(JwtUtils.decodeBase64Url(key))
+    fun toJwtKey(key: String): JwtKey =
+        toJwtKey(key.toByteArray())
+
+    fun toJwtKeyByBase64Url(encodedBase64Key: String): JwtKey =
+        toJwtKey(JwtUtils.decodeBase64(encodedBase64Key))
 
     override fun newRandomJwtKey(): JwtKey =
         newRandomJwtKey(32)

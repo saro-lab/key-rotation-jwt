@@ -25,8 +25,16 @@ open class JwtNode internal constructor(
         is Boolean -> v
         is Int -> v != 0
         is Long -> v != 0L
-        is String -> v.lowercase().matches("true|yes|on|1".toRegex())
-        else -> v.toString().lowercase().matches("true|yes|on|1".toRegex())
+        else -> {
+            val b: String = v.toString()
+            if (b.matches(REGEX_TRUE)) {
+                true
+            } else if (b.matches(REGEX_FALSE)) {
+                false
+            } else {
+                throw JwtException(JwtExceptionCode.PARSE_ERROR, "claimBoolean only support ignoreCase(true|yes|y|on|1|o|false|no|n|not|off|0|x) : $b")
+            }
+        }
     }
     fun claimInt(key: String): Int? = when (val v = payload[key]) {
         null -> null
@@ -47,14 +55,22 @@ open class JwtNode internal constructor(
         is Date -> v
         else -> claimLong(key)?.let { Date(1000L * it) }
     }
+    fun claimDateByEpochSecond(key: String): Long? = when (val v = payload[key]) {
+        null -> null
+        is Date -> v.time / 1000L
+        else -> claimLong(key)
+    }
 
     val issuer: Any? get() = claim("iss")
     val subject: String? get() = claim("sub")
     val audience: String? get() = claim("aud")
     val id: String? get() = claim("jti")
     val notBefore: Date? get() = claimDateByTimestamp("nbf")
+    val notBeforeEpochSecond: Long? get() = claimDateByEpochSecond("nbf")
     val issuedAt: Date? get() = claimDateByTimestamp("iat")
+    val issuedAtEpochSecond: Long? get() = claimDateByEpochSecond("iat")
     val expire: Date? get() = claimDateByTimestamp("exp")
+    val expireEpochSecond: Long? get() = claimDateByEpochSecond("exp")
 
     fun toBuilder(key: JwtKey): Builder = Builder(key, header.toMutableMap(), payload.toMutableMap())
 
@@ -65,6 +81,8 @@ open class JwtNode internal constructor(
     companion object {
         private const val DOT_BYTE: Byte = '.'.code.toByte()
         private const val DOT_INT: Int = '.'.code
+        private val REGEX_TRUE: Regex = Regex("true|yes|y|on|1|o", RegexOption.IGNORE_CASE)
+        private val REGEX_FALSE: Regex = Regex("false|no|n|not|off|0|x", RegexOption.IGNORE_CASE)
 
         fun parse(jwt: String?, getJwtKey: (jwtNode: JwtNode) -> JwtKey?): JwtNode {
             if (jwt.isNullOrBlank()) {
@@ -133,14 +151,17 @@ open class JwtNode internal constructor(
 
         fun id(value: String): Builder = claim("jti", value)
 
+        fun notBefore(epochSecond: Long): Builder = claim("nbf", epochSecond)
         fun notBefore(date: Date): Builder = claimTimestamp("nbf", date)
         fun notBefore(date: OffsetDateTime): Builder = claimTimestamp("nbf", date)
         fun notBefore(date: ZonedDateTime): Builder = claimTimestamp("nbf", date)
 
+        fun issuedAt(epochSecond: Long): Builder = claim("iat", epochSecond)
         fun issuedAt(date: Date): Builder = claimTimestamp("iat", date)
         fun issuedAt(date: OffsetDateTime): Builder = claimTimestamp("iat", date)
         fun issuedAt(date: ZonedDateTime): Builder = claimTimestamp("iat", date)
 
+        fun expire(epochSecond: Long): Builder = claim("exp", epochSecond)
         fun expire(date: Date): Builder = claimTimestamp("exp", date)
         fun expire(date: OffsetDateTime): Builder = claimTimestamp("exp", date)
         fun expire(date: ZonedDateTime): Builder = claimTimestamp("exp", date)

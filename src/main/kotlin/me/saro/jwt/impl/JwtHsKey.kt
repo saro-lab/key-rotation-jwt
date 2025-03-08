@@ -12,7 +12,7 @@ class JwtHsKey(
     algorithmFullNameCopy: String,
     override val secret: SecretKeySpec
 ): JwtHsAlgorithm(algorithmFullNameCopy), JwtKeySecret {
-    override val stringify: String = "$algorithmFullNameCopy $secretBase64Url"
+    override val stringify: String = "$algorithmFullNameCopy $secretBase64"
     override val algorithm: JwtAlgorithm = this
 
     override fun toString(): String = stringify

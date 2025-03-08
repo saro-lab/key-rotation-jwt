@@ -4,5 +4,5 @@ import javax.crypto.spec.SecretKeySpec
 
 interface JwtKeySecret: JwtKey {
     val secret: SecretKeySpec
-    val secretBase64Url: String get() = JwtUtils.encodeBase64UrlString(secret.encoded)
+    val secretBase64: String get() = JwtUtils.encodeBase64String(secret.encoded)
 }
