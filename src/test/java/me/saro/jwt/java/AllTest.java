@@ -124,7 +124,7 @@ public class AllTest {
         long start = System.currentTimeMillis();
 
         createKeyMap.forEach((kid, key) -> {
-            String jwt = key.newJwtBuilder()
+            String jwt = key.createJwt()
                     .kid(kid)
                     .expire(OffsetDateTime.now().minusMinutes(1))
                     .toJwt();
@@ -144,7 +144,7 @@ public class AllTest {
         long start = System.currentTimeMillis();
 
         createKeyMap.forEach((kid, key) -> {
-            String jwt = key.newJwtBuilder()
+            String jwt = key.createJwt()
                     .kid(kid)
                     .notBefore(OffsetDateTime.now().plusDays(1))
                     .toJwt();
@@ -164,7 +164,7 @@ public class AllTest {
         long start = System.currentTimeMillis();
 
         createKeyMap.forEach((kid, key) -> {
-            String jwt = key.newJwtBuilder()
+            String jwt = key.createJwt()
                     .kid(kid)
                     .toJwt();
             JwtNode node = Assertions.assertDoesNotThrow(() -> Jwt.parseJwt(jwt, it -> convertKeyMap.get(it.getKid())));
@@ -200,7 +200,7 @@ public class AllTest {
         long expire = OffsetDateTime.now().plusHours(1).toEpochSecond();
 
         createKeyMap.forEach((kid, key) -> {
-            String jwt = key.newJwtBuilder()
+            String jwt = key.createJwt()
                     .kid(kid)
                     .issuer(issuer)
                     .subject(subject)

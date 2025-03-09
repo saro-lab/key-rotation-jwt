@@ -7,7 +7,8 @@ import me.saro.jwt.JwtKey
 import me.saro.jwt.JwtNode
 import me.saro.jwt.JwtUtils.Companion.normalizePem
 import me.saro.jwt.exception.JwtException
-import me.saro.jwt.impl.*
+import me.saro.jwt.hash.JwtHsAlgorithm
+import me.saro.jwt.keyPair.*
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

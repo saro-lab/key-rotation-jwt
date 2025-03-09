@@ -12,8 +12,8 @@ import java.time.OffsetDateTime;
 public class ExampleTest {
 
     @Test
-    @DisplayName("[Java] 01 simple test")
-    public void test01() {
+    @DisplayName("[Java] 01 single key test")
+    public void test01SingleKey() {
         System.out.println("For an applied usage example, please refer to AllTest");
 
         var es256 = Jwt.ES256;
@@ -28,7 +28,7 @@ public class ExampleTest {
         long expire = OffsetDateTime.now().plusHours(1).toEpochSecond();
 
         // create jwt
-        String jwt = key.newJwtBuilder()
+        String jwt = key.createJwt()
                 .issuer(issuer)
                 .subject(subject)
                 .audience(audience)
@@ -52,6 +52,12 @@ public class ExampleTest {
         Assertions.assertEquals(expire, node.getExpireEpochSecond());
 
         System.out.println("jwt node: " + node);
+    }
+
+    @Test
+    @DisplayName("[Java] 02 key store test")
+    public void test02KeyStore() {
+
     }
 
 

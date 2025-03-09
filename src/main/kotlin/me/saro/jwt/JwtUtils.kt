@@ -27,6 +27,9 @@ class JwtUtils {
         fun readTextMap(src: ByteArray): MutableMap<String, String> = OBJECT_MAPPER.readValue(src, TYPE_TEXT_MAP)
 
         @JvmStatic
+        fun <T> readValue(src: String, valueTypeRef: TypeReference<T>): T = OBJECT_MAPPER.readValue(src, valueTypeRef)
+
+        @JvmStatic
         fun decodeBase64(src: String): ByteArray = DE_BASE64.decode(src)
 
         @JvmStatic

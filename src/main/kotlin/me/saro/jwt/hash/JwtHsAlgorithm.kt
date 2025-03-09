@@ -1,4 +1,4 @@
-package me.saro.jwt.impl
+package me.saro.jwt.hash
 
 import me.saro.jwt.JwtAlgorithm
 import me.saro.jwt.JwtKey

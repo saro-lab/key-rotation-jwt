@@ -1,8 +1,7 @@
-package me.saro.jwt.impl
+package me.saro.jwt.keyPair
 
 import me.saro.jwt.JwtAlgorithm
 import me.saro.jwt.JwtKey
-import me.saro.jwt.JwtKeyPair
 import java.security.KeyPair
 import java.security.PrivateKey
 import java.security.PublicKey

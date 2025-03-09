@@ -1,8 +1,7 @@
-package me.saro.jwt.impl
+package me.saro.jwt.hash
 
 import me.saro.jwt.JwtAlgorithm
 import me.saro.jwt.JwtKey
-import me.saro.jwt.JwtKeySecret
 import me.saro.jwt.JwtUtils
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
@@ -10,8 +9,9 @@ import javax.crypto.spec.SecretKeySpec
 
 class JwtHsKey(
     algorithmFullNameCopy: String,
-    override val secret: SecretKeySpec
-): JwtHsAlgorithm(algorithmFullNameCopy), JwtKeySecret {
+    private val secret: SecretKeySpec
+): JwtHsAlgorithm(algorithmFullNameCopy), JwtKey {
+    private val secretBase64: String get() = JwtUtils.encodeBase64String(secret.encoded)
     override val stringify: String = "$algorithmFullNameCopy $secretBase64"
     override val algorithm: JwtAlgorithm = this
 

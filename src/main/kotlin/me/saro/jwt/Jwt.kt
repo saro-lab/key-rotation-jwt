@@ -1,9 +1,10 @@
 package me.saro.jwt
 
-import me.saro.jwt.impl.JwtEsAlgorithm
-import me.saro.jwt.impl.JwtHsAlgorithm
-import me.saro.jwt.impl.JwtPsAlgorithm
-import me.saro.jwt.impl.JwtRsAlgorithm
+import me.saro.jwt.keyPair.JwtEsAlgorithm
+import me.saro.jwt.hash.JwtHsAlgorithm
+import me.saro.jwt.keyPair.JwtKeyPairAlgorithm
+import me.saro.jwt.keyPair.JwtPsAlgorithm
+import me.saro.jwt.keyPair.JwtRsAlgorithm
 
 class Jwt {
     companion object {
@@ -46,6 +47,9 @@ class Jwt {
             JwtNode.parse(jwt, getJwtKey)
 
         @JvmStatic
+        fun createJwt(jwtKey: JwtKey): JwtNode.Builder = JwtNode.Builder(jwtKey)
+
+        @JvmStatic
         fun parseKey(stringify: String): JwtKey {
             val args = stringify.split(" ")
             when (val algorithm = getAlgorithm<JwtAlgorithm>(args[0])) {
@@ -69,7 +73,5 @@ class Jwt {
             }
         }
 
-        @JvmStatic
-        fun create(jwtKey: JwtKey): JwtNode.Builder = JwtNode.Builder(jwtKey)
     }
 }

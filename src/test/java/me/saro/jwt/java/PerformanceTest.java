@@ -64,7 +64,7 @@ public class PerformanceTest {
             long start = System.currentTimeMillis();
             for (int i = 0 ; i < loop ; i++) {
                 JwtKey key = alg.newRandomJwtKey();
-                var jwt = key.newJwtBuilder()
+                var jwt = key.createJwt()
                         .subject("1234567890")
                         .claim("name", "John Doe")
                         .claim("admin", true)
@@ -86,7 +86,7 @@ public class PerformanceTest {
             JwtKey key = alg.newRandomJwtKey();
             long start = System.currentTimeMillis();
             for (int i = 0 ; i < loop ; i++) {
-                var jwt = key.newJwtBuilder()
+                var jwt = key.createJwt()
                         .subject("1234567890")
                         .claim("name", "John Doe")
                         .claim("admin", true)
