@@ -42,8 +42,9 @@ class JwtMirrorKeyStore private constructor(
 
     override fun export(): String =
         try {
+            val now = Instant.now().epochSecond
             readLock.lock()
-            list.joinToString(",", "[", "]") { it.toJson() }
+            list.filter { it.expire > now }.joinToString(",", "[", "]") { it.toJson() }
         } finally {
             readLock.unlock()
         }

@@ -65,9 +65,9 @@ class JwtMasterKeyStore private constructor(
             private var jsonArray: String = "[]"
             private var algorithm: JwtAlgorithm? = null
             private var genKey: (JwtAlgorithm) -> JwtKey = { it.newRandomJwtKey() }
-            private var expire: Duration? = null
-            private var not: Duration? = null
-            private var aaaa3: Duration? = null
+            private var keyLifetime: Duration? = null
+            private var preparedBroadcastTime: Duration? = null
+            private var minKeyCount: Duration? = null
 
             fun import(jsonArray: String): Builder {
                 this.jsonArray = jsonArray
