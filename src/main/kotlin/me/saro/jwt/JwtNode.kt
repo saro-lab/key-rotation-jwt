@@ -2,6 +2,7 @@ package me.saro.jwt
 
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
+import me.saro.jwt.store.JwtKeyStoreItem
 import java.io.ByteArrayOutputStream
 import java.time.OffsetDateTime
 import java.time.ZonedDateTime
@@ -72,7 +73,8 @@ open class JwtNode internal constructor(
     val expire: Date? get() = claimDateByTimestamp("exp")
     val expireEpochSecond: Long? get() = claimDateByEpochSecond("exp")
 
-    fun toBuilder(key: JwtKey): Builder = Builder(key, header.toMutableMap(), payload.toMutableMap())
+    fun toBuilder(key: JwtKey): Builder = Builder.of(key, header.toMutableMap(), payload.toMutableMap())
+    fun toBuilder(keyStoreItem: JwtKeyStoreItem): Builder = Builder.of(keyStoreItem, header.toMutableMap(), payload.toMutableMap())
 
     override fun toString(): String {
         return "$header.$payload"
@@ -130,11 +132,23 @@ open class JwtNode internal constructor(
         }
     }
 
-    open class Builder(
+    class Builder private constructor(
+        override val header: MutableMap<String, String>,
+        override val payload: MutableMap<String, Any>,
         private val key: JwtKey,
-        override val header: MutableMap<String, String> = mutableMapOf("typ" to "JWT"),
-        override val payload: MutableMap<String, Any> = mutableMapOf()
+        private val keyStoreItem: JwtKeyStoreItem?,
     ): JwtNode(header, payload) {
+
+        init {
+            header["typ"] = "JWT"
+            header["alg"] = key.algorithm.algorithmFullName
+            keyStoreItem?.also {
+                header["kid"] = it.kid.toString()
+                issuedAt(it.create)
+                expire(it.expire)
+            }
+        }
+
         fun header(key: String, value: String): Builder = this.apply { header[key] = value }
         fun kid(value: String): Builder = this.apply { header["kid"] = value }
 
@@ -167,8 +181,6 @@ open class JwtNode internal constructor(
         fun expire(date: ZonedDateTime): Builder = claimTimestamp("exp", date)
 
         fun toJwt(): String {
-            header["alg"] = key.algorithm.algorithmFullName
-
             val jwt = ByteArrayOutputStream(2000)
             jwt.write(JwtUtils.encodeToBase64UrlWop(JwtUtils.writeValueAsBytes(header)))
             jwt.write(DOT_INT)
@@ -183,6 +195,20 @@ open class JwtNode internal constructor(
 
         override fun toString(): String {
             return "$header.$payload"
+        }
+
+        companion object {
+            internal fun of(
+                key: JwtKey,
+                header: MutableMap<String, String> = mutableMapOf(),
+                payload: MutableMap<String, Any> = mutableMapOf(),
+            ) = Builder(header, payload, key, null)
+
+            internal fun of(
+                keyStoreItem: JwtKeyStoreItem,
+                header: MutableMap<String, String> = mutableMapOf(),
+                payload: MutableMap<String, Any> = mutableMapOf(),
+            ) = Builder(header, payload, keyStoreItem.key, keyStoreItem)
         }
     }
 

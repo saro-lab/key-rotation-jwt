@@ -18,6 +18,9 @@ class JwtUtils {
         private val REGEX_PEM_NORMALIZE = Regex("(\\s+|-----(BEGIN|END) .*?-----)")
 
         @JvmStatic
+        fun writeValueAsString(obj: Any): String = OBJECT_MAPPER.writeValueAsString(obj)
+
+        @JvmStatic
         fun writeValueAsBytes(obj: Any): ByteArray = OBJECT_MAPPER.writeValueAsBytes(obj)
 
         @JvmStatic

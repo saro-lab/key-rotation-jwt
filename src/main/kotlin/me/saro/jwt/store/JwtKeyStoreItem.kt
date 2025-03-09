@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import me.saro.jwt.Jwt
 import me.saro.jwt.JwtKey
 import me.saro.jwt.JwtUtils
+import java.time.Instant
 
 class JwtKeyStoreItem private constructor(
     val kid: Long,
@@ -34,7 +35,7 @@ class JwtKeyStoreItem private constructor(
                     )
                 }
 
-        fun ofList(jsonArray: String): List<JwtKeyStoreItem> =
+        fun ofJsonArray(jsonArray: String, removeExpired: Boolean): List<JwtKeyStoreItem> =
             JwtUtils.readValue(jsonArray, trListMap)
                 .map {
                     JwtKeyStoreItem(
@@ -45,6 +46,15 @@ class JwtKeyStoreItem private constructor(
                         it["expire"]!!.toLong()
                     )
                 }
+                .run {
+                    if (removeExpired) {
+                        val now: Long = Instant.now().epochSecond
+                        filter { it.expire > now }
+                    } else {
+                        this
+                    }
+                }
+                .sortedByDescending { it.expire }
     }
 
     fun toJson(): String =

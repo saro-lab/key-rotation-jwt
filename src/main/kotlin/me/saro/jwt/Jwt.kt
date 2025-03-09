@@ -5,6 +5,7 @@ import me.saro.jwt.hash.JwtHsAlgorithm
 import me.saro.jwt.keyPair.JwtKeyPairAlgorithm
 import me.saro.jwt.keyPair.JwtPsAlgorithm
 import me.saro.jwt.keyPair.JwtRsAlgorithm
+import me.saro.jwt.store.JwtKeyStoreItem
 
 class Jwt {
     companion object {
@@ -47,7 +48,10 @@ class Jwt {
             JwtNode.parse(jwt, getJwtKey)
 
         @JvmStatic
-        fun createJwt(jwtKey: JwtKey): JwtNode.Builder = JwtNode.Builder(jwtKey)
+        fun createJwt(jwtKey: JwtKey): JwtNode.Builder = JwtNode.Builder.of(jwtKey)
+
+        @JvmStatic
+        fun createJwt(jwtKeyStoreItem: JwtKeyStoreItem): JwtNode.Builder = JwtNode.Builder.of(jwtKeyStoreItem)
 
         @JvmStatic
         fun parseKey(stringify: String): JwtKey {

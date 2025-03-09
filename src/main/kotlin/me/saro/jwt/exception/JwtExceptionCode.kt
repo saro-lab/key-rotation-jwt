@@ -6,6 +6,7 @@ enum class JwtExceptionCode {
 
     // KEY
     INVALID_SIGNATURE,
+    NOT_FOUND_KEY,
 
     // CLAIMS
     DATE_EXPIRED,
