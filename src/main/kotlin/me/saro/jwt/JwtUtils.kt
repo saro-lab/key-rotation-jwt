@@ -27,6 +27,9 @@ class JwtUtils {
         fun readMap(src: ByteArray): MutableMap<String, Any> = OBJECT_MAPPER.readValue(src, TYPE_MAP)
 
         @JvmStatic
+        fun readTextMap(src: String): MutableMap<String, String> = OBJECT_MAPPER.readValue(src, TYPE_TEXT_MAP)
+
+        @JvmStatic
         fun readTextMap(src: ByteArray): MutableMap<String, String> = OBJECT_MAPPER.readValue(src, TYPE_TEXT_MAP)
 
         @JvmStatic
@@ -58,5 +61,13 @@ class JwtUtils {
 
         @JvmStatic
         fun normalizePem(key: String) = key.replace(REGEX_PEM_NORMALIZE, "")
+
+        @JvmStatic
+        fun toKid(kid: String): String {
+            if (kid.replace(" ", "") != kid) {
+                throw IllegalArgumentException("kid must not contain spaces")
+            }
+            return kid
+        }
     }
 }

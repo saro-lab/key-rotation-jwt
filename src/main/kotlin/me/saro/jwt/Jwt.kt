@@ -1,11 +1,10 @@
 package me.saro.jwt
 
-import me.saro.jwt.keyPair.JwtEsAlgorithm
 import me.saro.jwt.hash.JwtHsAlgorithm
+import me.saro.jwt.keyPair.JwtEsAlgorithm
 import me.saro.jwt.keyPair.JwtKeyPairAlgorithm
 import me.saro.jwt.keyPair.JwtPsAlgorithm
 import me.saro.jwt.keyPair.JwtRsAlgorithm
-import me.saro.jwt.store.JwtKeyStoreItem
 
 class Jwt {
     companion object {
@@ -27,7 +26,7 @@ class Jwt {
 
         @JvmStatic
         @Suppress("UNCHECKED_CAST")
-        fun <T: JwtAlgorithm> getAlgorithm(algorithm: String): T = when (algorithm) {
+        fun <T: JwtAlgorithm> getAlgorithm(algorithm: String?): T = when (algorithm) {
             "ES256" -> ES256 as T
             "ES384" -> ES384 as T
             "ES512" -> ES512 as T
@@ -48,27 +47,29 @@ class Jwt {
             JwtNode.parse(jwt, getJwtKey)
 
         @JvmStatic
-        fun createJwt(jwtKey: JwtKey): JwtNode.Builder = JwtNode.Builder.of(jwtKey)
-
-        @JvmStatic
-        fun createJwt(jwtKeyStoreItem: JwtKeyStoreItem): JwtNode.Builder = JwtNode.Builder.of(jwtKeyStoreItem)
+        fun createJwt(jwtKey: JwtKey): JwtNode.Builder = JwtNode.Builder(jwtKey)
 
         @JvmStatic
         fun parseKey(stringify: String): JwtKey {
-            val args = stringify.split(" ")
-            when (val algorithm = getAlgorithm<JwtAlgorithm>(args[0])) {
+            val map: MutableMap<String, String> = JwtUtils.readTextMap(stringify)
+
+            when (val algorithm = getAlgorithm<JwtAlgorithm>(map["algorithm"])) {
                 is JwtKeyPairAlgorithm<*> -> {
-                    if (args.size != 3) {
-                        throw IllegalArgumentException("Invalid ${algorithm.algorithmFullName} key format: $stringify")
-                    }
-                    return algorithm.toJwtKey(args[1], args[2])
+                    return algorithm.toJwtKey(map["publicKey"]!!, map["privateKey"]!!)
+                        .apply {
+                            kid = map["kid"].toString()
+                            notBefore = map["notBefore"].toString().toLong()
+                            expire = map["expire"].toString().toLong()
+                        }
                 }
 
                 is JwtHsAlgorithm -> {
-                    if (args.size != 2) {
-                        throw IllegalArgumentException("Invalid ${algorithm.algorithmFullName} key format: $stringify")
-                    }
-                    return algorithm.toJwtKeyByBase64Url(args[1])
+                    return algorithm.toJwtKeyByBase64Url(map["secret"]!!)
+                        .apply {
+                            kid = map["kid"].toString()
+                            notBefore = map["notBefore"].toString().toLong()
+                            expire = map["expire"].toString().toLong()
+                        }
                 }
 
                 else -> {

@@ -18,6 +18,15 @@ interface JwtKeyPair: JwtKey {
     val privateKeySize: Int get() = private.encoded.size * 8
     val privateKeyString: String get() = JwtUtils.encodeToBase64String(private.encoded)
 
+    override val stringify: String get() = JwtUtils.writeValueAsString(mapOf(
+        "algorithm" to algorithm.algorithmFullName,
+        "kid" to kid,
+        "notBefore" to notBefore,
+        "expire" to expire,
+        "publicKey" to publicKeyString,
+        "privateKey" to privateKeyString
+    ))
+
     fun getKeyPairSignature(): Signature
 
     override fun signature(body: ByteArray): ByteArray {

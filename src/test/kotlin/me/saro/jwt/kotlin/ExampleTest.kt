@@ -29,7 +29,7 @@ class ExampleTest {
         val expire = OffsetDateTime.now().plusHours(1).toEpochSecond()
 
         // create jwt
-        val jwt = key.createJwt()
+        val jwt = Jwt.createJwt(key)
             .issuer(issuer)
             .subject(subject)
             .audience(audience)

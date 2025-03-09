@@ -2,11 +2,12 @@ package me.saro.jwt
 
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
-import me.saro.jwt.store.JwtKeyStoreItem
 import java.io.ByteArrayOutputStream
+import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZonedDateTime
 import java.util.*
+import kotlin.time.Duration
 
 open class JwtNode internal constructor(
     protected open val header: Map<String, String>,
@@ -73,8 +74,7 @@ open class JwtNode internal constructor(
     val expire: Date? get() = claimDateByTimestamp("exp")
     val expireEpochSecond: Long? get() = claimDateByEpochSecond("exp")
 
-    fun toBuilder(key: JwtKey): Builder = Builder.of(key, header.toMutableMap(), payload.toMutableMap())
-    fun toBuilder(keyStoreItem: JwtKeyStoreItem): Builder = Builder.of(keyStoreItem, header.toMutableMap(), payload.toMutableMap())
+    fun toBuilder(key: JwtKey): Builder = Builder(key, header.toMutableMap(), payload.toMutableMap())
 
     override fun toString(): String {
         return "$header.$payload"
@@ -132,20 +132,18 @@ open class JwtNode internal constructor(
         }
     }
 
-    class Builder private constructor(
-        override val header: MutableMap<String, String>,
-        override val payload: MutableMap<String, Any>,
+    class Builder(
         private val key: JwtKey,
-        private val keyStoreItem: JwtKeyStoreItem?,
+        override val header: MutableMap<String, String> = mutableMapOf(),
+        override val payload: MutableMap<String, Any> = mutableMapOf(),
     ): JwtNode(header, payload) {
 
         init {
             header["typ"] = "JWT"
             header["alg"] = key.algorithm.algorithmFullName
-            keyStoreItem?.also {
-                header["kid"] = it.kid.toString()
-                issuedAt(it.create)
-                expire(it.expire)
+            header["kid"] = key.kid
+            if (key.expire > 0) {
+                expire(key.expire)
             }
         }
 
@@ -166,19 +164,19 @@ open class JwtNode internal constructor(
         fun id(value: String): Builder = claim("jti", value)
 
         fun notBefore(epochSecond: Long): Builder = claim("nbf", epochSecond)
-        fun notBefore(date: Date): Builder = claimTimestamp("nbf", date)
-        fun notBefore(date: OffsetDateTime): Builder = claimTimestamp("nbf", date)
-        fun notBefore(date: ZonedDateTime): Builder = claimTimestamp("nbf", date)
+        fun notBefore(date: Date): Builder = notBefore(date.time / 1000L)
+        fun notBefore(date: OffsetDateTime): Builder = notBefore(date.toEpochSecond())
+        fun notBefore(date: ZonedDateTime): Builder = notBefore(date.toEpochSecond())
 
         fun issuedAt(epochSecond: Long): Builder = claim("iat", epochSecond)
-        fun issuedAt(date: Date): Builder = claimTimestamp("iat", date)
-        fun issuedAt(date: OffsetDateTime): Builder = claimTimestamp("iat", date)
-        fun issuedAt(date: ZonedDateTime): Builder = claimTimestamp("iat", date)
+        fun issuedAt(date: Date): Builder = issuedAt(date.time / 1000L)
+        fun issuedAt(date: OffsetDateTime): Builder = issuedAt(date.toEpochSecond())
+        fun issuedAt(date: ZonedDateTime): Builder = issuedAt(date.toEpochSecond())
 
         fun expire(epochSecond: Long): Builder = claim("exp", epochSecond)
-        fun expire(date: Date): Builder = claimTimestamp("exp", date)
-        fun expire(date: OffsetDateTime): Builder = claimTimestamp("exp", date)
-        fun expire(date: ZonedDateTime): Builder = claimTimestamp("exp", date)
+        fun expire(date: Date): Builder = expire(date.time / 1000L)
+        fun expire(date: OffsetDateTime): Builder = expire(date.toEpochSecond())
+        fun expire(date: ZonedDateTime): Builder = expire(date.toEpochSecond())
 
         fun toJwt(): String {
             val jwt = ByteArrayOutputStream(2000)
@@ -195,20 +193,6 @@ open class JwtNode internal constructor(
 
         override fun toString(): String {
             return "$header.$payload"
-        }
-
-        companion object {
-            internal fun of(
-                key: JwtKey,
-                header: MutableMap<String, String> = mutableMapOf(),
-                payload: MutableMap<String, Any> = mutableMapOf(),
-            ) = Builder(header, payload, key, null)
-
-            internal fun of(
-                keyStoreItem: JwtKeyStoreItem,
-                header: MutableMap<String, String> = mutableMapOf(),
-                payload: MutableMap<String, Any> = mutableMapOf(),
-            ) = Builder(header, payload, keyStoreItem.key, keyStoreItem)
         }
     }
 

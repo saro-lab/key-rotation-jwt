@@ -2,16 +2,20 @@ package me.saro.jwt.keyPair
 
 import me.saro.jwt.JwtAlgorithm
 import me.saro.jwt.JwtKey
+import me.saro.jwt.JwtUtils
 import java.security.KeyPair
 import java.security.PrivateKey
 import java.security.PublicKey
 import java.security.Signature
+import java.util.*
 
 class JwtEsKey(
     algorithmFullNameCopy: String,
     override val keyPair: KeyPair
 ): JwtEsAlgorithm(algorithmFullNameCopy), JwtKeyPair {
-    override val stringify: String = "$algorithmFullNameCopy $publicKeyString $privateKeyString"
+    override var kid: String = UUID.randomUUID().toString()
+    override var notBefore: Long = 0
+    override var expire: Long = 0
     override val algorithm: JwtAlgorithm = this
 
     override fun toString(): String = stringify

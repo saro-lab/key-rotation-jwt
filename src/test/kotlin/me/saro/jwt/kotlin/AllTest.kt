@@ -122,8 +122,7 @@ class AllTest {
         val start = System.currentTimeMillis()
 
         createKeyMap.forEach { (kid, key) ->
-            val jwt = key.createJwt()
-                .kid(kid)
+            val jwt = Jwt.createJwt(key)
                 .expire(OffsetDateTime.now().minusMinutes(1))
                 .toJwt()
 
@@ -144,8 +143,7 @@ class AllTest {
         val start = System.currentTimeMillis()
 
         createKeyMap.forEach { (kid, key) ->
-            val jwt = key.createJwt()
-                .kid(kid)
+            val jwt = Jwt.createJwt(key)
                 .notBefore(OffsetDateTime.now().plusDays(1))
                 .toJwt()
 
@@ -166,8 +164,7 @@ class AllTest {
         val start = System.currentTimeMillis()
 
         createKeyMap.forEach { (kid, key) ->
-            val jwt = key.createJwt()
-                .kid(kid)
+            val jwt = Jwt.createJwt(key)
                 .toJwt()
 
             val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt) { it: JwtNode -> convertKeyMap[it.kid] } }
@@ -204,8 +201,7 @@ class AllTest {
         val expire = OffsetDateTime.now().plusHours(1).toEpochSecond()
 
         createKeyMap.forEach { (kid, key) ->
-            val jwt = key.createJwt()
-                .kid(kid)
+            val jwt = Jwt.createJwt(key)
                 .issuer(issuer)
                 .subject(subject)
                 .audience(audience)

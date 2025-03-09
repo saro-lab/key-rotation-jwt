@@ -28,7 +28,7 @@ public class ExampleTest {
         long expire = OffsetDateTime.now().plusHours(1).toEpochSecond();
 
         // create jwt
-        String jwt = key.createJwt()
+        String jwt = Jwt.createJwt(key)
                 .issuer(issuer)
                 .subject(subject)
                 .audience(audience)

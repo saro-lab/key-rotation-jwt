@@ -63,7 +63,7 @@ class PerformanceTest {
             val start = System.currentTimeMillis()
             for (i in 0..<loop) {
                 val key = alg.newRandomJwtKey()
-                val jwt = key.createJwt()
+                val jwt = Jwt.createJwt(key)
                     .subject("1234567890")
                     .claim("name", "John Doe")
                     .claim("admin", true)
@@ -85,7 +85,7 @@ class PerformanceTest {
             val key = alg.newRandomJwtKey()
             val start = System.currentTimeMillis()
             for (i in 0..<loop) {
-                val jwt = key.createJwt()
+                val jwt = Jwt.createJwt(key)
                     .subject("1234567890")
                     .claim("name", "John Doe")
                     .claim("admin", true)
