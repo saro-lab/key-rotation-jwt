@@ -11,4 +11,6 @@ enum class JwtExceptionCode {
     // CLAIMS
     DATE_EXPIRED,
     DATE_BEFORE,
+
+    KEY_STORE_EXCEPTION,
 }

@@ -1,10 +1,8 @@
 package me.saro.jwt.store
 
-import me.saro.jwt.JwtKey
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
-import java.time.OffsetDateTime
-import java.util.concurrent.ConcurrentLinkedDeque
+import java.time.Instant
 import java.util.concurrent.locks.ReentrantReadWriteLock
 
 class JwtMirrorKeyStore private constructor(
@@ -14,10 +12,7 @@ class JwtMirrorKeyStore private constructor(
     private val writeLock = lock.writeLock()
     private val readLock = lock.readLock()
 
-    override val key: JwtKey
-        get() = TODO("Not yet implemented")
-
-    override fun import(jsonArray: String): JwtKeyStore {
+    fun import(jsonArray: String): JwtKeyStore {
         val item = JwtKeyStoreItem.ofJsonArray(jsonArray, true)
         try {
             writeLock.lock()
@@ -28,6 +23,23 @@ class JwtMirrorKeyStore private constructor(
         return this
     }
 
+    override fun getKeyStoreItem(): JwtKeyStoreItem =
+        try {
+            val now = Instant.now().epochSecond
+            readLock.lock()
+            list.find { it.notBefore <= now && it.expire > now }
+        } finally {
+            readLock.unlock()
+        } ?: throw JwtException(JwtExceptionCode.NOT_FOUND_KEY, "not found key")
+
+    override fun findKeyStoreItem(kid: Long): JwtKeyStoreItem =
+        try {
+            readLock.lock()
+            list.find { it.kid == kid }
+        } finally {
+            readLock.unlock()
+        } ?: throw JwtException(JwtExceptionCode.NOT_FOUND_KEY, "not found kid: $kid")
+
     override fun export(): String =
         try {
             readLock.lock()
@@ -35,14 +47,6 @@ class JwtMirrorKeyStore private constructor(
         } finally {
             readLock.unlock()
         }
-
-    override fun findKey(kid: Long): JwtKey =
-        try {
-            readLock.lock()
-            list.find { it.kid == kid }
-        } finally {
-            readLock.unlock()
-        }?.key ?: throw JwtException(JwtExceptionCode.NOT_FOUND_KEY, "not found kid: $kid")
 
     companion object {
         class Builder {

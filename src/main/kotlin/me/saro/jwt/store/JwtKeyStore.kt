@@ -1,14 +1,13 @@
 package me.saro.jwt.store
 
 import me.saro.jwt.Jwt
-import me.saro.jwt.JwtKey
+import me.saro.jwt.JwtNode
 
 interface JwtKeyStore {
-    fun import(jsonArray: String): JwtKeyStore
     fun export(): String
-    val key: JwtKey
+    fun getKeyStoreItem(): JwtKeyStoreItem
     fun findKeyStoreItem(kid: Long): JwtKeyStoreItem
-    fun findKeyStoreItem(kid: String): JwtKey = KeyStoreItem(kid.toLong())
-    fun createJwt() = Jwt.createJwt(key)
-    fun parseJwt(jwt: String) = Jwt.parseJwt(jwt) { findKey(it.kid!!) }
+    fun findKeyStoreItem(kid: String): JwtKeyStoreItem = findKeyStoreItem(kid.toLong())
+    fun createJwt(): JwtNode.Builder = Jwt.createJwt(getKeyStoreItem())
+    fun parseJwt(jwt: String): JwtNode = Jwt.parseJwt(jwt) { findKeyStoreItem(it.kid!!).key }
 }
