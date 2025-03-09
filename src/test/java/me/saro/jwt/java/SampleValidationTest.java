@@ -3,25 +3,26 @@ package me.saro.jwt.java;
 import me.saro.jwt.Jwt;
 import me.saro.jwt.JwtKey;
 import me.saro.jwt.JwtNode;
-import me.saro.jwt.JwtUtils;
 import me.saro.jwt.exception.JwtException;
-import me.saro.jwt.keyPair.JwtEsAlgorithm;
 import me.saro.jwt.hash.JwtHsAlgorithm;
+import me.saro.jwt.keyPair.JwtEsAlgorithm;
 import me.saro.jwt.keyPair.JwtPsAlgorithm;
 import me.saro.jwt.keyPair.JwtRsAlgorithm;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+
 @DisplayName("[Java] Sample Validation Test - jwt.io")
 public class SampleValidationTest {
 
-    public JwtNode parseJwt(String jwt, JwtKey key) {
+    private JwtNode parseJwt(String jwt, JwtKey key) {
         return Jwt.parseJwt(jwt, node -> key);
     }
 
-    public JwtNode parseJwt(String jwt, String key) {
-        return Jwt.parseJwt(jwt, node -> Jwt.parseKey(key));
+    private JwtNode parseJwt(String jwt, Map<String, String> keyMap) {
+        return Jwt.parseJwt(jwt, node -> Jwt.parseKey(keyMap));
     }
 
     @Test
@@ -32,9 +33,14 @@ public class SampleValidationTest {
         String privateKey = "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgevZzL1gdAFr88hb2OF/2NxApJCzGCEDdfSp6VQO30hyhRANCAAQRWz+jn65BtOMvdyHKcvjBeBSDZH2r1RTwjmYSi9R/zpBnuQ4EiMnCqfMPWiZqB4QdbAd0E7oH50VpuZ1P087G";
 
         JwtEsAlgorithm alg = Assertions.assertDoesNotThrow(() -> Jwt.getAlgorithm("ES256"));
+        Map<String, String> map = Map.of(
+                "algorithm", alg.getAlgorithmFullName(),
+                "publicKey", publicKey,
+                "privateKey", privateKey
+        );
         JwtKey key = Assertions.assertDoesNotThrow(alg::newRandomJwtKey);
         Assertions.assertThrows(JwtException.class, () -> parseJwt(jwt, key));
-        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, alg.getAlgorithmFullName() + " " + publicKey + " " + privateKey));
+        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, map));
         Assertions.assertEquals("1234567890", node.getSubject());
         Assertions.assertEquals("John Doe", node.claimString("name"));
         Assertions.assertEquals(true, node.claimBoolean("admin"));
@@ -50,9 +56,14 @@ public class SampleValidationTest {
         String privateKey = "MIG2AgEAMBAGByqGSM49AgEGBSuBBAAiBIGeMIGbAgEBBDCAHpFQ62QnGCEvYh/pE9QmR1C9aLcDItRbslbmhen/h1tt8AyMhskeenT+rAyyPhGhZANiAAQLW5ZJePZzMIPAxMtZXkEWbDF0zo9f2n4+T1h/2sh/fviblc/VTyrv10GEtIi5qiOy85Pf1RRw8lE5IPUWpgu553SteKigiKLUPeNpbqmYZUkWGh3MLfVzLmx85ii2vMU=";
 
         JwtEsAlgorithm alg = Assertions.assertDoesNotThrow(() -> Jwt.getAlgorithm("ES384"));
+        Map<String, String> map = Map.of(
+                "algorithm", alg.getAlgorithmFullName(),
+                "publicKey", publicKey,
+                "privateKey", privateKey
+        );
         JwtKey key = Assertions.assertDoesNotThrow(alg::newRandomJwtKey);
         Assertions.assertThrows(JwtException.class, () -> parseJwt(jwt, key));
-        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, alg.getAlgorithmFullName() + " " + publicKey + " " + privateKey));
+        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, map));
         Assertions.assertEquals("1234567890", node.getSubject());
         Assertions.assertEquals("John Doe", node.claimString("name"));
         Assertions.assertEquals(true, node.claimBoolean("admin"));
@@ -68,9 +79,14 @@ public class SampleValidationTest {
         String privateKey = "MIHuAgEAMBAGByqGSM49AgEGBSuBBAAjBIHWMIHTAgEBBEIBiyAa7aRHFDCh2qga9sTUGINE5jHAFnmM8xWeT/uni5I4tNqhV5Xx0pDrmCV9mbroFtfEa0XVfKuMAxxfZ6LM/yKhgYkDgYYABAGBzgdnP798FsLuWYTDDQA7c0r3BVk8NnRUSexpQUsRilPNv3SchO0lRw9Ru86x1khnVDx+duq4BiDFcvlSAcyjLACJvjvoyTLJiA+TQFdmrearjMiZNE25pT2yWP1NUndJxPcvVtfBW48kPOmvkY4WlqP5bAwCXwbsKrCgk6xbsp12ew==";
 
         JwtEsAlgorithm alg = Assertions.assertDoesNotThrow(() -> Jwt.getAlgorithm("ES512"));
+        Map<String, String> map = Map.of(
+                "algorithm", alg.getAlgorithmFullName(),
+                "publicKey", publicKey,
+                "privateKey", privateKey
+        );
         JwtKey key = Assertions.assertDoesNotThrow(alg::newRandomJwtKey);
         Assertions.assertThrows(JwtException.class, () -> parseJwt(jwt, key));
-        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, alg.getAlgorithmFullName() + " " + publicKey + " " + privateKey));
+        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, map));
         Assertions.assertEquals("1234567890", node.getSubject());
         Assertions.assertEquals("John Doe", node.claimString("name"));
         Assertions.assertEquals(true, node.claimBoolean("admin"));
@@ -83,11 +99,11 @@ public class SampleValidationTest {
     public void hs256() {
         String jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
         JwtHsAlgorithm alg = Assertions.assertDoesNotThrow(() -> Jwt.getAlgorithm("HS256"));
-        String secret = alg.toJwtKey("your-256-bit-secret".getBytes()).getStringify();
+        JwtKey checkKey = alg.toJwtKey("your-256-bit-secret");
 
         JwtKey key = Assertions.assertDoesNotThrow(() -> alg.newRandomJwtKey(10));
         Assertions.assertThrows(JwtException.class, () -> parseJwt(jwt, key));
-        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, secret));
+        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, checkKey));
         Assertions.assertEquals("1234567890", node.getSubject());
         Assertions.assertEquals("John Doe", node.claimString("name"));
         Assertions.assertEquals(1516239022, node.claimInt("iat"));
@@ -99,11 +115,11 @@ public class SampleValidationTest {
     public void hs384() {
         String jwt = "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.bQTnz6AuMJvmXXQsVPrxeQNvzDkimo7VNXxHeSBfClLufmCVZRUuyTwJF311JHuh";
         JwtHsAlgorithm alg = Assertions.assertDoesNotThrow(() -> Jwt.getAlgorithm("HS384"));
-        String secret = alg.toJwtKey("your-384-bit-secret".getBytes()).getStringify();
+        JwtKey checkKey = alg.toJwtKey("your-384-bit-secret");
 
         JwtKey key = Assertions.assertDoesNotThrow(() -> alg.newRandomJwtKey(10));
         Assertions.assertThrows(JwtException.class, () -> parseJwt(jwt, key));
-        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, secret));
+        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, checkKey));
         Assertions.assertEquals("1234567890", node.getSubject());
         Assertions.assertEquals("John Doe", node.claimString("name"));
         Assertions.assertEquals(1516239022, node.claimInt("iat"));
@@ -115,11 +131,11 @@ public class SampleValidationTest {
     public void hs512() {
         String jwt = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.VFb0qJ1LRg_4ujbZoRMXnVkUgiuKq5KxWqNdbKq_G9Vvz-S1zZa9LPxtHWKa64zDl2ofkT8F6jBt_K4riU-fPg";
         JwtHsAlgorithm alg = Assertions.assertDoesNotThrow(() -> Jwt.getAlgorithm("HS512"));
-        String secret = alg.toJwtKey("your-512-bit-secret".getBytes()).getStringify();
+        JwtKey checkKey = alg.toJwtKey("your-512-bit-secret");
 
         JwtKey key = Assertions.assertDoesNotThrow(() -> alg.newRandomJwtKey(10));
         Assertions.assertThrows(JwtException.class, () -> parseJwt(jwt, key));
-        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, secret));
+        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, checkKey));
         Assertions.assertEquals("1234567890", node.getSubject());
         Assertions.assertEquals("John Doe", node.claimString("name"));
         Assertions.assertEquals(1516239022, node.claimInt("iat"));
@@ -169,10 +185,14 @@ public class SampleValidationTest {
                 "-----END PRIVATE KEY-----";
 
         JwtPsAlgorithm alg = Assertions.assertDoesNotThrow(() -> Jwt.getAlgorithm("PS256"));
+        Map<String, String> map = Map.of(
+                "algorithm", alg.getAlgorithmFullName(),
+                "publicKey", publicKey,
+                "privateKey", privateKey
+        );
         JwtKey key = Assertions.assertDoesNotThrow(() -> alg.newRandomJwtKey(2048));
         Assertions.assertThrows(JwtException.class, () -> parseJwt(jwt, key));
-        String norKey = alg.getAlgorithmFullName() + " " + JwtUtils.normalizePem(publicKey) + " " + JwtUtils.normalizePem(privateKey);
-        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, norKey));
+        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, map));
         Assertions.assertEquals("1234567890", node.getSubject());
         Assertions.assertEquals("John Doe", node.claimString("name"));
         Assertions.assertEquals(true, node.claimBoolean("admin"));
@@ -223,10 +243,14 @@ public class SampleValidationTest {
                 "-----END PRIVATE KEY-----";
 
         JwtPsAlgorithm alg = Assertions.assertDoesNotThrow(() -> Jwt.getAlgorithm("PS384"));
+        Map<String, String> map = Map.of(
+                "algorithm", alg.getAlgorithmFullName(),
+                "publicKey", publicKey,
+                "privateKey", privateKey
+        );
         JwtKey key = Assertions.assertDoesNotThrow(() -> alg.newRandomJwtKey(2048));
         Assertions.assertThrows(JwtException.class, () -> parseJwt(jwt, key));
-        String norKey = alg.getAlgorithmFullName() + " " + JwtUtils.normalizePem(publicKey) + " " + JwtUtils.normalizePem(privateKey);
-        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, norKey));
+        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, map));
         Assertions.assertEquals("1234567890", node.getSubject());
         Assertions.assertEquals("John Doe", node.claimString("name"));
         Assertions.assertEquals(true, node.claimBoolean("admin"));
@@ -277,10 +301,14 @@ public class SampleValidationTest {
                 "-----END PRIVATE KEY-----";
 
         JwtPsAlgorithm alg = Assertions.assertDoesNotThrow(() -> Jwt.getAlgorithm("PS512"));
+        Map<String, String> map = Map.of(
+                "algorithm", alg.getAlgorithmFullName(),
+                "publicKey", publicKey,
+                "privateKey", privateKey
+        );
         JwtKey key = Assertions.assertDoesNotThrow(() -> alg.newRandomJwtKey(2048));
         Assertions.assertThrows(JwtException.class, () -> parseJwt(jwt, key));
-        String norKey = alg.getAlgorithmFullName() + " " + JwtUtils.normalizePem(publicKey) + " " + JwtUtils.normalizePem(privateKey);
-        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, norKey));
+        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, map));
         Assertions.assertEquals("1234567890", node.getSubject());
         Assertions.assertEquals("John Doe", node.claimString("name"));
         Assertions.assertEquals(true, node.claimBoolean("admin"));
@@ -331,10 +359,14 @@ public class SampleValidationTest {
                 "-----END PRIVATE KEY-----";
 
         JwtRsAlgorithm alg = Assertions.assertDoesNotThrow(() -> Jwt.getAlgorithm("RS256"));
+        Map<String, String> map = Map.of(
+                "algorithm", alg.getAlgorithmFullName(),
+                "publicKey", publicKey,
+                "privateKey", privateKey
+        );
         JwtKey key = Assertions.assertDoesNotThrow(() -> alg.newRandomJwtKey(2048));
         Assertions.assertThrows(JwtException.class, () -> parseJwt(jwt, key));
-        String norKey = alg.getAlgorithmFullName() + " " + JwtUtils.normalizePem(publicKey) + " " + JwtUtils.normalizePem(privateKey);
-        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, norKey));
+        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, map));
         Assertions.assertEquals("1234567890", node.getSubject());
         Assertions.assertEquals("John Doe", node.claimString("name"));
         Assertions.assertEquals(true, node.claimBoolean("admin"));
@@ -385,10 +417,14 @@ public class SampleValidationTest {
                 "-----END PRIVATE KEY-----";
 
         JwtRsAlgorithm alg = Assertions.assertDoesNotThrow(() -> Jwt.getAlgorithm("RS384"));
+        Map<String, String> map = Map.of(
+                "algorithm", alg.getAlgorithmFullName(),
+                "publicKey", publicKey,
+                "privateKey", privateKey
+        );
         JwtKey key = Assertions.assertDoesNotThrow(() -> alg.newRandomJwtKey(2048));
         Assertions.assertThrows(JwtException.class, () -> parseJwt(jwt, key));
-        String norKey = alg.getAlgorithmFullName() + " " + JwtUtils.normalizePem(publicKey) + " " + JwtUtils.normalizePem(privateKey);
-        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, norKey));
+        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, map));
         Assertions.assertEquals("1234567890", node.getSubject());
         Assertions.assertEquals("John Doe", node.claimString("name"));
         Assertions.assertEquals(true, node.claimBoolean("admin"));
@@ -439,10 +475,14 @@ public class SampleValidationTest {
                 "-----END PRIVATE KEY-----";
 
         JwtRsAlgorithm alg = Assertions.assertDoesNotThrow(() -> Jwt.getAlgorithm("RS512"));
+        Map<String, String> map = Map.of(
+                "algorithm", alg.getAlgorithmFullName(),
+                "publicKey", publicKey,
+                "privateKey", privateKey
+        );
         JwtKey key = Assertions.assertDoesNotThrow(() -> alg.newRandomJwtKey(2048));
         Assertions.assertThrows(JwtException.class, () -> parseJwt(jwt, key));
-        String norKey = alg.getAlgorithmFullName() + " " + JwtUtils.normalizePem(publicKey) + " " + JwtUtils.normalizePem(privateKey);
-        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, norKey));
+        JwtNode node = Assertions.assertDoesNotThrow(() -> parseJwt(jwt, map));
         Assertions.assertEquals("1234567890", node.getSubject());
         Assertions.assertEquals("John Doe", node.claimString("name"));
         Assertions.assertEquals(true, node.claimBoolean("admin"));

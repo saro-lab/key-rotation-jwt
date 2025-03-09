@@ -5,7 +5,6 @@ import me.saro.jwt.Jwt.Companion.parseJwt
 import me.saro.jwt.Jwt.Companion.parseKey
 import me.saro.jwt.JwtKey
 import me.saro.jwt.JwtNode
-import me.saro.jwt.JwtUtils.Companion.normalizePem
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.hash.JwtHsAlgorithm
 import me.saro.jwt.keyPair.*
@@ -15,13 +14,12 @@ import org.junit.jupiter.api.Test
 
 @DisplayName("[Kotlin] Sample Validation Test - jwt.io")
 class SampleValidationTest {
-
-    fun parseJwt(jwt: String?, key: JwtKey?): JwtNode {
-        return parseJwt(jwt) { node: JwtNode? -> key }
+    private fun parseJwt(jwt: String?, key: JwtKey?): JwtNode {
+        return parseJwt(jwt) { key }
     }
 
-    fun parseJwt(jwt: String?, key: String): JwtNode {
-        return parseJwt(jwt) { node: JwtNode? -> parseKey(key) }
+    private fun parseJwt(jwt: String?, keyMap: Map<String, String>): JwtNode {
+        return parseJwt(jwt) { parseKey(keyMap) }
     }
 
     @Test
@@ -32,9 +30,14 @@ class SampleValidationTest {
         val privateKey = "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgevZzL1gdAFr88hb2OF/2NxApJCzGCEDdfSp6VQO30hyhRANCAAQRWz+jn65BtOMvdyHKcvjBeBSDZH2r1RTwjmYSi9R/zpBnuQ4EiMnCqfMPWiZqB4QdbAd0E7oH50VpuZ1P087G"
 
         val alg = Assertions.assertDoesNotThrow<JwtEsAlgorithm> { getAlgorithm("ES256") }
+        val map = java.util.Map.of(
+            "algorithm", alg.algorithmFullName,
+            "publicKey", publicKey,
+            "privateKey", privateKey
+        )
         val key: JwtKey = Assertions.assertDoesNotThrow<JwtEsKey> { alg.newRandomJwtKey() }
         Assertions.assertThrows(JwtException::class.java) { parseJwt(jwt, key) }
-        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, alg.algorithmFullName + " " + publicKey + " " + privateKey) }
+        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, map) }
         Assertions.assertEquals("1234567890", node.subject)
         Assertions.assertEquals("John Doe", node.claimString("name"))
         Assertions.assertEquals(true, node.claimBoolean("admin"))
@@ -50,9 +53,14 @@ class SampleValidationTest {
         val privateKey = "MIG2AgEAMBAGByqGSM49AgEGBSuBBAAiBIGeMIGbAgEBBDCAHpFQ62QnGCEvYh/pE9QmR1C9aLcDItRbslbmhen/h1tt8AyMhskeenT+rAyyPhGhZANiAAQLW5ZJePZzMIPAxMtZXkEWbDF0zo9f2n4+T1h/2sh/fviblc/VTyrv10GEtIi5qiOy85Pf1RRw8lE5IPUWpgu553SteKigiKLUPeNpbqmYZUkWGh3MLfVzLmx85ii2vMU="
 
         val alg = Assertions.assertDoesNotThrow<JwtEsAlgorithm> { getAlgorithm("ES384") }
+        val map = java.util.Map.of(
+            "algorithm", alg.algorithmFullName,
+            "publicKey", publicKey,
+            "privateKey", privateKey
+        )
         val key: JwtKey = Assertions.assertDoesNotThrow<JwtEsKey> { alg.newRandomJwtKey() }
         Assertions.assertThrows(JwtException::class.java) { parseJwt(jwt, key) }
-        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, alg.algorithmFullName + " " + publicKey + " " + privateKey) }
+        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, map) }
         Assertions.assertEquals("1234567890", node.subject)
         Assertions.assertEquals("John Doe", node.claimString("name"))
         Assertions.assertEquals(true, node.claimBoolean("admin"))
@@ -68,9 +76,14 @@ class SampleValidationTest {
         val privateKey = "MIHuAgEAMBAGByqGSM49AgEGBSuBBAAjBIHWMIHTAgEBBEIBiyAa7aRHFDCh2qga9sTUGINE5jHAFnmM8xWeT/uni5I4tNqhV5Xx0pDrmCV9mbroFtfEa0XVfKuMAxxfZ6LM/yKhgYkDgYYABAGBzgdnP798FsLuWYTDDQA7c0r3BVk8NnRUSexpQUsRilPNv3SchO0lRw9Ru86x1khnVDx+duq4BiDFcvlSAcyjLACJvjvoyTLJiA+TQFdmrearjMiZNE25pT2yWP1NUndJxPcvVtfBW48kPOmvkY4WlqP5bAwCXwbsKrCgk6xbsp12ew=="
 
         val alg = Assertions.assertDoesNotThrow<JwtEsAlgorithm> { getAlgorithm("ES512") }
+        val map = java.util.Map.of(
+            "algorithm", alg.algorithmFullName,
+            "publicKey", publicKey,
+            "privateKey", privateKey
+        )
         val key: JwtKey = Assertions.assertDoesNotThrow<JwtEsKey> { alg.newRandomJwtKey() }
         Assertions.assertThrows(JwtException::class.java) { parseJwt(jwt, key) }
-        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, alg.algorithmFullName + " " + publicKey + " " + privateKey) }
+        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, map) }
         Assertions.assertEquals("1234567890", node.subject)
         Assertions.assertEquals("John Doe", node.claimString("name"))
         Assertions.assertEquals(true, node.claimBoolean("admin"))
@@ -83,11 +96,11 @@ class SampleValidationTest {
     fun hs256() {
         val jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
         val alg = Assertions.assertDoesNotThrow<JwtHsAlgorithm> { getAlgorithm("HS256") }
-        val secret = alg.toJwtKey("your-256-bit-secret".toByteArray()).stringify
+        val checkKey = alg.toJwtKey("your-256-bit-secret")
 
         val key = Assertions.assertDoesNotThrow<JwtKey> { alg.newRandomJwtKey(10) }
         Assertions.assertThrows(JwtException::class.java) { parseJwt(jwt, key) }
-        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, secret) }
+        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, checkKey) }
         Assertions.assertEquals("1234567890", node.subject)
         Assertions.assertEquals("John Doe", node.claimString("name"))
         Assertions.assertEquals(1516239022, node.claimInt("iat"))
@@ -99,11 +112,11 @@ class SampleValidationTest {
     fun hs384() {
         val jwt = "eyJhbGciOiJIUzM4NCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.bQTnz6AuMJvmXXQsVPrxeQNvzDkimo7VNXxHeSBfClLufmCVZRUuyTwJF311JHuh"
         val alg = Assertions.assertDoesNotThrow<JwtHsAlgorithm> { getAlgorithm("HS384") }
-        val secret = alg.toJwtKey("your-384-bit-secret".toByteArray()).stringify
+        val checkKey = alg.toJwtKey("your-384-bit-secret")
 
         val key = Assertions.assertDoesNotThrow<JwtKey> { alg.newRandomJwtKey(10) }
         Assertions.assertThrows(JwtException::class.java) { parseJwt(jwt, key) }
-        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, secret) }
+        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, checkKey) }
         Assertions.assertEquals("1234567890", node.subject)
         Assertions.assertEquals("John Doe", node.claimString("name"))
         Assertions.assertEquals(1516239022, node.claimInt("iat"))
@@ -115,11 +128,11 @@ class SampleValidationTest {
     fun hs512() {
         val jwt = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.VFb0qJ1LRg_4ujbZoRMXnVkUgiuKq5KxWqNdbKq_G9Vvz-S1zZa9LPxtHWKa64zDl2ofkT8F6jBt_K4riU-fPg"
         val alg = Assertions.assertDoesNotThrow<JwtHsAlgorithm> { getAlgorithm("HS512") }
-        val secret = alg.toJwtKey("your-512-bit-secret".toByteArray()).stringify
+        val checkKey = alg.toJwtKey("your-512-bit-secret")
 
         val key = Assertions.assertDoesNotThrow<JwtKey> { alg.newRandomJwtKey(10) }
         Assertions.assertThrows(JwtException::class.java) { parseJwt(jwt, key) }
-        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, secret) }
+        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, checkKey) }
         Assertions.assertEquals("1234567890", node.subject)
         Assertions.assertEquals("John Doe", node.claimString("name"))
         Assertions.assertEquals(1516239022, node.claimInt("iat"))
@@ -140,7 +153,7 @@ class SampleValidationTest {
             cKWTjpBP2dPwVZ4WWC+9aGVd+Gyn1o0CLelf4rEjGoXbAAEgAqeGUxrcIlbjXfbc
             mwIDAQAB
             -----END PUBLIC KEY-----
-            """
+            """.trimIndent()
         val privateKey = """
             -----BEGIN PRIVATE KEY-----
             MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC7VJTUt9Us8cKj
@@ -170,13 +183,17 @@ class SampleValidationTest {
             TQrKhArgLXX4v3CddjfTRJkFWDbE/CkvKZNOrcf1nhaGCPspRJj2KUkj1Fhl9Cnc
             dn/RsYEONbwQSjIfMPkvxF+8HQ==
             -----END PRIVATE KEY-----
-            """
+            """.trimIndent()
 
         val alg = Assertions.assertDoesNotThrow<JwtPsAlgorithm> { getAlgorithm("PS256") }
+        val map = java.util.Map.of(
+            "algorithm", alg.algorithmFullName,
+            "publicKey", publicKey,
+            "privateKey", privateKey
+        )
         val key: JwtKey = Assertions.assertDoesNotThrow<JwtPsKey> { alg.newRandomJwtKey(2048) }
         Assertions.assertThrows(JwtException::class.java) { parseJwt(jwt, key) }
-        val norKey = alg.algorithmFullName + " " + normalizePem(publicKey) + " " + normalizePem(privateKey)
-        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, norKey) }
+        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, map) }
         Assertions.assertEquals("1234567890", node.subject)
         Assertions.assertEquals("John Doe", node.claimString("name"))
         Assertions.assertEquals(true, node.claimBoolean("admin"))
@@ -198,7 +215,7 @@ class SampleValidationTest {
             cKWTjpBP2dPwVZ4WWC+9aGVd+Gyn1o0CLelf4rEjGoXbAAEgAqeGUxrcIlbjXfbc
             mwIDAQAB
             -----END PUBLIC KEY-----
-            """
+            """.trimIndent()
         val privateKey = """
             -----BEGIN PRIVATE KEY-----
             MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC7VJTUt9Us8cKj
@@ -228,13 +245,17 @@ class SampleValidationTest {
             TQrKhArgLXX4v3CddjfTRJkFWDbE/CkvKZNOrcf1nhaGCPspRJj2KUkj1Fhl9Cnc
             dn/RsYEONbwQSjIfMPkvxF+8HQ==
             -----END PRIVATE KEY-----
-            """
+            """.trimIndent()
 
         val alg = Assertions.assertDoesNotThrow<JwtPsAlgorithm> { getAlgorithm("PS384") }
+        val map = java.util.Map.of(
+            "algorithm", alg.algorithmFullName,
+            "publicKey", publicKey,
+            "privateKey", privateKey
+        )
         val key: JwtKey = Assertions.assertDoesNotThrow<JwtPsKey> { alg.newRandomJwtKey(2048) }
         Assertions.assertThrows(JwtException::class.java) { parseJwt(jwt, key) }
-        val norKey = alg.algorithmFullName + " " + normalizePem(publicKey) + " " + normalizePem(privateKey)
-        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, norKey) }
+        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, map) }
         Assertions.assertEquals("1234567890", node.subject)
         Assertions.assertEquals("John Doe", node.claimString("name"))
         Assertions.assertEquals(true, node.claimBoolean("admin"))
@@ -256,7 +277,7 @@ class SampleValidationTest {
             cKWTjpBP2dPwVZ4WWC+9aGVd+Gyn1o0CLelf4rEjGoXbAAEgAqeGUxrcIlbjXfbc
             mwIDAQAB
             -----END PUBLIC KEY-----
-            """
+            """.trimIndent()
         val privateKey = """
             -----BEGIN PRIVATE KEY-----
             MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC7VJTUt9Us8cKj
@@ -286,13 +307,17 @@ class SampleValidationTest {
             TQrKhArgLXX4v3CddjfTRJkFWDbE/CkvKZNOrcf1nhaGCPspRJj2KUkj1Fhl9Cnc
             dn/RsYEONbwQSjIfMPkvxF+8HQ==
             -----END PRIVATE KEY-----
-            """
+            """.trimIndent()
 
         val alg = Assertions.assertDoesNotThrow<JwtPsAlgorithm> { getAlgorithm("PS512") }
+        val map = java.util.Map.of(
+            "algorithm", alg.algorithmFullName,
+            "publicKey", publicKey,
+            "privateKey", privateKey
+        )
         val key: JwtKey = Assertions.assertDoesNotThrow<JwtPsKey> { alg.newRandomJwtKey(2048) }
         Assertions.assertThrows(JwtException::class.java) { parseJwt(jwt, key) }
-        val norKey = alg.algorithmFullName + " " + normalizePem(publicKey) + " " + normalizePem(privateKey)
-        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, norKey) }
+        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, map) }
         Assertions.assertEquals("1234567890", node.subject)
         Assertions.assertEquals("John Doe", node.claimString("name"))
         Assertions.assertEquals(true, node.claimBoolean("admin"))
@@ -314,7 +339,7 @@ class SampleValidationTest {
             cKWTjpBP2dPwVZ4WWC+9aGVd+Gyn1o0CLelf4rEjGoXbAAEgAqeGUxrcIlbjXfbc
             mwIDAQAB
             -----END PUBLIC KEY-----
-            """
+            """.trimIndent()
         val privateKey = """
             -----BEGIN PRIVATE KEY-----
             MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC7VJTUt9Us8cKj
@@ -344,13 +369,17 @@ class SampleValidationTest {
             TQrKhArgLXX4v3CddjfTRJkFWDbE/CkvKZNOrcf1nhaGCPspRJj2KUkj1Fhl9Cnc
             dn/RsYEONbwQSjIfMPkvxF+8HQ==
             -----END PRIVATE KEY-----
-            """
+            """.trimIndent()
 
         val alg = Assertions.assertDoesNotThrow<JwtRsAlgorithm> { getAlgorithm("RS256") }
+        val map = java.util.Map.of(
+            "algorithm", alg.algorithmFullName,
+            "publicKey", publicKey,
+            "privateKey", privateKey
+        )
         val key: JwtKey = Assertions.assertDoesNotThrow<JwtRsKey> { alg.newRandomJwtKey(2048) }
         Assertions.assertThrows(JwtException::class.java) { parseJwt(jwt, key) }
-        val norKey = alg.algorithmFullName + " " + normalizePem(publicKey) + " " + normalizePem(privateKey)
-        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, norKey) }
+        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, map) }
         Assertions.assertEquals("1234567890", node.subject)
         Assertions.assertEquals("John Doe", node.claimString("name"))
         Assertions.assertEquals(true, node.claimBoolean("admin"))
@@ -372,7 +401,7 @@ class SampleValidationTest {
             cKWTjpBP2dPwVZ4WWC+9aGVd+Gyn1o0CLelf4rEjGoXbAAEgAqeGUxrcIlbjXfbc
             mwIDAQAB
             -----END PUBLIC KEY-----
-            """
+            """.trimIndent()
         val privateKey = """
             -----BEGIN PRIVATE KEY-----
             MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC7VJTUt9Us8cKj
@@ -402,13 +431,17 @@ class SampleValidationTest {
             TQrKhArgLXX4v3CddjfTRJkFWDbE/CkvKZNOrcf1nhaGCPspRJj2KUkj1Fhl9Cnc
             dn/RsYEONbwQSjIfMPkvxF+8HQ==
             -----END PRIVATE KEY-----
-            """
+            """.trimIndent()
 
         val alg = Assertions.assertDoesNotThrow<JwtRsAlgorithm> { getAlgorithm("RS384") }
+        val map = java.util.Map.of(
+            "algorithm", alg.algorithmFullName,
+            "publicKey", publicKey,
+            "privateKey", privateKey
+        )
         val key: JwtKey = Assertions.assertDoesNotThrow<JwtRsKey> { alg.newRandomJwtKey(2048) }
         Assertions.assertThrows(JwtException::class.java) { parseJwt(jwt, key) }
-        val norKey = alg.algorithmFullName + " " + normalizePem(publicKey) + " " + normalizePem(privateKey)
-        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, norKey) }
+        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, map) }
         Assertions.assertEquals("1234567890", node.subject)
         Assertions.assertEquals("John Doe", node.claimString("name"))
         Assertions.assertEquals(true, node.claimBoolean("admin"))
@@ -430,7 +463,7 @@ class SampleValidationTest {
             cKWTjpBP2dPwVZ4WWC+9aGVd+Gyn1o0CLelf4rEjGoXbAAEgAqeGUxrcIlbjXfbc
             mwIDAQAB
             -----END PUBLIC KEY-----
-            """
+            """.trimIndent()
         val privateKey = """
             -----BEGIN PRIVATE KEY-----
             MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC7VJTUt9Us8cKj
@@ -460,13 +493,17 @@ class SampleValidationTest {
             TQrKhArgLXX4v3CddjfTRJkFWDbE/CkvKZNOrcf1nhaGCPspRJj2KUkj1Fhl9Cnc
             dn/RsYEONbwQSjIfMPkvxF+8HQ==
             -----END PRIVATE KEY-----
-            """
+            """.trimIndent()
 
         val alg = Assertions.assertDoesNotThrow<JwtRsAlgorithm> { getAlgorithm("RS512") }
+        val map = java.util.Map.of(
+            "algorithm", alg.algorithmFullName,
+            "publicKey", publicKey,
+            "privateKey", privateKey
+        )
         val key: JwtKey = Assertions.assertDoesNotThrow<JwtRsKey> { alg.newRandomJwtKey(2048) }
         Assertions.assertThrows(JwtException::class.java) { parseJwt(jwt, key) }
-        val norKey = alg.algorithmFullName + " " + normalizePem(publicKey) + " " + normalizePem(privateKey)
-        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, norKey) }
+        val node = Assertions.assertDoesNotThrow<JwtNode> { parseJwt(jwt, map) }
         Assertions.assertEquals("1234567890", node.subject)
         Assertions.assertEquals("John Doe", node.claimString("name"))
         Assertions.assertEquals(true, node.claimBoolean("admin"))

@@ -3,11 +3,9 @@ package me.saro.jwt
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
 import java.io.ByteArrayOutputStream
-import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZonedDateTime
 import java.util.*
-import kotlin.time.Duration
 
 open class JwtNode internal constructor(
     protected open val header: Map<String, String>,

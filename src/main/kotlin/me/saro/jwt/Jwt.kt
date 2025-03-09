@@ -47,36 +47,36 @@ class Jwt {
             JwtNode.parse(jwt, getJwtKey)
 
         @JvmStatic
+        fun parseJwt(jwt: String?, keys: Collection<JwtKey>): JwtNode =
+            JwtNode.parse(jwt) {
+                keys.firstOrNull { key -> key.kid == it.kid }
+            }
+
+        @JvmStatic
         fun createJwt(jwtKey: JwtKey): JwtNode.Builder = JwtNode.Builder(jwtKey)
 
         @JvmStatic
-        fun parseKey(stringify: String): JwtKey {
-            val map: MutableMap<String, String> = JwtUtils.readTextMap(stringify)
+        fun parseKey(json: String): JwtKey =
+            parseKey(JwtUtils.readTextMap(json))
 
+        @JvmStatic
+        fun parseKey(map: Map<String, String>): JwtKey =
             when (val algorithm = getAlgorithm<JwtAlgorithm>(map["algorithm"])) {
                 is JwtKeyPairAlgorithm<*> -> {
-                    return algorithm.toJwtKey(map["publicKey"]!!, map["privateKey"]!!)
-                        .apply {
-                            kid = map["kid"].toString()
-                            notBefore = map["notBefore"].toString().toLong()
-                            expire = map["expire"].toString().toLong()
-                        }
+                    algorithm.toJwtKey(map["publicKey"]!!, map["privateKey"]!!)
                 }
 
                 is JwtHsAlgorithm -> {
-                    return algorithm.toJwtKeyByBase64Url(map["secret"]!!)
-                        .apply {
-                            kid = map["kid"].toString()
-                            notBefore = map["notBefore"].toString().toLong()
-                            expire = map["expire"].toString().toLong()
-                        }
+                    algorithm.toJwtKeyByBase64Url(map["secret"]!!)
                 }
 
                 else -> {
                     throw IllegalArgumentException("Unsupported algorithm: ${algorithm.algorithmFullName}")
                 }
+            }.apply {
+                map.getOrDefault("kid", null)?.also { this.kid = it }
+                map.getOrDefault("notBefore", null)?.toLong()?.also { this.notBefore = it }
+                map.getOrDefault("expire", null)?.toLong()?.also { this.expire = it }
             }
-        }
-
     }
 }
