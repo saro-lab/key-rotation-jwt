@@ -2,6 +2,7 @@ package me.saro.jwt.keyPair
 
 import me.saro.jwt.JwtAlgorithm
 import me.saro.jwt.JwtKey
+import me.saro.jwt.JwtKeyOption
 import me.saro.jwt.JwtUtils
 import java.security.KeyPair
 import java.security.PrivateKey
@@ -9,8 +10,9 @@ import java.security.PublicKey
 import java.security.Signature
 
 abstract class JwtKeyPair(
-    algorithm: JwtAlgorithm
-): JwtKey(algorithm) {
+    algorithm: JwtAlgorithm,
+    option: JwtKeyOption = JwtKeyOption(),
+): JwtKey(algorithm, option) {
     abstract val keyPair: KeyPair
     abstract fun getKeyPairSignature(): Signature
 

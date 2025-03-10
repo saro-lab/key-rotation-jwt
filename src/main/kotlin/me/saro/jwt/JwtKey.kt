@@ -1,17 +1,12 @@
 package me.saro.jwt
 
-import java.util.*
-
 abstract class JwtKey(
-    val algorithm: JwtAlgorithm
+    val algorithm: JwtAlgorithm,
+    private val option: JwtKeyOption
 ) {
-    internal var kidIn: String = UUID.randomUUID().toString()
-    internal var notBeforeIn: Long = 0
-    internal var expireIn: Long = 0
-
-    val kid: String get() = kidIn
-    val notBefore: Long get() = notBeforeIn
-    val expire: Long get() = expireIn
+    val kid: String get() = option.kid
+    val notBefore: Long get() = option.notBefore
+    val expire: Long get() = option.expire
 
     override fun toString(): String = stringify
     override fun hashCode(): Int = stringify.hashCode()
