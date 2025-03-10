@@ -60,6 +60,10 @@ class Jwt {
             parseKey(JwtUtils.readTextMap(json))
 
         @JvmStatic
+        fun parseKeyArray(jsonArray: String): List<JwtKey> =
+            JwtUtils.readTextMapList(jsonArray).map { parseKey(it) }
+
+        @JvmStatic
         fun parseKey(map: Map<String, String>): JwtKey =
             when (val algorithm = getAlgorithm<JwtAlgorithm>(map["algorithm"])) {
                 is JwtKeyPairAlgorithm<*> -> {

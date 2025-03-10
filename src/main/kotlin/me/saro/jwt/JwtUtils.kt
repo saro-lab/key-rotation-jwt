@@ -13,6 +13,7 @@ class JwtUtils {
         private val DE_BASE64: Base64.Decoder = Base64.getDecoder()
         private val TYPE_MAP = object: TypeReference<MutableMap<String, Any>>() {}
         private val TYPE_TEXT_MAP = object: TypeReference<MutableMap<String, String>>() {}
+        private val TYPE_TEXT_MAP_LIST = object: TypeReference<List<MutableMap<String, String>>>() {}
         private val EN_BASE64 = Base64.getEncoder()
         private val EN_BASE64_URL_WOP: Base64.Encoder = Base64.getUrlEncoder().withoutPadding()
         private val REGEX_PEM_NORMALIZE = Regex("(\\s+|-----(BEGIN|END) .*?-----)")
@@ -31,6 +32,9 @@ class JwtUtils {
 
         @JvmStatic
         fun readTextMap(src: ByteArray): MutableMap<String, String> = OBJECT_MAPPER.readValue(src, TYPE_TEXT_MAP)
+
+        @JvmStatic
+        fun readTextMapList(src: String): List<MutableMap<String, String>> = OBJECT_MAPPER.readValue(src, TYPE_TEXT_MAP_LIST)
 
         @JvmStatic
         fun <T> readValue(src: String, valueTypeRef: TypeReference<T>): T = OBJECT_MAPPER.readValue(src, valueTypeRef)
@@ -61,13 +65,5 @@ class JwtUtils {
 
         @JvmStatic
         fun normalizePem(key: String) = key.replace(REGEX_PEM_NORMALIZE, "")
-
-        @JvmStatic
-        fun toKid(kid: String): String {
-            if (kid.replace(" ", "") != kid) {
-                throw IllegalArgumentException("kid must not contain spaces")
-            }
-            return kid
-        }
     }
 }
