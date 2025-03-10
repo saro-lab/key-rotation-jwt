@@ -1,5 +1,6 @@
 package me.saro.jwt.keyPair
 
+import me.saro.jwt.JwtAlgorithm
 import me.saro.jwt.JwtKey
 import me.saro.jwt.JwtUtils
 import java.security.KeyPair
@@ -7,8 +8,11 @@ import java.security.PrivateKey
 import java.security.PublicKey
 import java.security.Signature
 
-interface JwtKeyPair: JwtKey {
-    val keyPair: KeyPair
+abstract class JwtKeyPair(
+    algorithm: JwtAlgorithm
+): JwtKey(algorithm) {
+    abstract val keyPair: KeyPair
+    abstract fun getKeyPairSignature(): Signature
 
     val public: PublicKey get() = keyPair.public
     val publicKeySize: Int get() = public.encoded.size * 8
@@ -26,8 +30,6 @@ interface JwtKeyPair: JwtKey {
         "publicKey" to publicKeyString,
         "privateKey" to privateKeyString
     ))
-
-    fun getKeyPairSignature(): Signature
 
     override fun signature(body: ByteArray): ByteArray {
         val keyPairSignature = getKeyPairSignature()

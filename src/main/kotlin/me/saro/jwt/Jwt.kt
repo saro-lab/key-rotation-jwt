@@ -78,9 +78,9 @@ class Jwt {
                     throw IllegalArgumentException("Unsupported algorithm: ${algorithm.algorithmFullName}")
                 }
             }.apply {
-                map.getOrDefault("kid", null)?.also { this.kid = it }
-                map.getOrDefault("notBefore", null)?.toLong()?.also { this.notBefore = it }
-                map.getOrDefault("expire", null)?.toLong()?.also { this.expire = it }
+                map.getOrDefault("kid", null)?.also { this.kidIn = it }
+                map.getOrDefault("notBefore", null)?.toLong()?.also { this.notBeforeIn = it }
+                map.getOrDefault("expire", null)?.toLong()?.also { this.expireIn = it }
             }
     }
 }

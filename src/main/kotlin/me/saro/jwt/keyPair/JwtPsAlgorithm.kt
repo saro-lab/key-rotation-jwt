@@ -25,16 +25,16 @@ open class JwtPsAlgorithm(
     }
 
     override fun toJwtKey(keyPair: KeyPair): JwtPsKey =
-        JwtPsKey(algorithmFullName, keyPair)
+        JwtPsKey(this, keyPair)
 
     override fun newRandomJwtKey(): JwtKey =
         newRandomJwtKey(2048)
 
     // 2048, 3072, 4096
     fun newRandomJwtKey(bit: Int): JwtPsKey =
-        KeyPairGenerator.getInstance(keyAlgorithmName).run {
-            initialize(bit)
-            JwtPsKey(algorithmFullName, genKeyPair())
+        KeyPairGenerator.getInstance(keyAlgorithmName).let {
+            it.initialize(bit)
+            JwtPsKey(this, it.genKeyPair())
         }
 
     override fun toJwtKey(publicKey: String, privateKey: String): JwtPsKey =

@@ -15,10 +15,10 @@ open class JwtHsAlgorithm(
     override val algorithmName: String = "RS"
     override val algorithmFullName: String = algorithmFullNameCopy
     private val keyAlgorithm: String = getKeyAlgorithm(algorithmFullNameCopy)
-    protected fun getMac(): Mac = Mac.getInstance(keyAlgorithm)
+    internal fun getMac(): Mac = Mac.getInstance(keyAlgorithm)
 
     fun toJwtKey(key: ByteArray): JwtKey = try {
-        JwtHsKey(algorithmFullName, SecretKeySpec(key, keyAlgorithm))
+        JwtHsKey(this, SecretKeySpec(key, keyAlgorithm))
     } catch (e: Exception) {
         throw JwtException(JwtExceptionCode.PARSE_ERROR)
     }

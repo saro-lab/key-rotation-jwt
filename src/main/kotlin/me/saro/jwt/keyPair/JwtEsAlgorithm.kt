@@ -22,12 +22,12 @@ open class JwtEsAlgorithm(
     private val genParameterSpec: ECGenParameterSpec = getGenParameterSpec(algorithmFullNameCopy)
 
     override fun toJwtKey(keyPair: KeyPair): JwtEsKey =
-        JwtEsKey(algorithmFullName, keyPair)
+        JwtEsKey(this, keyPair)
 
     override fun newRandomJwtKey(): JwtEsKey =
-        KeyPairGenerator.getInstance(keyAlgorithmName).run {
-            initialize(genParameterSpec)
-            JwtEsKey(algorithmFullName, genKeyPair())
+        KeyPairGenerator.getInstance(keyAlgorithmName).let {
+            it.initialize(genParameterSpec)
+            JwtEsKey(this, it.genKeyPair())
         }
 
     override fun toJwtKey(publicKey: String, privateKey: String): JwtEsKey =

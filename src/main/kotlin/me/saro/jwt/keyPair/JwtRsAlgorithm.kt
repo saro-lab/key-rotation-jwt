@@ -19,16 +19,16 @@ open class JwtRsAlgorithm(
         Signature.getInstance(signatureAlgorithm)
 
     override fun toJwtKey(keyPair: KeyPair): JwtRsKey =
-        JwtRsKey(algorithmFullName, keyPair)
+        JwtRsKey(this, keyPair)
 
     override fun newRandomJwtKey(): JwtRsKey =
         newRandomJwtKey(2048)
 
     // 2048, 3072, 4096
     fun newRandomJwtKey(bit: Int): JwtRsKey =
-        KeyPairGenerator.getInstance(keyAlgorithmName).run {
-            initialize(bit)
-            JwtRsKey(algorithmFullName, genKeyPair())
+        KeyPairGenerator.getInstance(keyAlgorithmName).let {
+            it.initialize(bit)
+            JwtRsKey(this, it.genKeyPair())
         }
 
     override fun toJwtKey(publicKey: String, privateKey: String): JwtRsKey =
