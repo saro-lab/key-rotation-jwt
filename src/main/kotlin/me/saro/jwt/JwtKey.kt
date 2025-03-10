@@ -1,12 +1,12 @@
 package me.saro.jwt
 
 abstract class JwtKey(
-    val algorithm: JwtAlgorithm,
-    private val option: JwtKeyOption
+    private val data: JwtKeyData,
 ) {
-    val kid: String get() = option.kid
-    val notBefore: Long get() = option.notBefore
-    val expire: Long get() = option.expire
+    val algorithm: JwtAlgorithm = Jwt.getAlgorithm(data.algorithm)
+    val kid: String get() = data.kid
+    val notBefore: Long get() = data.notBefore
+    val expire: Long get() = data.expire
 
     override fun toString(): String = stringify
     override fun hashCode(): Int = stringify.hashCode()

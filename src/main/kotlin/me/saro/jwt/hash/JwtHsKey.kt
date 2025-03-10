@@ -2,7 +2,6 @@ package me.saro.jwt.hash
 
 import me.saro.jwt.JwtAlgorithm
 import me.saro.jwt.JwtKey
-import me.saro.jwt.JwtKeyOption
 import me.saro.jwt.JwtUtils
 import me.saro.jwt.exception.JwtException
 import me.saro.jwt.exception.JwtExceptionCode
